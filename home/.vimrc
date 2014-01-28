@@ -31,6 +31,7 @@ NeoBundle 'bling/vim-airline'
 NeoBundle 'shougo/neocomplcache'
 NeoBundle 'shougo/unite.vim'
 NeoBundle 'majutsushi/tagbar'
+NeoBundle 'terryma/vim-multiple-cursors'
 
 " Other directives
 " Persistent undo
@@ -48,6 +49,7 @@ set t_Co=256
 set laststatus=2
 
 let g:airline_powerline_fonts=1
+let g:neocomplcache_enable_at_startup = 1
 
 " Filetype conditional settings
 au FileType python set colorcolumn=80
