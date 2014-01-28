@@ -25,6 +25,9 @@ NeoBundle 'sheerun/vim-polyglot'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'fholgado/minibufexpl.vim'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'flazz/vim-colorschemes'
+NeoBundle 'lepture/vim-jinja'
+NeoBundle 'bling/vim-airline'
 
 " Other directives
 " Persistent undo
@@ -37,8 +40,11 @@ set number
 set tabstop=4
 set shiftwidth=4
 set expandtab
+set smartindent
 
 " Filetype conditional settings
 au FileType python set colorcolumn=80
 au FileType ruby set tabstop=2
 "    set shiftwidth=2
+"
+color blacklight
