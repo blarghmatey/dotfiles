@@ -28,6 +28,9 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'flazz/vim-colorschemes'
 NeoBundle 'lepture/vim-jinja'
 NeoBundle 'bling/vim-airline'
+NeoBundle 'shougo/neocomplcache'
+NeoBundle 'shougo/unite.vim'
+NeoBundle 'majutsushi/tagbar'
 
 " Other directives
 " Persistent undo
@@ -41,6 +44,10 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 set smartindent
+set t_Co=256
+set laststatus=2
+
+let g:airline_powerline_fonts=1
 
 " Filetype conditional settings
 au FileType python set colorcolumn=80
