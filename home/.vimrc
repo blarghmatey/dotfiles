@@ -86,6 +86,7 @@ color Monokai
 :map <leader>j <C-W>j
 :map <leader>k <C-W>k
 :map <leader>l <C-W>l
+:nmap ' <leader>
 
 " Abbreviations
 :iabbrev <// </<C-X><C-O>
