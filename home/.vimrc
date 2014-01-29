@@ -37,6 +37,9 @@ NeoBundle 'davidhalter/jedi-vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'phleet/vim-mercenary'
 NeoBundle 'mileszs/ack.vim'
+NeoBundle 'jiangmiao/auto-pairs'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'phleet/vim-mercenary'
 
 " Other directives
 " Persistent undo
@@ -62,7 +65,7 @@ au FileType python set colorcolumn=80
 au FileType ruby set tabstop=2
 "    set shiftwidth=2
 "
-color blacklight
+color Monokai
 
 " My Key Mappings
 :map <leader>h <C-W>h
