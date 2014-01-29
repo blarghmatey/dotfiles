@@ -69,3 +69,6 @@ color blacklight
 :map <leader>j <C-W>j
 :map <leader>k <C-W>k
 :map <leader>l <C-W>l
+
+" Abbreviations
+:iabbrev <// </<C-X><C-O>
