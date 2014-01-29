@@ -28,18 +28,20 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'flazz/vim-colorschemes'
 NeoBundle 'lepture/vim-jinja'
 NeoBundle 'bling/vim-airline'
-NeoBundle 'shougo/neocomplcache'
+"NeoBundle 'shougo/neocomplcache'
 NeoBundle 'shougo/unite.vim'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'tpope/vim-rails'
-NeoBundle 'davidhalter/jedi-vim'
+"NeoBundle 'davidhalter/jedi-vim'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'phleet/vim-mercenary'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'jiangmiao/auto-pairs'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'phleet/vim-mercenary'
+NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'xolox/vim-session', {'depends': 'xolox/vim-misc'}
 
 " Other directives
 " Persistent undo
@@ -59,7 +61,8 @@ set backspace=indent,start
 set incsearch
 
 let g:airline_powerline_fonts=1
-let g:neocomplcache_enable_at_startup = 1
+let g:neobundle#types#git#default_protocol = 'ssh'
+"let g:neocomplcache_enable_at_startup = 1
 
 " Filetype conditional settings
 au FileType python set colorcolumn=80
