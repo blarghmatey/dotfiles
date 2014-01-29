@@ -41,6 +41,8 @@ NeoBundle 'jiangmiao/auto-pairs' "Auto close quotes, parentheses, braces, etc.
 NeoBundle 'tpope/vim-fugitive' "Git integration
 NeoBundle 'Valloric/YouCompleteMe' "Multi-language code completion, requires executing install.sh after download
 NeoBundle 'xolox/vim-session', {'depends': 'xolox/vim-misc'} "Automatic session management
+NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://bitbucket.org/ns9tks/vim-l9'}
+
 
 " Other directives
 "
