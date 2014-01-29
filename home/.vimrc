@@ -56,6 +56,7 @@ set smartindent
 set t_Co=256
 set laststatus=2
 set backspace=indent,start
+set incsearch
 
 let g:airline_powerline_fonts=1
 let g:neocomplcache_enable_at_startup = 1
