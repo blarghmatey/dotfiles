@@ -32,6 +32,11 @@ NeoBundle 'shougo/neocomplcache'
 NeoBundle 'shougo/unite.vim'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'tpope/vim-rails'
+NeoBundle 'davidhalter/jedi-vim'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'phleet/vim-mercenary'
+NeoBundle 'mileszs/ack.vim'
 
 " Other directives
 " Persistent undo
@@ -47,6 +52,7 @@ set expandtab
 set smartindent
 set t_Co=256
 set laststatus=2
+set backspace=indent,start
 
 let g:airline_powerline_fonts=1
 let g:neocomplcache_enable_at_startup = 1
