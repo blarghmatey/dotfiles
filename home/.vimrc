@@ -63,3 +63,9 @@ au FileType ruby set tabstop=2
 "    set shiftwidth=2
 "
 color blacklight
+
+" My Key Mappings
+:map <leader>h <C-W>h
+:map <leader>j <C-W>j
+:map <leader>k <C-W>k
+:map <leader>l <C-W>l
