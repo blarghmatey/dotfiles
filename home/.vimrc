@@ -36,7 +36,7 @@ NeoBundle 'tpope/vim-rails' "Syntax highlighting and project navigation for rail
 NeoBundle 'davidhalter/jedi-vim' "High accuracy python auto complete
 NeoBundle 'scrooloose/syntastic' "Polyglot linting
 NeoBundle 'phleet/vim-mercenary' "Mercurial integration
-NeoBundle 'mileszs/ack.vim' "Fast file grepping, requires ack installed on the system
+NeoBundle 'rking/ag.vim' "Fast file grepping, requires the silver searcher (ag) installed on the system
 NeoBundle 'jiangmiao/auto-pairs' "Auto close quotes, parentheses, braces, etc.
 NeoBundle 'tpope/vim-fugitive' "Git integration
 NeoBundle 'Valloric/YouCompleteMe' "Multi-language code completion, requires executing install.sh after download
@@ -45,7 +45,6 @@ NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://b
 NeoBundle 'othree/javascript-libraries-syntax.vim'
 "NeoBundle 'jmcantrell/vim-virtualenv'
 NeoBundle 'klen/python-mode'
-NeoBundle 'marcweber/vim-addon-local-vimrc'
 
 
 " Other directives
@@ -65,6 +64,9 @@ set t_Co=256 "Tell vim that it's running with 256 colors
 set laststatus=2 "Tell vim-airline to always display
 set backspace=indent,start "Allow for backspacing over auto-indent
 set incsearch "Jump to search matches as they are being typed
+set history=100 " Keep more command history
+set splitbelow
+set splitright
 
 " Package configurations
 let g:airline_powerline_fonts=1
@@ -74,6 +76,7 @@ let g:used_javascript_libs = 'jquery,angularjs'
 let g:pymode_rope_completion = 0
 let g:pymode_virtualenv = 1
 let g:pymode_folding = 0
+let g:syntastic_check_on_open = 1
 
 " Platoform specific stuff goes here
 if has("unix")
@@ -83,12 +86,17 @@ if has("unix")
   endif
 endif
 
+colorscheme Monokai
+
 " Filetype conditional settings
-au FileType python set colorcolumn=80
-au FileType ruby set tabstop=2
-"    set shiftwidth=2
-"
-color Monokai
+augroup vimrc
+    autocmd!
+    au BufRead,BufNewFile *.py set colorcolumn=80
+    au BufRead,BufNewFile *.rb set tabstop=2 |
+                \    set shiftwidth=2
+    au BufRead,BufNewFile *.js let b:javascript_lib_use_jquery = 1
+    au BufRead,BufNewFile *.js let b:javascript_lib_use_angularjs = 1
+augroup end
 
 " My Key Mappings
 :map <leader>h <C-W>h
@@ -98,3 +106,7 @@ color Monokai
 :nmap ' <leader>
 
 " Abbreviations
+"
+"
+" Function definitions
+
