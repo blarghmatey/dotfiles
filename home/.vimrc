@@ -28,12 +28,12 @@ NeoBundle 'tpope/vim-surround' "Manage quotes, braces, etc around text
 NeoBundle 'flazz/vim-colorschemes' "Repository of color schemes for vim
 NeoBundle 'lepture/vim-jinja' "Jinja template syntax highlighting
 NeoBundle 'bling/vim-airline' "Fancy status line for vim
-"NeoBundle 'shougo/neocomplcache' "Code auto completion
+NeoBundle 'shougo/neocomplcache' "Code auto completion
 "NeoBundle 'shougo/unite.vim'
 NeoBundle 'majutsushi/tagbar' "Display and navigation of tags for a given buffer
 NeoBundle 'terryma/vim-multiple-cursors' "Multiple cursor selection like sublime
 NeoBundle 'tpope/vim-rails' "Syntax highlighting and project navigation for rails
-"NeoBundle 'davidhalter/jedi-vim' "High accuracy python auto complete
+NeoBundle 'davidhalter/jedi-vim' "High accuracy python auto complete
 NeoBundle 'scrooloose/syntastic' "Polyglot linting
 NeoBundle 'phleet/vim-mercenary' "Mercurial integration
 NeoBundle 'mileszs/ack.vim' "Fast file grepping, requires ack installed on the system
@@ -42,6 +42,10 @@ NeoBundle 'tpope/vim-fugitive' "Git integration
 NeoBundle 'Valloric/YouCompleteMe' "Multi-language code completion, requires executing install.sh after download
 NeoBundle 'xolox/vim-session', {'depends': 'xolox/vim-misc'} "Automatic session management
 NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://bitbucket.org/ns9tks/vim-l9'}
+NeoBundle 'othree/javascript-libraries-syntax.vim'
+"NeoBundle 'jmcantrell/vim-virtualenv'
+NeoBundle 'klen/python-mode'
+NeoBundle 'marcweber/vim-addon-local-vimrc'
 
 
 " Other directives
@@ -62,9 +66,14 @@ set laststatus=2 "Tell vim-airline to always display
 set backspace=indent,start "Allow for backspacing over auto-indent
 set incsearch "Jump to search matches as they are being typed
 
+" Package configurations
 let g:airline_powerline_fonts=1
 let g:neobundle#types#git#default_protocol = 'ssh'
 "let g:neocomplcache_enable_at_startup = 1
+let g:used_javascript_libs = 'jquery,angularjs'
+let g:pymode_rope_completion = 0
+let g:pymode_virtualenv = 1
+let g:pymode_folding = 0
 
 " Platoform specific stuff goes here
 if has("unix")
@@ -89,4 +98,3 @@ color Monokai
 :nmap ' <leader>
 
 " Abbreviations
-:iabbrev <// </<C-X><C-O>
