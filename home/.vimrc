@@ -47,6 +47,8 @@ NeoBundle 'othree/javascript-libraries-syntax.vim'
 NeoBundle 'klen/python-mode'
 NeoBundle 'gregsexton/MatchTag'
 "NeoBundle 'valloric/MatchTagAlways'
+NeoBundle 'edkolev/promptline.vim'
+NeoBundle 'edkolev/tmuxline.vim'
 
 
 " Other directives
@@ -102,12 +104,12 @@ endif
 colorscheme Monokai
 
 " Filetype conditional settings
-augroup vimrc
-    autocmd!
-    au BufRead,BufNewFile *.py set colorcolumn=80
-    au BufRead,BufNewFile *.rb set tabstop=2 |
-                \    set shiftwidth=2
-augroup end
+"augroup vimrc
+"    autocmd!
+"    au BufRead,BufNewFile *.py set colorcolumn=80
+"    au BufRead,BufNewFile *.rb set tabstop=2 |
+"                \    set shiftwidth=2
+"augroup end
 
 " My Key Mappings
 :map <leader>h <C-W>h
