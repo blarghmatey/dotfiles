@@ -73,10 +73,10 @@ set ignorecase
 set smartcase
 
 " Command aliases
-cabbrev tbp tabprev
-cabbrev tbn tabnext
-cabbrev tbf tabfirst
-cabbrev tbl tablast
+cabbrev tp tabprev
+cabbrev tn tabnext
+cabbrev tf tabfirst
+cabbrev tl tablast
 
 
 " Package configurations
