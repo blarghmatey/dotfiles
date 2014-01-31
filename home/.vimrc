@@ -45,6 +45,8 @@ NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://b
 NeoBundle 'othree/javascript-libraries-syntax.vim'
 "NeoBundle 'jmcantrell/vim-virtualenv'
 NeoBundle 'klen/python-mode'
+NeoBundle 'gregsexton/MatchTag'
+"NeoBundle 'valloric/MatchTagAlways'
 
 
 " Other directives
@@ -67,6 +69,15 @@ set incsearch "Jump to search matches as they are being typed
 set history=100 " Keep more command history
 set splitbelow
 set splitright
+set ignorecase
+set smartcase
+
+" Command aliases
+cabbrev tbp tabprev
+cabbrev tbn tabnext
+cabbrev tbf tabfirst
+cabbrev tbl tablast
+
 
 " Package configurations
 let g:airline_powerline_fonts=1
@@ -77,6 +88,8 @@ let g:pymode_rope_completion = 0
 let g:pymode_virtualenv = 1
 let g:pymode_folding = 0
 let g:syntastic_check_on_open = 1
+let g:ctrlp_use_caching = 0
+let g:sytnastic_aggregate_errors = 1
 
 " Platoform specific stuff goes here
 if has("unix")
@@ -94,8 +107,6 @@ augroup vimrc
     au BufRead,BufNewFile *.py set colorcolumn=80
     au BufRead,BufNewFile *.rb set tabstop=2 |
                 \    set shiftwidth=2
-    au BufRead,BufNewFile *.js let b:javascript_lib_use_jquery = 1
-    au BufRead,BufNewFile *.js let b:javascript_lib_use_angularjs = 1
 augroup end
 
 " My Key Mappings
