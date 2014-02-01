@@ -45,6 +45,10 @@ NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://b
 NeoBundle 'othree/javascript-libraries-syntax.vim'
 "NeoBundle 'jmcantrell/vim-virtualenv'
 NeoBundle 'klen/python-mode'
+NeoBundle 'gregsexton/MatchTag'
+"NeoBundle 'valloric/MatchTagAlways'
+NeoBundle 'edkolev/promptline.vim'
+NeoBundle 'edkolev/tmuxline.vim'
 
 
 " Other directives
@@ -67,6 +71,15 @@ set incsearch "Jump to search matches as they are being typed
 set history=100 " Keep more command history
 set splitbelow
 set splitright
+set ignorecase
+set smartcase
+
+" Command aliases
+cabbrev tp tabprev
+cabbrev tn tabnext
+cabbrev tf tabfirst
+cabbrev tl tablast
+
 
 " Package configurations
 let g:airline_powerline_fonts=1
@@ -77,6 +90,8 @@ let g:pymode_rope_completion = 0
 let g:pymode_virtualenv = 1
 let g:pymode_folding = 0
 let g:syntastic_check_on_open = 1
+let g:ctrlp_use_caching = 0
+let g:syntastic_aggregate_errors = 1
 
 " Platoform specific stuff goes here
 if has("unix")
