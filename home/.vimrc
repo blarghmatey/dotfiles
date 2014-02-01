@@ -92,6 +92,7 @@ colorscheme Monokai
 augroup vimrc
     autocmd!
     au BufRead,BufNewFile *.py set colorcolumn=80
+    au BufLeave *.py set colorcolumn&
     au BufRead,BufNewFile *.rb set tabstop=2 |
                 \    set shiftwidth=2
     au BufRead,BufNewFile *.js let b:javascript_lib_use_jquery = 1
