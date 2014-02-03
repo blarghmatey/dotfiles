@@ -28,12 +28,12 @@ NeoBundle 'tpope/vim-surround' "Manage quotes, braces, etc around text
 NeoBundle 'flazz/vim-colorschemes' "Repository of color schemes for vim
 NeoBundle 'lepture/vim-jinja' "Jinja template syntax highlighting
 NeoBundle 'bling/vim-airline' "Fancy status line for vim
-NeoBundle 'shougo/neocomplcache' "Code auto completion
+"NeoBundle 'shougo/neocomplcache' "Code auto completion
 "NeoBundle 'shougo/unite.vim'
 NeoBundle 'majutsushi/tagbar' "Display and navigation of tags for a given buffer
 NeoBundle 'terryma/vim-multiple-cursors' "Multiple cursor selection like sublime
 NeoBundle 'tpope/vim-rails' "Syntax highlighting and project navigation for rails
-NeoBundle 'davidhalter/jedi-vim' "High accuracy python auto complete
+"NeoBundle 'davidhalter/jedi-vim' "High accuracy python auto complete
 NeoBundle 'scrooloose/syntastic' "Polyglot linting
 NeoBundle 'phleet/vim-mercenary' "Mercurial integration
 NeoBundle 'rking/ag.vim' "Fast file grepping, requires the silver searcher (ag) installed on the system
@@ -43,12 +43,12 @@ NeoBundle 'Valloric/YouCompleteMe' "Multi-language code completion, requires exe
 NeoBundle 'xolox/vim-session', {'depends': 'xolox/vim-misc'} "Automatic session management
 NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://bitbucket.org/ns9tks/vim-l9'}
 NeoBundle 'othree/javascript-libraries-syntax.vim'
-"NeoBundle 'jmcantrell/vim-virtualenv'
-NeoBundle 'klen/python-mode'
+""NeoBundle 'jmcantrell/vim-virtualenv'
+"NeoBundle 'klen/python-mode'
 NeoBundle 'gregsexton/MatchTag'
-"NeoBundle 'valloric/MatchTagAlways'
-NeoBundle 'edkolev/promptline.vim'
-NeoBundle 'edkolev/tmuxline.vim'
+NeoBundle 'marijnh/tern_for_vim'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'scrooloose/nerdcommenter'
 
 
 " Other directives
@@ -101,18 +101,19 @@ if has("unix")
   endif
 endif
 
-colorscheme Monokai
+colorscheme ir_black
+set background=dark
 
 " Filetype conditional settings
-augroup vimrc
-    autocmd!
-    au BufRead,BufNewFile *.py set colorcolumn=80
-    au BufLeave *.py set colorcolumn&
-    au BufRead,BufNewFile *.rb set tabstop=2 |
-                \    set shiftwidth=2
-    au BufRead,BufNewFile *.js let b:javascript_lib_use_jquery = 1
-    au BufRead,BufNewFile *.js let b:javascript_lib_use_angularjs = 1
-augroup end
+"augroup vimrc
+"    autocmd!
+"    au BufRead,BufNewFile *.py set colorcolumn=80
+"    au BufLeave *.py set colorcolumn&
+"    au BufRead,BufNewFile *.rb set tabstop=2 |
+"                \    set shiftwidth=2
+"    au BufRead,BufNewFile *.js let b:javascript_lib_use_jquery = 1
+"    au BufRead,BufNewFile *.js let b:javascript_lib_use_angularjs = 1
+"augroup end
 
 " My Key Mappings
 :map <leader>h <C-W>h
