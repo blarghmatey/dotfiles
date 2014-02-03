@@ -42,13 +42,13 @@ NeoBundle 'tpope/vim-fugitive' "Git integration
 NeoBundle 'Valloric/YouCompleteMe' "Multi-language code completion, requires executing install.sh after download
 NeoBundle 'xolox/vim-session', {'depends': 'xolox/vim-misc'} "Automatic session management
 NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://bitbucket.org/ns9tks/vim-l9'}
-NeoBundle 'othree/javascript-libraries-syntax.vim'
+NeoBundle 'othree/javascript-libraries-syntax.vim' "Syntax highlighting for various javascript libraries
 "NeoBundle 'jmcantrell/vim-virtualenv'
-NeoBundle 'klen/python-mode'
-NeoBundle 'gregsexton/MatchTag'
-NeoBundle 'marijnh/tern_for_vim'
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'klen/python-mode' " A collection of plugins useful for python development
+NeoBundle 'gregsexton/MatchTag' " Highlight matching HTML tags when the cursor is inside the opening or closing tag
+NeoBundle 'marijnh/tern_for_vim' " Javascript code intelligence using a node backend. After bundle install cd ~/.vim/bundles/tern_for_vim && npm install
+NeoBundle 'mattn/emmet-vim' " Plugin for better HTML and CSS code intelligence
+NeoBundle 'scrooloose/nerdcommenter' " Easily comment out lines or segments of code using key commands
 
 
 " Other directives
