@@ -43,8 +43,8 @@ NeoBundle 'Valloric/YouCompleteMe' "Multi-language code completion, requires exe
 NeoBundle 'xolox/vim-session', {'depends': 'xolox/vim-misc'} "Automatic session management
 NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://bitbucket.org/ns9tks/vim-l9'}
 NeoBundle 'othree/javascript-libraries-syntax.vim'
-""NeoBundle 'jmcantrell/vim-virtualenv'
-"NeoBundle 'klen/python-mode'
+"NeoBundle 'jmcantrell/vim-virtualenv'
+NeoBundle 'klen/python-mode'
 NeoBundle 'gregsexton/MatchTag'
 NeoBundle 'marijnh/tern_for_vim'
 NeoBundle 'mattn/emmet-vim'
