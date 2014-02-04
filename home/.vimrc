@@ -74,12 +74,18 @@ set splitbelow
 set splitright
 set ignorecase
 set smartcase
+set showcmd
+set list listchars=tab:»·,trail:·
 
 " Command aliases
+" Tab navigation
 cabbrev tp tabprev
 cabbrev tn tabnext
 cabbrev tf tabfirst
 cabbrev tl tablast
+" Go to next/previous buffer and close current buffer
+cabbrev bbp bp<BAR>bd#
+cabbrev bbn bn<BAR>bd#
 
 
 " Package configurations
