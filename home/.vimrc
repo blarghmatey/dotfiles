@@ -49,6 +49,7 @@ NeoBundle 'gregsexton/MatchTag' " Highlight matching HTML tags when the cursor i
 NeoBundle 'marijnh/tern_for_vim' " Javascript code intelligence using a node backend. After bundle install cd ~/.vim/bundles/tern_for_vim && npm install
 NeoBundle 'mattn/emmet-vim' " Plugin for better HTML and CSS code intelligence
 NeoBundle 'scrooloose/nerdcommenter' " Easily comment out lines or segments of code using key commands
+NeoBundle 'mtth/scratch.vim' " Scratch buffer for taking notes or storing snippets during a session
 
 
 " Other directives
@@ -105,22 +106,26 @@ colorscheme ir_black
 set background=dark
 
 " Filetype conditional settings
-"augroup vimrc
-"    autocmd!
-"    au BufRead,BufNewFile *.py set colorcolumn=80
-"    au BufLeave *.py set colorcolumn&
-"    au BufRead,BufNewFile *.rb set tabstop=2 |
-"                \    set shiftwidth=2
-"    au BufRead,BufNewFile *.js let b:javascript_lib_use_jquery = 1
-"    au BufRead,BufNewFile *.js let b:javascript_lib_use_angularjs = 1
-"augroup end
+augroup vimrc
+    autocmd!
+    au FileType python setlocal colorcolumn=80
+    au FileType ruby setlocal tabstop=2 |
+                \    set shiftwidth=2
+    au FileType javascript let b:javascript_lib_use_jquery = 1
+    au FileType javascript let b:javascript_lib_use_angularjs = 1
+augroup end
 
 " My Key Mappings
+:nmap ' <leader>
+" Window split navigation made easier
 :map <leader>h <C-W>h
 :map <leader>j <C-W>j
 :map <leader>k <C-W>k
 :map <leader>l <C-W>l
-:nmap ' <leader>
+" Quickly open a scratch buffer
+:map <leader>s :Scratch<CR>
+:map <leader>S :ScratchSelection<CR>
+
 
 " Abbreviations
 "
