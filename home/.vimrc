@@ -50,6 +50,7 @@ NeoBundle 'marijnh/tern_for_vim' " Javascript code intelligence using a node bac
 NeoBundle 'mattn/emmet-vim' " Plugin for better HTML and CSS code intelligence
 NeoBundle 'scrooloose/nerdcommenter' " Easily comment out lines or segments of code using key commands
 NeoBundle 'mtth/scratch.vim' " Scratch buffer for taking notes or storing snippets during a session
+NeoBundle 'tsaleh/vim-matchit'
 
 
 " Other directives
@@ -77,7 +78,6 @@ set ignorecase
 set smartcase
 set showcmd
 set list listchars=tab:»·,trail:·
-set clipboard=unnamed
 
 " Command aliases
 " Tab navigation
@@ -142,3 +142,12 @@ augroup end
 "
 "
 " Function definitions
+"
+function! ExpandWidth()
+  let maxWidth = max(map(getline(1,'$'), 'len(v:val)'))
+  let g:blarghmatey#maxWidth#default = 300
+  let widthResult = min([ ( maxWidth + 10 ), g:blarghmatey#maxWidth#default ])
+  execute 'vertical resize ' . widthResult
+endfunction
+
+:map <leader>m :call ExpandWidth()<CR>
