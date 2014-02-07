@@ -79,6 +79,9 @@ set ignorecase
 set smartcase
 set showcmd
 set list listchars=tab:»·,trail:·
+set wildmode
+set autoread
+set clipboard+=unnamed
 
 " Command aliases
 " Tab navigation
