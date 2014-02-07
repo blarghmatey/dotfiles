@@ -160,4 +160,21 @@ function! ExpandWidth()
     execute 'vertical resize ' . widthResult
 endfunction
 
+function! ExpandHeight()
+    if exists('b:blarghmatey_maxHeight_lastHeight')
+        let heightResult = b:blarghmatey_maxHeight_lastHeight
+        unlet b:blarghmatey_maxHeight_lastHeight
+    else
+        let b:blarghmatey_maxHeight_lastHeight = winheight(0)
+        let maxHeight = &lines
+        let heightResult = maxHeight
+        if exists('g:blarghmatey#maxHeight#heightLimit')
+            let heightLimit = g:blarghmatey#maxHeight#heightLimit
+            let heightResult = min([maxHeight, heightLimit])
+        endif
+    endif
+    execute 'resize ' . heightResult
+endfunction
+
 :map <leader>m :call ExpandWidth()<CR>
+:map <leader>M :call ExpandHeight()<CR>
