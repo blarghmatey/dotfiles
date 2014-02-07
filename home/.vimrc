@@ -51,6 +51,7 @@ NeoBundle 'mattn/emmet-vim' " Plugin for better HTML and CSS code intelligence
 NeoBundle 'scrooloose/nerdcommenter' " Easily comment out lines or segments of code using key commands
 NeoBundle 'mtth/scratch.vim' " Scratch buffer for taking notes or storing snippets during a session
 NeoBundle 'tsaleh/vim-matchit'
+NeoBundle 'vim-scripts/loremipsum'
 
 
 " Other directives
@@ -119,9 +120,12 @@ set background=dark
 augroup vimrc
     autocmd!
     au FileType python setlocal colorcolumn=80
+    au FileType eruby setlocal tabstop=2 |
+                \    setlocal shiftwidth=2 |
+                \    setlocal softtabstop=2
     au FileType ruby setlocal tabstop=2 |
-                \    set shiftwidth=2 |
-                \    set softtabstop=2
+                \    setlocal shiftwidth=2 |
+                \    setlocal softtabstop=2
     au FileType javascript let b:javascript_lib_use_jquery = 1
     au FileType javascript let b:javascript_lib_use_angularjs = 1
 augroup end
@@ -144,10 +148,16 @@ augroup end
 " Function definitions
 "
 function! ExpandWidth()
-  let maxWidth = max(map(getline(1,'$'), 'len(v:val)'))
-  let g:blarghmatey#maxWidth#default = 300
-  let widthResult = min([ ( maxWidth + 10 ), g:blarghmatey#maxWidth#default ])
-  execute 'vertical resize ' . widthResult
+    if exists('b:blarghmatey_maxWidth_lastWidth')
+        let widthResult = b:blarghmatey_maxWidth_lastWidth
+        unlet b:blarghmatey_maxWidth_lastWidth
+    else
+        let b:blarghmatey_maxWidth_lastWidth = winwidth(0)
+        let maxWidth = max(map(getline(1,'$'), 'len(v:val)'))
+        let g:blarghmatey#maxWidth#default = 200
+        let widthResult = min([ ( maxWidth + 10 ), g:blarghmatey#maxWidth#default ])
+    endif
+    execute 'vertical resize ' . widthResult
 endfunction
 
 :map <leader>m :call ExpandWidth()<CR>
