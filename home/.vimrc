@@ -158,7 +158,7 @@ function! ExpandWidth()
         let b:blarghmatey_maxWidth_lastWidth = winwidth(0)
         let maxWidth = max(map(getline(1,'$'), 'len(v:val)'))
         let g:blarghmatey#maxWidth#default = 200
-        let widthResult = min([ ( maxWidth + 10 ), g:blarghmatey#maxWidth#default ])
+        let widthResult = min([ ( maxWidth + 5 ), g:blarghmatey#maxWidth#default ])
     endif
     execute 'vertical resize ' . widthResult
 endfunction
@@ -169,7 +169,7 @@ function! ExpandHeight()
         unlet b:blarghmatey_maxHeight_lastHeight
     else
         let b:blarghmatey_maxHeight_lastHeight = winheight(0)
-        let fileLength = line('$') + 5
+        let fileLength = line('$') + 2
         let maxHeight = &lines
         let heightResult = min([maxHeight, fileLength])
         if exists('g:blarghmatey#maxHeight#heightLimit')
