@@ -79,7 +79,7 @@ set ignorecase
 set smartcase
 set showcmd
 set list listchars=tab:»·,trail:·
-set wildmode
+set wildmode=list,full
 set autoread
 set clipboard+=unnamed
 
@@ -134,7 +134,7 @@ augroup vimrc
 augroup end
 
 " My Key Mappings
-:nmap ' <leader>
+:map ' <leader>
 " Window split navigation made easier
 :map <leader>h <C-W>h
 :map <leader>j <C-W>j
