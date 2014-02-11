@@ -169,11 +169,12 @@ function! ExpandHeight()
         unlet b:blarghmatey_maxHeight_lastHeight
     else
         let b:blarghmatey_maxHeight_lastHeight = winheight(0)
+        let fileLength = line('$') + 5
         let maxHeight = &lines
-        let heightResult = maxHeight
+        let heightResult = min([maxHeight, fileLength])
         if exists('g:blarghmatey#maxHeight#heightLimit')
             let heightLimit = g:blarghmatey#maxHeight#heightLimit
-            let heightResult = min([maxHeight, heightLimit])
+            let heightResult = min([heightResult, heightLimit])
         endif
     endif
     execute 'resize ' . heightResult
