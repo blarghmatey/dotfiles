@@ -52,6 +52,7 @@ NeoBundle 'scrooloose/nerdcommenter' " Easily comment out lines or segments of c
 NeoBundle 'mtth/scratch.vim' " Scratch buffer for taking notes or storing snippets during a session
 NeoBundle 'tsaleh/vim-matchit'
 NeoBundle 'vim-scripts/loremipsum'
+NeoBundle 'blarghmatey/split-expander'
 
 
 " Other directives
@@ -150,35 +151,35 @@ augroup end
 "
 " Function definitions
 "
-function! ExpandWidth()
-    if exists('b:blarghmatey_maxWidth_lastWidth')
-        let widthResult = b:blarghmatey_maxWidth_lastWidth
-        unlet b:blarghmatey_maxWidth_lastWidth
-    else
-        let b:blarghmatey_maxWidth_lastWidth = winwidth(0)
-        let maxWidth = max(map(getline(1,'$'), 'len(v:val)'))
-        let g:blarghmatey#maxWidth#default = 200
-        let widthResult = min([ ( maxWidth + 5 ), g:blarghmatey#maxWidth#default ])
-    endif
-    execute 'vertical resize ' . widthResult
-endfunction
+"function! ExpandWidth()
+    "if exists('b:blarghmatey_maxWidth_lastWidth')
+        "let widthResult = b:blarghmatey_maxWidth_lastWidth
+        "unlet b:blarghmatey_maxWidth_lastWidth
+    "else
+        "let b:blarghmatey_maxWidth_lastWidth = winwidth(0)
+        "let maxWidth = max(map(getline(1,'$'), 'len(v:val)'))
+        "let g:blarghmatey#maxWidth#default = 200
+        "let widthResult = min([ ( maxWidth + 5 ), g:blarghmatey#maxWidth#default ])
+    "endif
+    "execute 'vertical resize ' . widthResult
+"endfunction
 
-function! ExpandHeight()
-    if exists('b:blarghmatey_maxHeight_lastHeight')
-        let heightResult = b:blarghmatey_maxHeight_lastHeight
-        unlet b:blarghmatey_maxHeight_lastHeight
-    else
-        let b:blarghmatey_maxHeight_lastHeight = winheight(0)
-        let fileLength = line('$') + 2
-        let maxHeight = &lines
-        let heightResult = min([maxHeight, fileLength])
-        if exists('g:blarghmatey#maxHeight#heightLimit')
-            let heightLimit = g:blarghmatey#maxHeight#heightLimit
-            let heightResult = min([heightResult, heightLimit])
-        endif
-    endif
-    execute 'resize ' . heightResult
-endfunction
+"function! ExpandHeight()
+    "if exists('b:blarghmatey_maxHeight_lastHeight')
+        "let heightResult = b:blarghmatey_maxHeight_lastHeight
+        "unlet b:blarghmatey_maxHeight_lastHeight
+    "else
+        "let b:blarghmatey_maxHeight_lastHeight = winheight(0)
+        "let fileLength = line('$') + 2
+        "let maxHeight = &lines
+        "let heightResult = min([maxHeight, fileLength])
+        "if exists('g:blarghmatey#maxHeight#heightLimit')
+            "let heightLimit = g:blarghmatey#maxHeight#heightLimit
+            "let heightResult = min([heightResult, heightLimit])
+        "endif
+    "endif
+    "execute 'resize ' . heightResult
+"endfunction
 
-:map <leader>m :call ExpandWidth()<CR>
-:map <leader>M :call ExpandHeight()<CR>
+":map <leader>m :call ExpandWidth()<CR>
+":map <leader>M :call ExpandHeight()<CR>
