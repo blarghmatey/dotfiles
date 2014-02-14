@@ -28,7 +28,7 @@ NeoBundle 'tpope/vim-surround' "Manage quotes, braces, etc around text
 NeoBundle 'flazz/vim-colorschemes' "Repository of color schemes for vim
 NeoBundle 'lepture/vim-jinja' "Jinja template syntax highlighting
 NeoBundle 'bling/vim-airline' "Fancy status line for vim
-NeoBundle 'shougo/neocomplcache' "Code auto completion
+"NeoBundle 'shougo/neocomplcache' "Code auto completion
 "NeoBundle 'shougo/unite.vim'
 NeoBundle 'majutsushi/tagbar' "Display and navigation of tags for a given buffer
 NeoBundle 'terryma/vim-multiple-cursors' "Multiple cursor selection like sublime
@@ -39,7 +39,7 @@ NeoBundle 'phleet/vim-mercenary' "Mercurial integration
 NeoBundle 'rking/ag.vim' "Fast file grepping, requires the silver searcher (ag) installed on the system
 NeoBundle 'jiangmiao/auto-pairs' "Auto close quotes, parentheses, braces, etc.
 NeoBundle 'tpope/vim-fugitive' "Git integration
-"NeoBundle 'Valloric/YouCompleteMe' "Multi-language code completion, requires executing install.sh after download
+NeoBundle 'Valloric/YouCompleteMe' "Multi-language code completion, requires executing install.sh after download
 NeoBundle 'xolox/vim-session', {'depends': 'xolox/vim-misc'} "Automatic session management
 NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://bitbucket.org/ns9tks/vim-l9'}
 NeoBundle 'othree/javascript-libraries-syntax.vim' "Syntax highlighting for various javascript libraries
@@ -53,7 +53,10 @@ NeoBundle 'mtth/scratch.vim' " Scratch buffer for taking notes or storing snippe
 NeoBundle 'tsaleh/vim-matchit'
 NeoBundle 'vim-scripts/loremipsum'
 NeoBundle 'blarghmatey/split-expander'
-
+NeoBundle 'fs111/pydoc.vim'
+NeoBundle 'sjl/gundo.vim'
+NeoBundle 'saltstack/salt-vim'
+NeoBundle 'kien/tabman.vim'
 
 " Other directives
 "
@@ -108,8 +111,10 @@ let g:ctrlp_use_caching = 0
 let g:syntastic_aggregate_errors = 1
 let g:use_emmet_complete_tag = 1
 let g:airline#extensions#tabline#enabled=1
+let g:tabman_toggle = '<leader>tt'
+let g:tabman_focus = '<leader>tf'
 
-" Platoform specific stuff goes here
+" Platform specific stuff goes here
 if has("unix")
   let s:uname = system("uname")
   if s:uname == "Darwin\n"
