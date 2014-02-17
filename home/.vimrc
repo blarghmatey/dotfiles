@@ -127,7 +127,7 @@ let g:ycm_semantic_triggers =  {
 \   'ruby' : ['.', '::'],
 \   'lua' : ['.', ':'],
 \   'erlang' : [':'],
-\   'css' : [':', '']
+\   'css' : [':', ': ', ' '],
 \ }
 
 " Platform specific stuff goes here
