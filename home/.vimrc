@@ -113,6 +113,22 @@ let g:use_emmet_complete_tag = 1
 let g:airline#extensions#tabline#enabled=1
 let g:tabman_toggle = '<leader>tt'
 let g:tabman_focus = '<leader>tf'
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_add_preview_to_completeopt = 1
+let g:ycm_semantic_triggers =  {
+\   'c' : ['->', '.'],
+\   'objc' : ['->', '.'],
+\   'ocaml' : ['.', '#'],
+\   'cpp,objcpp' : ['->', '.', '::'],
+\   'perl' : ['->'],
+\   'php' : ['->', '::'],
+\   'cs,java,javascript,d,vim,python,perl6,scala,vb,elixir,go' : ['.'],
+\   'ruby' : ['.', '::'],
+\   'lua' : ['.', ':'],
+\   'erlang' : [':'],
+\   'css' : [':', '']
+\ }
 
 " Platform specific stuff goes here
 if has("unix")
