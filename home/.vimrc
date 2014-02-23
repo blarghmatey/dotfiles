@@ -57,6 +57,8 @@ NeoBundle 'fs111/pydoc.vim'
 NeoBundle 'sjl/gundo.vim'
 NeoBundle 'saltstack/salt-vim'
 NeoBundle 'kien/tabman.vim'
+NeoBundle 'Rykka/colorv.vim'
+NeoBundle 'mattn/webapi-vim'
 
 " Other directives
 "
@@ -138,8 +140,8 @@ if has("unix")
   endif
 endif
 
-colorscheme ir_black
-set background=dark
+"colorscheme ir_black
+"set background=dark
 
 " Filetype conditional settings
 augroup vimrc
