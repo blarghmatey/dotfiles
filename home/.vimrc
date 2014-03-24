@@ -168,6 +168,7 @@ augroup end
 " Quickly open a scratch buffer
 :map <leader>s :Scratch<CR>
 :map <leader>S :ScratchSelection<CR>
+:nmap <leader>sd :%s/\s\+$//g<CR> " Delete trailing whitespace from file
 
 
 " Abbreviations
