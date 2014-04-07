@@ -1,0 +1,82 @@
+[user]
+	name = Tobias Macey
+	email = tmacey@gazelle.com
+[core]
+  pager = less -FRSX
+  whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eolexcludesfile = /Users/tmacey/.gitignore_global
+	excludesfile = /Users/tmacey/.gitignore_global
+
+[alias]
+  co = checkout
+  ci = commit
+  st = status
+  pick = cherry-pick
+  ph = push origin HEAD
+  cm = checkout master
+  plh = pull origin HEAD
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+  w = whatchanged
+  search = "!f() { query=\"$1\"; shift; git log -S\"$query\" \"$@\"; }; f \"$@\""
+  b = branch
+  rdiff = diff --summary head
+  stat = diff --summary head
+  mt = mergetool
+  rc = rebase --continue
+  pr = pull-request
+  f = fetch
+  smc = log --author=\"Allen Madsen\" --grep=\"$1\"
+
+[mirror]
+  summary = true
+
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+  ui = true
+  pager = true
+
+[color "branch"]
+  current = green reverse
+  local = green
+  remote = cyan
+
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = red
+
+[merge]
+  keepBackup = false
+  tool = perforce4merge
+
+[mergetool "perforce4merge"]
+  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$BASE" "$PWD/$REMOTE" "$PWD/$LOCAL" "$PWD/$MERGED"
+  keepTemporaries = false
+  trustExitCode = false
+  keepBackup = false
+[diff]
+  tool = perforce4diff
+[difftool "perforce4diff"]
+  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$LOCAL" "$PWD/$REMOTE"
+[rerere]
+  enabled = 1
+[mergetool]
+  keepBackup = false
+[gc]
+  rerereresolved = 256
+[difftool "sourcetree"]
+	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+	trustExitCode = true
+[push]
+	default = simple
