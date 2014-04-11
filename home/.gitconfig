@@ -1,6 +1,6 @@
 [user]
 	name = Tobias Macey
-	email = tmacey@gazelle.com
+
 [core]
   pager = less -FRSX
   whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eolexcludesfile = /Users/tmacey/.gitignore_global
@@ -53,30 +53,14 @@
   changed = green
   untracked = red
 
-[merge]
-  keepBackup = false
-  tool = perforce4merge
-
-[mergetool "perforce4merge"]
-  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$BASE" "$PWD/$REMOTE" "$PWD/$LOCAL" "$PWD/$MERGED"
-  keepTemporaries = false
-  trustExitCode = false
-  keepBackup = false
-[diff]
-  tool = perforce4diff
-[difftool "perforce4diff"]
-  cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge "$PWD/$LOCAL" "$PWD/$REMOTE"
 [rerere]
   enabled = 1
+
 [mergetool]
   keepBackup = false
+
 [gc]
   rerereresolved = 256
-[difftool "sourcetree"]
-	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
-	trustExitCode = true
+
 [push]
 	default = simple
