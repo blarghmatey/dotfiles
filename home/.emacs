@@ -1,6 +1,12 @@
+;;; package ---- Summary
+;;; Commentary:
+
+;;; Code:
 (require 'package)
 (add-to-list 'package-archives
    '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (setq mac-option-key-is-meta nil)
 (setq mac-command-key-is-meta t)
 (setq mac-command-modifier 'meta)
@@ -20,6 +26,14 @@
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
 (desktop-save-mode 1) ; Save/restore opened buffers
+(company-mode 1) ; Enable company mode
+(flycheck-mode 1) ; Enable flycheck
+
+;; Use regex searches by default.
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -33,9 +47,8 @@
 ;;  (setq load-path (append load-path '("~/path/to/dir/containing/this-file")))
 ;;  (require 'pje-customizations)
 
-(require 'package)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+
+
 
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -100,7 +113,7 @@
 ;(add-hook 'html-mode-hook (lambda () (auto-fill-mode -1)))
 
 ;; Make tab width 4 chars
-(setq default-tab-width 4)
+(setq tab-width 4)
 
 ;; Turn on column number mode
 ;(column-number-mode)
@@ -115,20 +128,16 @@
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 
-;; Use regex searches by default.
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "\C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
+
 
 ;; Show matching parens
 (show-paren-mode)
 
 ;; Allow direct edting of permission flags in wdired
-(setq wdired-allow-to-change-permissions t)
+(defvar wdired-allow-to-change-permissions t)
 
 ;; Don't ask to delete excess versions of files
-(setq trim-versions-without-asking t)
+(defvar trim-versions-without-asking t)
 
 (require 'ido)
 (ido-mode t)
@@ -143,12 +152,12 @@
     (let ((text (delete-and-extract-region start end)))
       (insert (funcall func text)))))
 
-(defun hex-region (start end)
+(defun urlencode (start end)
   "urlencode the region between START and END in current buffer."
   (interactive "r")
   (func-region start end #'url-hexify-string))
 
-(defun unhex-region (start end)
+(defun urldecode (start end)
   "de-urlencode the region between START and END in current buffer."
   (interactive "r")
   (func-region start end #'url-unhex-string))
@@ -280,6 +289,8 @@ creating buffers."
   "*Format for \\[insert-time] (c.f. 'format-time-string').")
 (defvar insert-date-format "%Y/%m/%d"
   "*Format for \\[insert-date] (c.f. 'format-time-string').")
+(defvar insert-date-time-format "%Y/%m/%d %X"
+  "*Format for \\[insert-date-time] (c.f. 'format-date-time-string').")
 
 (defun insert-date ()
   "Insert the current date"
@@ -296,10 +307,9 @@ creating buffers."
 (defun insert-date-time ()
   "Insert the current date and time"
   (interactive "*")
-  (insert (format-time-string insert-date-format
-			      (current-time)
-			      insert-time-format
-			      (current-time))))
+  (insert (format-time-string insert-date-time-format
+							  (current-time))))
+
 ;;
 ;; Common Lisp
 ;;
@@ -340,7 +350,7 @@ creating buffers."
 ;;
 
 (when window-system
-  (blink-cursor-mode 1))
+  (blink-cursor-mode 0))
 
 ;;
 ;; OS-Dependant Config
@@ -465,7 +475,8 @@ version control if file is under version control."
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil)))))))
 
-(setq quote-xml
+(defvar quote-xml
    [?\C-s ?< ?\C-m ?\C-b ?\" ?\C-e ?\" ?\S-  ?+ ?\C-a ?\C-n])
 
-;;(provide 'pje-customizations)
+(provide '.emacs)
+;;; .emacs ends here
