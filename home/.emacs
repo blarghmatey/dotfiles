@@ -6,11 +6,11 @@
 (add-to-list 'package-archives
    '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(setq mac-option-key-is-meta nil)
-(setq mac-command-key-is-meta t)
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
+   '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(defvar mac-option-key-is-meta nil)
+(defvar mac-command-key-is-meta t)
+(defvar mac-command-modifier 'meta)
+(defvar mac-option-modifier nil)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -26,14 +26,60 @@
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
 (desktop-save-mode 1) ; Save/restore opened buffers
-(company-mode 1) ; Enable company mode
-(flycheck-mode 1) ; Enable flycheck
+
+;; Enable minor modes for given major modes
+(defun default-minor-modes ()
+  "Enable several minor modes that are generally applicable."
+  (interactive)
+  (flycheck-mode)
+  (company-mode)
+  (helm-mode)
+  (rainbow-mode)
+  )
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'web-mode 'default-minor-modes)
+(add-hook 'python-mode-hook 'default-minor-modes)
+(add-hook 'ruby-mode-hook 'default-minor-modes)
+(add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
+(add-hook 'javascript-mode-hook 'default-minor-modes)
+(add-hook 'javascript-mode-hook 'tern-mode)
+
 
 ;; Use regex searches by default.
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "\C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
+
+;; Set font and font-size
+(set-face-attribute 'default nil :font "Source Code Pro-9")
+
+;; Autoindent open-*-lines
+(defvar newline-and-indent t
+  "Modify the behavior of the open-*-line functions to cause them to autoindent.")
+
+;; Behave like vi's o command
+(defun open-next-line (arg)
+  "Move to the next line and then opens a line.
+  See also `newline-and-indent'."
+  (interactive "p")
+  (end-of-line)
+  (open-line arg)
+  (next-line 1)
+  (when newline-and-indent
+    (indent-according-to-mode)))
+(global-set-key (kbd "C-o") 'open-next-line)
+;; Behave like vi's O command
+(defun open-previous-line (arg)
+  "Open a new line before the current one. 
+  See also `newline-and-indent'."
+  (interactive "p")
+  (beginning-of-line)
+  (open-line arg)
+  (when newline-and-indent
+    (indent-according-to-mode)))
+(global-set-key (kbd "M-o") 'open-previous-line)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -62,6 +108,7 @@
 (electric-indent-mode +1)
 
 (defun enable_flyspell ()
+  "Set flyspell dictionary."
   (ispell-change-dictionary "american")
   (flyspell-prog-mode))
 
@@ -91,7 +138,7 @@
 
 ;; Ruby
 ;; Don't indent parameters inside parens more than normal 
-(setq ruby-deep-indent-paren nil)
+(defvar ruby-deep-indent-paren nil)
 ;; enable subword (CamelCase-aware) just in ruby-mode
 (add-hook 'ruby-mode-hook 'subword-mode)
 
@@ -147,25 +194,25 @@
 ;     (add-to-list 'grep-find-ignored-files "*.class")))
 
 (defun func-region (start end func)
-  "run a function over the region between START and END in current buffer."
+  "Run a function over the region between START and END in current buffer."
   (save-excursion
     (let ((text (delete-and-extract-region start end)))
       (insert (funcall func text)))))
 
 (defun urlencode (start end)
-  "urlencode the region between START and END in current buffer."
+  "Urlencode the region between START and END in current buffer."
   (interactive "r")
   (func-region start end #'url-hexify-string))
 
 (defun urldecode (start end)
-  "de-urlencode the region between START and END in current buffer."
+  "De-urlencode the region between START and END in current buffer."
   (interactive "r")
   (func-region start end #'url-unhex-string))
 
 ;; XML pretty printer, requires nXML mode
 (defun pretty-print-xml-region (begin end)
-  "Pretty format XML markup in region. You need to have nxml-mode
-http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
+  "Pretty format XML markup in selected region.  You need to have 'nxml-mode'
+\(http://www.emacswiki.org/cgi-bin/wiki/NxmlMode) installed to do
 this.  The function inserts linebreaks to separate tags that have
 nothing but whitespace between them.  It then indents the markup
 by using nxml's indentation rules."
@@ -177,22 +224,6 @@ by using nxml's indentation rules."
       (backward-char) (insert "\n"))
     (indent-region begin end))
   (message "Ah, much better!"))
-
-(defun func-region (start end func)
-  "run a function over the region between START and END in current buffer."
-  (save-excursion
-    (let ((text (delete-and-extract-region start end)))
-      (insert (funcall func text)))))
-
-(defun hex-region (start end)
-  "urlencode the region between START and END in current buffer."
-  (interactive "r")
-  (func-region start end #'url-hexify-string))
-
-(defun unhex-region (start end)
-  "de-urlencode the region between START and END in current buffer."
-  (interactive "r")
-  (func-region start end #'url-unhex-string))
 
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
@@ -228,7 +259,7 @@ by using nxml's indentation rules."
 (defadvice switch-to-buffer (before existing-buffer 
 				    activate compile)
   "When interactive, switch to existing buffers only,
-unless given a prefix argument. Prevents unintentionally
+unless given a prefix argument.  Prevents unintentionally
 creating buffers."
   (interactive
    (list (read-buffer "Switch to buffer:"
