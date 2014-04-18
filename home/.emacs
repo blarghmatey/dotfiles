@@ -7,10 +7,26 @@
    '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
    '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(defvar mac-option-key-is-meta nil)
-(defvar mac-command-key-is-meta t)
-(defvar mac-command-modifier 'meta)
-(defvar mac-option-modifier nil)
+(setq mac-option-key-is-meta nil)
+(setq mac-command-key-is-meta t)
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
+(package-initialize)
+
+(defun save-package-list ()
+  (with-temp-file "~/Dropbox/.emacs-packages-installed.el" (insert (format "(defvar my-packages '%s)" package-activated-list))))
+
+(add-hook 'kill-emacs-hook 'save-package-list)
+
+(load-file "~/Dropbox/.emacs-packages-installed.el")
+
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
+
+
+(elscreen-start)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
