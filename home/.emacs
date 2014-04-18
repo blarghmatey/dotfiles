@@ -24,7 +24,9 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
+(global-auto-revert-mode t)
 
+(autoload 'dirtree "dirtree" "Add directory to tree view" t)
 (elscreen-start)
 
 (custom-set-variables
@@ -32,7 +34,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("ef365fdcbc9da94cb2558f66e6af18fb2c09b1a843e9db83b71b056e9c5bb8b0" default))))
+ '(custom-safe-themes (quote ("ef365fdcbc9da94cb2558f66e6af18fb2c09b1a843e9db83b71b056e9c5bb8b0" default)))
+ '(speedbar-indentation-width 2)
+ '(speedbar-show-unknown-files t)
+ '(speedbar-smart-directory-expand-flag nil)
+ '(speedbar-use-images nil)
+ '(sr-speedbar-right-side nil)
+ '(sr-speedbar-skip-other-window-p t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -48,11 +56,11 @@
   "Enable several minor modes that are generally applicable."
   (interactive)
   (flycheck-mode)
-  (company-mode)
   (helm-mode)
   (rainbow-mode)
   )
 (add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'program-mode-hook 'default-minor-modes)
 (add-hook 'web-mode 'default-minor-modes)
 (add-hook 'python-mode-hook 'default-minor-modes)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
@@ -60,6 +68,8 @@
 (add-hook 'javascript-mode-hook 'default-minor-modes)
 (add-hook 'javascript-mode-hook 'tern-mode)
 
+(add-hook 'after-init-hook 'global-company-mode)
+(setq company-idle-delay t)
 
 ;; Use regex searches by default.
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
@@ -182,7 +192,7 @@
 ;(column-number-mode)
 
 ;; Don't minimize emacs with Ctrl-Z
-(global-unset-key (kbd "C-z"))
+;; (global-unset-key (kbd "C-z"))
 
 ;; Completion that uses many different methods to find options.
 ;(global-set-key (kbd "M-/") 'hippie-expand)
