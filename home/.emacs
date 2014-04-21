@@ -24,9 +24,11 @@
   (when (not (package-installed-p p))
     (package-install p)))
 
+(global-whitespace-mode)
+(setq whitespace-style
+  '(face trailing empty lines-tail tab-mark))
 (global-auto-revert-mode t)
-
-(autoload 'dirtree "dirtree" "Add directory to tree view" t)
+;; (powerline-center-theme)
 (elscreen-start)
 
 (custom-set-variables
@@ -50,6 +52,7 @@
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
 (desktop-save-mode 1) ; Save/restore opened buffers
+(setq-default indent-tabs-mode nil)
 
 ;; Enable minor modes for given major modes
 (defun default-minor-modes ()
@@ -58,15 +61,14 @@
   (flycheck-mode)
   (helm-mode)
   (rainbow-mode)
-  )
+)
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'program-mode-hook 'default-minor-modes)
 (add-hook 'web-mode 'default-minor-modes)
 (add-hook 'python-mode-hook 'default-minor-modes)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
-(add-hook 'javascript-mode-hook 'default-minor-modes)
-(add-hook 'javascript-mode-hook 'tern-mode)
+(add-hook 'javascript-mode-hook 'default-minor-modes 'tern-mode)
 
 (add-hook 'after-init-hook 'global-company-mode)
 (setq company-idle-delay t)
