@@ -30,6 +30,12 @@
 (setq sr-speedbar-right-side nil)
 (setq sr-speedbar-skip-other-window-p t)
 
+(setq ac-auto-show-menu t)
+(setq ac-expand-on-auto-complete t)
+(setq ac-show-menu-immediately-on-auto-complete t)
+(setq ac-fuzzy-enable t)
+(ac-set-trigger-key "TAB")
+
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
 (desktop-save-mode 1) ; Save/restore opened buffers
