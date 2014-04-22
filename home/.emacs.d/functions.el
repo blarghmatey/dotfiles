@@ -110,6 +110,7 @@ version control if file is under version control."
   (interactive)
   (helm-mode)
   (rainbow-mode)
+  (turn-on-ctags-auto-update-mode)
   )
 
 ;; Behave like vi's o command
