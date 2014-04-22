@@ -28,15 +28,18 @@
 (setq whitespace-style
   '(face trailing empty lines-tail tab-mark))
 (global-auto-revert-mode t)
-;; (powerline-center-theme)
 (elscreen-start)
+(powerline-center-theme)
+(setq ido-enable-flex-matching t)
+
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("ef365fdcbc9da94cb2558f66e6af18fb2c09b1a843e9db83b71b056e9c5bb8b0" default)))
+ '(custom-safe-themes (quote ("0e121ff9bef6937edad8dfcff7d88ac9219b5b4f1570fd1702e546a80dba0832" "96b023d1a6e796bab61b472f4379656bcac67b3af4e565d9fb1b6b7989356610" "ef365fdcbc9da94cb2558f66e6af18fb2c09b1a843e9db83b71b056e9c5bb8b0" default)))
  '(speedbar-indentation-width 2)
  '(speedbar-show-unknown-files t)
  '(speedbar-smart-directory-expand-flag nil)
@@ -58,7 +61,6 @@
 (defun default-minor-modes ()
   "Enable several minor modes that are generally applicable."
   (interactive)
-  (flycheck-mode)
   (helm-mode)
   (rainbow-mode)
 )
@@ -68,9 +70,13 @@
 (add-hook 'python-mode-hook 'default-minor-modes)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
-(add-hook 'javascript-mode-hook 'default-minor-modes 'tern-mode)
+(add-hook 'js-mode-hook 'default-minor-modes)
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(add-hook 'js2-mode-hook 'default-minor-modes)
+(add-hook 'js2-mode-hook 'tern-mode)
 
 (add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'after-init-hook 'global-flycheck-mode)
 (setq company-idle-delay t)
 
 ;; Use regex searches by default.
@@ -79,6 +85,8 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
+(global-set-key (kbd "M-X") 'smex)
+;; (icy-mode 1)
 ;; Set font and font-size
 (set-face-attribute 'default nil :font "Source Code Pro-9")
 
@@ -165,7 +173,7 @@
 (electric-pair-mode +1)
 
 ;; Ruby
-;; Don't indent parameters inside parens more than normal 
+;; Don't indent parameters inside parens more than normal
 (defvar ruby-deep-indent-paren nil)
 ;; enable subword (CamelCase-aware) just in ruby-mode
 (add-hook 'ruby-mode-hook 'subword-mode)
