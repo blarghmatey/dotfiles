@@ -102,7 +102,8 @@ version control if file is under version control."
 
 (defun save-package-list ()
   "Save the list of installed packages to a file."
-  (with-temp-file "~/Dropbox/.emacs-packages-installed.el" (insert (format "(defvar my-packages '%s)" package-activated-list))))
+  (with-temp-file "~/Dropbox/.emacs-packages-installed.el"
+    (insert (format "(defvar my-packages '%s)" package-activated-list))))
 
 ;; Enable minor modes for given major modes
 (defun default-minor-modes ()
@@ -126,7 +127,7 @@ version control if file is under version control."
 
 ;; Behave like vi's O command
 (defun open-previous-line (arg)
-  "Open a new line before the current one. 
+  "Open a new line before the current one.
   See also `newline-and-indent'."
   (interactive "p")
   (beginning-of-line)
