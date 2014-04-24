@@ -36,7 +36,8 @@
 (add-hook 'js2-mode-hook 'default-minor-modes)
 (add-hook 'js2-mode-hook 'tern-mode)
 
-(add-hook 'after-init-hook 'global-company-mode)
+;; (add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'after-init-hook 'global-auto-complete-mode) ;; Trying out auto-complete instead of company
 (add-hook 'after-init-hook 'global-flycheck-mode)
 
 (when (not package-archive-contents)

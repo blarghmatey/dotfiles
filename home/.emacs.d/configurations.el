@@ -34,7 +34,7 @@
 (setq ac-expand-on-auto-complete t)
 (setq ac-show-menu-immediately-on-auto-complete t)
 (setq ac-fuzzy-enable t)
-(ac-set-trigger-key "TAB")
+;; (ac-set-trigger-key "TAB")
 
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
@@ -74,6 +74,8 @@
 (global-set-key (kbd "C-c g") 'google)
 
 (global-set-key (kbd "C-c D")  'delete-file-and-buffer)
+
+(global-set-key (kbd "C-x :") 'goto-line)
 
 (global-set-key (kbd "C-M-z") 'indent-defun)
 ; (global-set-key (kbd "C-c o") 'open-with)
