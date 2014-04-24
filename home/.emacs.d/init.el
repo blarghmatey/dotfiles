@@ -29,6 +29,7 @@
 (add-hook 'python-mode-hook 'default-minor-modes)
 (add-hook 'python-mode-hook (lambda () (interactive) (column-marker-1 80)))
 (add-hook 'python-mode-hook 'pyvenv-mode)
+(add-hook 'python-mode-hook 'jedi:setup)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
 (add-hook 'js-mode-hook 'default-minor-modes)

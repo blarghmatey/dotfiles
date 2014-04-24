@@ -34,7 +34,6 @@
 (setq ac-expand-on-auto-complete t)
 (setq ac-show-menu-immediately-on-auto-complete t)
 (setq ac-fuzzy-enable t)
-;; (ac-set-trigger-key "TAB")
 
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
