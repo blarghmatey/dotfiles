@@ -36,16 +36,18 @@
 (add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (add-hook 'js2-mode-hook 'default-minor-modes)
 (add-hook 'js2-mode-hook 'tern-mode)
+;; enable subword (CamelCase-aware) just in ruby-mode
+(add-hook 'ruby-mode-hook 'subword-mode)
 
 ;; (add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'after-init-hook 'global-auto-complete-mode) ;; Trying out auto-complete instead of company
 (add-hook 'after-init-hook 'global-flycheck-mode)
 
+(add-hook 'after-init-hook (lambda () (load-theme 'dakrone)))
+
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-;; enable subword (CamelCase-aware) just in ruby-mode
-(add-hook 'ruby-mode-hook 'subword-mode)
 
 (provide 'init)
 ;;; init.el ends here
