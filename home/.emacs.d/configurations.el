@@ -35,6 +35,8 @@
 (setq ac-show-menu-immediately-on-auto-complete t)
 (setq ac-fuzzy-enable t)
 
+(setq jedi:complete-on-dot t)
+
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
 (desktop-save-mode 1) ; Save/restore opened buffers
@@ -91,6 +93,8 @@
 
 (global-set-key (kbd "M-s t") 'sr-speedbar-toggle)
 (global-set-key (kbd "M-s f") 'sr-speedbar-select-window)
+
+(global-set-key (kbd "C-x :") 'goto-line)
 ;; Show matching parens
 (show-paren-mode)
 
