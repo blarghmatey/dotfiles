@@ -18,6 +18,7 @@
 
 (setq ido-enable-flex-matching t)
 
+(setq whitespace-line-column 150)
 (setq whitespace-style
       '(face trailing empty lines-tail tab-mark))
 
@@ -36,14 +37,15 @@
 (setq ac-fuzzy-enable t)
 
 (setq jedi:complete-on-dot t)
+(setq jedi:setup-keys t)
 
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
-(desktop-save-mode 1) ; Save/restore opened buffers
+(desktop-save-mode 1) ; Offer to save/restore open buffers
+
 (setq-default indent-tabs-mode nil)
 
 (setq company-idle-delay t)
-
 
 (set-face-attribute 'default nil :font "Source Code Pro-9")
 
