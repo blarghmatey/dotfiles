@@ -32,6 +32,8 @@
 (add-hook 'python-mode-hook 'jedi-setup-venv)
 (add-hook 'python-mode-hook 'jedi:setup)
 (add-hook 'python-mode-hook (lambda () (setq whitespace-line-column 80)))
+(add-hook 'python-mode-hook 'flycheck-python-setup)
+(add-hook 'python-mode-hook 'py-autopep8-before-save)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
 (add-hook 'js-mode-hook 'default-minor-modes)
