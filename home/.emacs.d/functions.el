@@ -276,3 +276,14 @@ is considered to be a project root."
   "Activates the virtualenv of the current buffer."
   (let ((project-name (project-name buffer-file-name)))
     (when project-name (venv-workon project-name))))
+
+(defun flycheck-python-set-executables ()
+  (let ((exec-path (python-shell-calculate-exec-path)))
+    (setq flycheck-python-pylint-executable (executable-find "pylint")
+          flycheck-python-flake8-executable (executable-find "flake8")))
+  ;; Force Flycheck mode on
+  (flycheck-mode))
+
+(defun flycheck-python-setup ()
+  (add-hook 'hack-local-variables-hook #'flyspell-python-set-executables
+            nil 'local))
