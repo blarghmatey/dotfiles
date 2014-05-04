@@ -102,6 +102,7 @@ version control if file is under version control."
 
 (defun save-package-list ()
   "Save the list of installed packages to a file."
+  (interactive)
   (with-temp-file "~/Dropbox/.emacs-packages-installed.el"
     (insert (format "(defvar my-packages '%s)" package-activated-list))))
 
