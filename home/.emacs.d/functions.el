@@ -286,5 +286,13 @@ is considered to be a project root."
   (flycheck-mode))
 
 (defun flycheck-python-setup ()
-  (add-hook 'hack-local-variables-hook #'flyspell-python-set-executables
+  (add-hook 'hack-local-variables-hook 'flycheck-python-set-executables
             nil 'local))
+
+(defun load-packages ()
+  "Load package list and install missing packages."
+  (interactive)
+  (load-file "~/Dropbox/.emacs-packages-installed.el")
+  (dolist (p my-packages)
+    (when (not (package-installed-p p))
+      (package-install p))))
