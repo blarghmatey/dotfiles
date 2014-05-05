@@ -23,6 +23,7 @@
       '(face trailing empty lines-tail tab-mark))
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.sls\\'" . yaml-mode))
 
 (setq speedbar-indentation-width 2)
 (setq speedbar-show-unknown-files t)
@@ -74,6 +75,7 @@
 (global-set-key (kbd "C-x p") 'other-window-backward)
 
 (global-set-key (kbd "C-c t") 'visit-ansi-term)
+(global-set-key (kbd "C-c P") 'run-python)
 (global-set-key (kbd "C-c g") 'google)
 
 (global-set-key (kbd "C-c D")  'delete-file-and-buffer)
@@ -93,8 +95,8 @@
 (global-set-key (kbd "C-o") 'open-next-line)
 (global-set-key (kbd "M-o") 'open-previous-line)
 
-(global-set-key (kbd "M-s t") 'sr-speedbar-toggle)
-(global-set-key (kbd "M-s f") 'sr-speedbar-select-window)
+(global-set-key (kbd "M-s t") 'speedbar)
+(global-set-key (kbd "M-s f") 'speedbar-get-focus)
 
 (global-set-key (kbd "C-x :") 'goto-line)
 ;; Show matching parens
