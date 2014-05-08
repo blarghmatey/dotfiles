@@ -6,7 +6,7 @@
 ;;; Code:
 (load-file "~/.emacs.d/functions.el")
 (load-file "~/.emacs.d/configurations.el")
-;; (setq load-path (append load-path '("~/.emacs.d/"))
+(setq load-path (append load-path '("~/.emacs.d/plugins")))
 ;; (require 'functions)
 ;; (require 'configurations)
 
@@ -23,22 +23,31 @@
 (powerline-center-theme)
 (autoload 'turn-on-ctags-auto-update-mode "ctags-update" "turn on `ctags-auto-update-mode'." t)
 
+
+(autoload 'pymacs-apply "pymacs")
+(autoload 'pymacs-call "pymacs")
+(autoload 'pymacs-eval "pymacs" nil t)
+(autoload 'pymacs-exec "pymacs" nil t)
+(autoload 'pymacs-load "pymacs" nil t)
+(autoload 'pymacs-autoload "pymacs")
+
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'program-mode-hook 'default-minor-modes)
 (add-hook 'web-mode 'default-minor-modes)
-(add-hook 'python-mode-hook 'default-minor-modes)
-(add-hook 'python-mode-hook (lambda () (interactive) (column-marker-1 80)))
 (add-hook 'python-mode-hook 'pyvenv-mode)
 (add-hook 'python-mode-hook 'jedi-setup-venv)
 (add-hook 'python-mode-hook 'jedi:setup)
-(add-hook 'python-mode-hook (lambda () (setq whitespace-line-column 80)))
 (add-hook 'python-mode-hook 'flycheck-python-setup)
+(add-hook 'python-mode-hook 'fci-mode)
+(add-hook 'python-mode-hook (lambda ()
+                              (require 'pymacs)
+                              (pymacs-load "ropemacs" "rope-")))
+(add-hook 'python-mode-hook 'default-minor-modes)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
-(add-hook 'js-mode-hook 'default-minor-modes)
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
-(add-hook 'js2-mode-hook 'default-minor-modes)
 (add-hook 'js2-mode-hook 'tern-mode)
+(add-hook 'js2-mode-hook 'tern-ac-setup)
+(add-hook 'js2-mode-hook 'default-minor-modes)
 ;; enable subword (CamelCase-aware) just in ruby-mode
 (add-hook 'ruby-mode-hook 'subword-mode)
 
