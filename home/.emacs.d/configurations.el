@@ -8,6 +8,9 @@
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier nil)
 
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin"))
+(setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin")))
+
 ;;; Package manager settings
 (require 'package)
 (add-to-list 'package-archives
@@ -21,6 +24,8 @@
 (setq whitespace-line-column 150)
 (setq whitespace-style
       '(face trailing empty lines-tail tab-mark))
+
+(setq fci-rule-column 80)
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.sls\\'" . yaml-mode))
@@ -39,6 +44,10 @@
 
 (setq jedi:complete-on-dot t)
 (setq jedi:setup-keys t)
+
+(setq ropemacs-global-prefix "M-p")
+
+(setq tern-ac-dot-complete t)
 
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
