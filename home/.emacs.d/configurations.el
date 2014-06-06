@@ -139,5 +139,33 @@
 (when window-system
   (blink-cursor-mode 0))
 
+;;;
+;;; Polymode definitions
+;;;
+
+(defcustom pm-host/yaml
+  (pm-chunkmode "yaml" :mode 'yaml-mode)
+  "Yaml host chunkmode."
+  :group 'hostmodes
+  :type 'object)
+
+(defcustom pm-inner/jinja2
+  (pm-bchunkmode "jinja2" :mode 'jinja2-mode)
+  "Jinja2 inner chunkmode."
+  :group 'innermodes
+  :type 'object)
+
+(defcustom pm-poly/saltstack
+  (pm-polymode-one "saltstack"
+                   :hostmode 'pm-host/yaml
+                   :innermode 'pm-inner/jinja2)
+  "SaltStack polymode."
+  :group 'polymodes
+  :group 'object)
+
+(define-polymode poly-saltstack-mode pm-poly/saltstack)
+
+;;; end Polymode
+
 (provide 'configurations)
 ;;; configurations.el ends here

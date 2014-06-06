@@ -247,9 +247,6 @@ by using nxml's indentation rules."
   (insert (format-time-string insert-date-time-format
                               (current-time))))
 
-(provide 'functions)
-;;; functions.el ends here
-
 (defun project-directory (buffer-name)
   "Returns the root directory of the project that contains the
 given buffer. Any directory with a .git or .jedi file/directory
@@ -296,3 +293,6 @@ is considered to be a project root."
   (dolist (p my-packages)
     (when (not (package-installed-p p))
       (package-install p))))
+
+(provide 'functions)
+;;; functions.el ends here
