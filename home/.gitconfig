@@ -3,8 +3,8 @@
 
 [core]
   pager = less -FRSX
-  whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eolexcludesfile = /Users/tmacey/.gitignore_global
-	excludesfile = /Users/tmacey/.gitignore_global
+  whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eolexcludesfile = ~/.gitignore_global
+  excludesfile = ~/.gitignore_global
 
 [alias]
   co = checkout
@@ -24,7 +24,7 @@
   rc = rebase --continue
   pr = pull-request
   f = fetch
-  smc = log --author=\"Allen Madsen\" --grep=\"$1\"
+  smc = log --author=\"Tobias Macey\" --grep=\"$1\"
 
 [mirror]
   summary = true
@@ -63,4 +63,13 @@
   rerereresolved = 256
 
 [push]
-	default = simple
+  default = simple
+
+[merge]
+  tool = kdiff3
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

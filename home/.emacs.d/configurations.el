@@ -54,6 +54,7 @@
 (desktop-save-mode 1) ; Offer to save/restore open buffers
 
 (setq-default indent-tabs-mode nil)
+;; (setq-default tab-always-indent nil)
 
 (setq company-idle-delay t)
 
@@ -63,9 +64,9 @@
   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
 
 
-(scroll-bar-mode -1)
+;; (scroll-bar-mode -1)
 (tool-bar-mode -1)
-(electric-indent-mode +1)
+(electric-indent-mode nil)
 
 ; To automatically enter closing pair when opening pair is entered
 (electric-pair-mode +1)
@@ -108,6 +109,7 @@
 (global-set-key (kbd "M-s f") 'speedbar-get-focus)
 
 (global-set-key (kbd "C-x :") 'goto-line)
+(global-set-key (kbd "RET") 'newline-and-indent)
 ;; Show matching parens
 (show-paren-mode)
 
