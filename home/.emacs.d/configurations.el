@@ -145,29 +145,50 @@
 ;;; Polymode definitions
 ;;;
 
-(defcustom pm-host/yaml
-  (pm-chunkmode "yaml" :mode 'yaml-mode)
-  "Yaml host chunkmode."
-  :group 'hostmodes
-  :type 'object)
+;; (defcustom pm-host/yaml
+;;   (pm-bchunkmode "yaml" :mode 'yaml-mode)
+;;   "Yaml host chunkmode."
+;;   :group 'hostmodes
+;;   :type 'object)
 
-(defcustom pm-inner/jinja2
-  (pm-bchunkmode "jinja2" :mode 'jinja2-mode)
-  "Jinja2 inner chunkmode."
-  :group 'innermodes
-  :type 'object)
+;; (defcustom pm-inner/jinja2
+;;   (pm-bchunkmode "jinja2" :mode 'jinja2-mode)
+;;   "Jinja2 inner chunkmode."
+;;   :group 'innermodes
+;;   :type 'object)
 
-(defcustom pm-poly/saltstack
-  (pm-polymode-one "saltstack"
-                   :hostmode 'pm-host/yaml
-                   :innermode 'pm-inner/jinja2)
-  "SaltStack polymode."
-  :group 'polymodes
-  :group 'object)
+;; (defcustom pm-poly/saltstack
+;;   (pm-polymode-one "saltstack"
+;;                    :hostmode 'pm-host/yaml
+;;                    :innermode 'pm-inner/jinja2)
+;;   "SaltStack polymode."
+;;   :group 'polymodes
+;;   :group 'object)
 
-(define-polymode poly-saltstack-mode pm-poly/saltstack)
+;; (define-polymode poly-saltstack-mode pm-poly/saltstack)
 
 ;;; end Polymode
+
+;;;
+;;; MMM-Mode definitions
+;;;
+
+(require 'mmm-mode)
+
+(setq mmm-submode-decoration-level 1)
+
+(mmm-add-classes
+ '((saltstack-mode
+    :submode jinja2-mode
+    :face mmm-declaration-submode-face
+    :front "{[{%].*?"
+    :front-offset -2
+    :back "[}%]}"
+    :back-offset 2)))
+
+(mmm-add-mode-ext-class 'yaml-mode "\\.sls\\'" 'saltstack-mode)
+(setq mmm-global-mode t)
+;;; end MMM-Mode
 
 (provide 'configurations)
 ;;; configurations.el ends here
