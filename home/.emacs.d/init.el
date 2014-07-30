@@ -4,17 +4,23 @@
 ;;; configurations.el as well as providing initialization routines
 
 ;;; Code:
+
 (load-file "~/.emacs.d/functions.el")
+(add-hook 'after-init-hook 'load-packages)
+
 (load-file "~/.emacs.d/configurations.el")
 (setq load-path (append load-path '("~/.emacs.d/plugins")))
 ;; (require 'functions)
 ;; (require 'configurations)
-
 (when (not package-archive-contents)
   (package-refresh-contents))
 
+(load-file "~/Dropbox/.emacs-packages-installed.el")
+(dolist (p my-packages)
+  (when (not (package-installed-p p))
+    (package-install p)))
+
 (add-hook 'kill-emacs-hook 'save-package-list)
-(add-hook 'after-init-hook 'load-packages)
 
 (projectile-global-mode)
 (global-whitespace-mode)
@@ -24,13 +30,6 @@
 (autoload 'turn-on-ctags-auto-update-mode "ctags-update" "turn on `ctags-auto-update-mode'." t)
 
 
-(autoload 'pymacs-apply "pymacs")
-(autoload 'pymacs-call "pymacs")
-(autoload 'pymacs-eval "pymacs" nil t)
-(autoload 'pymacs-exec "pymacs" nil t)
-(autoload 'pymacs-load "pymacs" nil t)
-(autoload 'pymacs-autoload "pymacs")
-
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'program-mode-hook 'default-minor-modes)
 (add-hook 'web-mode 'default-minor-modes)
@@ -39,9 +38,6 @@
 (add-hook 'python-mode-hook 'jedi:setup)
 (add-hook 'python-mode-hook 'flycheck-python-setup)
 (add-hook 'python-mode-hook 'fci-mode)
-(add-hook 'python-mode-hook (lambda ()
-                              (require 'pymacs)
-                              (pymacs-load "ropemacs" "rope-")))
 (add-hook 'python-mode-hook 'default-minor-modes)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)

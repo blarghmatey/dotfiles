@@ -45,8 +45,6 @@
 (setq jedi:complete-on-dot t)
 (setq jedi:setup-keys t)
 
-(setq ropemacs-global-prefix "M-p")
-
 (setq tern-ac-dot-complete t)
 
 (global-linum-mode 1) ; Show line numbers
@@ -140,34 +138,6 @@
 
 (when window-system
   (blink-cursor-mode 0))
-
-;;;
-;;; Polymode definitions
-;;;
-
-;; (defcustom pm-host/yaml
-;;   (pm-bchunkmode "yaml" :mode 'yaml-mode)
-;;   "Yaml host chunkmode."
-;;   :group 'hostmodes
-;;   :type 'object)
-
-;; (defcustom pm-inner/jinja2
-;;   (pm-bchunkmode "jinja2" :mode 'jinja2-mode)
-;;   "Jinja2 inner chunkmode."
-;;   :group 'innermodes
-;;   :type 'object)
-
-;; (defcustom pm-poly/saltstack
-;;   (pm-polymode-one "saltstack"
-;;                    :hostmode 'pm-host/yaml
-;;                    :innermode 'pm-inner/jinja2)
-;;   "SaltStack polymode."
-;;   :group 'polymodes
-;;   :group 'object)
-
-;; (define-polymode poly-saltstack-mode pm-poly/saltstack)
-
-;;; end Polymode
 
 ;;;
 ;;; MMM-Mode definitions
