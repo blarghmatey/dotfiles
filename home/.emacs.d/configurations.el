@@ -51,8 +51,10 @@
 (column-number-mode 1) ; Show cursor column position
 (desktop-save-mode 1) ; Offer to save/restore open buffers
 
+(setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 ;; (setq-default tab-always-indent nil)
+;; (setq indent-line-function 'insert-tab)
 
 (setq company-idle-delay t)
 
@@ -64,7 +66,6 @@
 
 ;; (scroll-bar-mode -1)
 (tool-bar-mode -1)
-(electric-indent-mode nil)
 
 ; To automatically enter closing pair when opening pair is entered
 (electric-pair-mode +1)
@@ -72,8 +73,6 @@
 ;; Ruby
 ;; Don't indent parameters inside parens more than normal
 (defvar ruby-deep-indent-paren nil)
-
-(setq tab-width 4)
 
 ;; Font size
 (define-key global-map (kbd "C-+") 'text-scale-increase)
@@ -120,6 +119,9 @@
 (require 'ido)
 (ido-mode t)
 
+(require 'evil)
+(evil-mode 1)
+
 ;;
 ;; Unscroll support
 ;;
@@ -147,14 +149,30 @@
 
 (setq mmm-submode-decoration-level 1)
 
-(mmm-add-classes
- '((saltstack-mode
-    :submode jinja2-mode
-    :face mmm-declaration-submode-face
-    :front "{[{%].*?"
-    :front-offset -2
-    :back "[}%]}"
-    :back-offset 2)))
+(mmm-add-classes '((saltstack-mode
+                  :submode jinja2-mode
+                  :face mmm-declaration-submode-face
+                  :front "{[{%].+?"
+                  :front-offset -3
+                  :back "[}%]}"
+                  :back-offset 2)))
+
+
+;; (mmm-add-group 'saltstack-mode
+;;                '((saltstack-mode-jinja
+;;                   :submode jinja2-mode
+;;                   :face mmm-declaration-submode-face
+;;                   :front "{[{%].+?"
+;;                   :front-offset -2
+;;                   :back "[}%]}"
+;;                   :back-offset 2)
+;;                (saltstack-mode-python
+;;                   :submode python-mode
+;;                   :face mmm-declaration-submode-face
+;;                   :front "salt[[].+?"
+;;                   :front-offset -5
+;;                   :back ")"
+;;                   :back-offset 1)))
 
 (mmm-add-mode-ext-class 'yaml-mode "\\.sls\\'" 'saltstack-mode)
 (setq mmm-global-mode t)

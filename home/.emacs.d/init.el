@@ -10,6 +10,7 @@
 
 (load-file "~/.emacs.d/configurations.el")
 (setq load-path (append load-path '("~/.emacs.d/plugins")))
+(load-file "~/.emacs.d/evil-elscreen.el")
 ;; (require 'functions)
 ;; (require 'configurations)
 (when (not package-archive-contents)
@@ -29,7 +30,31 @@
 (powerline-center-theme)
 (autoload 'turn-on-ctags-auto-update-mode "ctags-update" "turn on `ctags-auto-update-mode'." t)
 
+;; CSS color values colored by themselves
 
+;; http://news.ycombinator.com/item?id=873541
+
+
+
+(defvar hexcolor-keywords
+  '(("#[abcdef[:digit:]]+"
+     (0 (put-text-property
+         (match-beginning 0)
+         (match-end 0)
+         'face (list :background
+                     (match-string-no-properties 0)))))))
+
+(defun hexcolor-add-to-font-lock ()
+  (font-lock-add-keywords nil hexcolor-keywords))
+
+(add-hook 'css-mode-hook 'hexcolor-add-to-font-lock)
+
+;; (autoload 'pymacs-apply "pymacs")
+;; (autoload 'pymacs-call "pymacs")
+;; (autoload 'pymacs-eval "pymacs" nil t)
+;; (autoload 'pymacs-exec "pymacs" nil t)
+;; (autoload 'pymacs-load "pymacs" nil t)
+;; (autoload 'pymacs-autoload "pymacs")
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'program-mode-hook 'default-minor-modes)
 (add-hook 'web-mode 'default-minor-modes)
