@@ -56,6 +56,10 @@
 ;; (setq-default tab-always-indent nil)
 ;; (setq indent-line-function 'insert-tab)
 
+(require 'workgroups2)
+(setq wg-session-file "~/.emacs.d/.emacs_workgroups")
+(setq wg-session-load-on-start 1)
+
 (setq company-idle-delay t)
 
 (set-face-attribute 'default nil :font "Source Code Pro-9")
@@ -119,6 +123,7 @@
 (require 'ido)
 (ido-mode t)
 
+(setq evil-toggle-key "C-`")
 (require 'evil)
 (evil-mode 1)
 
