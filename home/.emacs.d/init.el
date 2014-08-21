@@ -10,7 +10,6 @@
 
 (load-file "~/.emacs.d/configurations.el")
 (setq load-path (append load-path '("~/.emacs.d/plugins")))
-(load-file "~/.emacs.d/evil-elscreen.el")
 ;; (require 'functions)
 ;; (require 'configurations)
 (when (not package-archive-contents)
@@ -22,6 +21,9 @@
     (package-install p)))
 
 (add-hook 'kill-emacs-hook 'save-package-list)
+(add-hook 'kill-emacs-hook 'wg-save-session)
+
+(workgroups-mode 1)
 
 (projectile-global-mode)
 (global-whitespace-mode)
@@ -66,8 +68,11 @@
 (add-hook 'python-mode-hook 'default-minor-modes)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
-(add-hook 'js2-mode-hook 'tern-mode)
-(add-hook 'js2-mode-hook 'tern-ac-setup)
+(add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+(eval-after-load 'tern
+  '(progn
+     (require 'tern-auto-complete)
+     (tern-ac-setup)))
 (add-hook 'js2-mode-hook 'default-minor-modes)
 ;; enable subword (CamelCase-aware) just in ruby-mode
 (add-hook 'ruby-mode-hook 'subword-mode)
