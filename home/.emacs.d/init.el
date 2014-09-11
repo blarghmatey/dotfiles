@@ -1,5 +1,5 @@
 ;;; package --- Summary
-;;; Commentary:
+;; Commentary:
 ;;; This file pulls in the functions and variables from functions.el and
 ;;; configurations.el as well as providing initialization routines
 
@@ -21,7 +21,8 @@
     (package-install p)))
 
 (add-hook 'kill-emacs-hook 'save-package-list)
-(add-hook 'kill-emacs-hook 'wg-save-session)
+(add-hook 'kill-emacs-hook 'elscreen-store)
+;; (add-hook 'kill-emacs-hook 'wg-save-session)
 
 (workgroups-mode 1)
 
@@ -29,25 +30,13 @@
 (global-whitespace-mode)
 (global-auto-revert-mode t)
 (elscreen-start)
+(elscreen-restore)
 (powerline-center-theme)
 (autoload 'turn-on-ctags-auto-update-mode "ctags-update" "turn on `ctags-auto-update-mode'." t)
 
 ;; CSS color values colored by themselves
 
 ;; http://news.ycombinator.com/item?id=873541
-
-
-
-(defvar hexcolor-keywords
-  '(("#[abcdef[:digit:]]+"
-     (0 (put-text-property
-         (match-beginning 0)
-         (match-end 0)
-         'face (list :background
-                     (match-string-no-properties 0)))))))
-
-(defun hexcolor-add-to-font-lock ()
-  (font-lock-add-keywords nil hexcolor-keywords))
 
 (add-hook 'css-mode-hook 'hexcolor-add-to-font-lock)
 

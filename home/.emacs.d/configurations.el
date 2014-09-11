@@ -146,6 +146,21 @@
 (when window-system
   (blink-cursor-mode 0))
 
+(defvar emacs-configuration-directory
+    "~/.emacs.d/"
+    "The directory where the emacs configuration files are stored.")
+(defvar elscreen-tab-configuration-store-filename
+    (concat emacs-configuration-directory ".elscreen")
+    "The file where the elscreen tab configuration is stored.")
+
+
+(defvar hexcolor-keywords
+  '(("#[abcdef[:digit:]]+"
+     (0 (put-text-property
+         (match-beginning 0)
+         (match-end 0)
+         'face (list :background
+                     (match-string-no-properties 0)))))))
 ;;;
 ;;; MMM-Mode definitions
 ;;;
