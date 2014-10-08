@@ -45,20 +45,22 @@
 (setq jedi:complete-on-dot t)
 (setq jedi:setup-keys t)
 
+(setq tern-command (cons (executable-find "tern") '()))
 (setq tern-ac-dot-complete t)
 
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
-(desktop-save-mode 1) ; Offer to save/restore open buffers
 
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 ;; (setq-default tab-always-indent nil)
 ;; (setq indent-line-function 'insert-tab)
 
-(require 'workgroups2)
-(setq wg-session-file "~/.emacs.d/.emacs_workgroups")
-(setq wg-session-load-on-start 1)
+(require 'nose)
+
+;; (require 'workgroups2)
+;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
+;; (setq wg-session-load-on-start 1)
 
 (setq company-idle-delay t)
 
@@ -197,6 +199,13 @@
 (mmm-add-mode-ext-class 'yaml-mode "\\.sls\\'" 'saltstack-mode)
 (setq mmm-global-mode t)
 ;;; end MMM-Mode
+
+;; Jedi Mode
+(defvar jedi-config:with-virtualenv nil
+"Set to non-nil to point to a particular virtualenv.")
+;; Variables to help find the project root
+(defvar jedi-config:vcs-root-sentinel ".git")
+(defvar jedi-config:python-module-sentinel "__init__.py")
 
 (provide 'configurations)
 ;;; configurations.el ends here

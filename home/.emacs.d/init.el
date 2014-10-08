@@ -24,15 +24,19 @@
 (add-hook 'kill-emacs-hook 'elscreen-store)
 ;; (add-hook 'kill-emacs-hook 'wg-save-session)
 
-(workgroups-mode 1)
+;; (workgroups-mode 1)
 
 (projectile-global-mode)
 (global-whitespace-mode)
 (global-auto-revert-mode t)
 (elscreen-start)
 (elscreen-restore)
+(run-with-timer 0 (* 30 60) 'elscreen-store)
 (powerline-center-theme)
 (autoload 'turn-on-ctags-auto-update-mode "ctags-update" "turn on `ctags-auto-update-mode'." t)
+
+(require 'jedi)
+(add-to-list 'ac-sources 'ac-source-jedi-direct)
 
 ;; CSS color values colored by themselves
 
@@ -55,6 +59,8 @@
 (add-hook 'python-mode-hook 'flycheck-python-setup)
 (add-hook 'python-mode-hook 'fci-mode)
 (add-hook 'python-mode-hook 'default-minor-modes)
+(add-hook 'python-mode-hook 'nose-mode)
+(add-hook 'python-mode-hook 'jedi-config:setup-server-args)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
 (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
@@ -70,8 +76,7 @@
 (add-hook 'after-init-hook 'global-auto-complete-mode) ;; Trying out auto-complete instead of company
 (add-hook 'after-init-hook 'global-flycheck-mode)
 
-;; (add-hook 'after-init-hook (lambda () (load-theme 'dakrone)))
-(color-theme-monokai)
+(lush-theme)
 
 (provide 'init)
 ;;; init.el ends here
