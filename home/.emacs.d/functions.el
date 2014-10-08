@@ -255,6 +255,7 @@ is considered to be a project root."
   (let ((root-dir (file-name-directory buffer-name)))
     (while (and root-dir
                 (not (file-exists-p (concat root-dir ".git")))
+                (not (file-exists-p (concat root-dir ".hg")))
                 (not (file-exists-p (concat root-dir ".jedi"))))
       (setq root-dir
             (if (equal root-dir "/")
@@ -269,11 +270,6 @@ is considered to be a project root."
         (file-name-nondirectory
          (directory-file-name root-dir))
       nil)))
-
-(defun jedi-setup-venv ()
-  "Activates the virtualenv of the current buffer."
-  (let ((project-name (project-name buffer-file-name)))
-    (when project-name (venv-workon project-name))))
 
 (defun flycheck-python-set-executables ()
   (let ((exec-path (python-shell-calculate-exec-path)))
@@ -324,6 +320,43 @@ is considered to be a project root."
 
 (defun hexcolor-add-to-font-lock ()
   (font-lock-add-keywords nil hexcolor-keywords))
+
+
+;; Jedi Mode
+;; Function to find project root given a buffer
+(defun get-project-root (buf repo-type init-file)
+  (vc-find-root (expand-file-name (buffer-file-name buf)) repo-type))
+
+(defvar jedi-config:find-root-function 'get-project-root)
+
+;; And call this on initialization
+(defun current-buffer-project-root ()
+  (funcall jedi-config:find-root-function
+           (current-buffer)
+           jedi-config:vcs-root-sentinel
+           jedi-config:python-module-sentinel))
+
+(defun jedi-config:setup-server-args ()
+  ;; little helper macro for building the arglist
+  (defmacro add-args (arg-list arg-name arg-value)
+    `(setq ,arg-list (append ,arg-list (list ,arg-name ,arg-value))))
+  ;; and now define the args
+  (let ((project-root (current-buffer-project-root)))
+
+    (make-local-variable 'jedi:server-args)
+
+    (when project-root
+      (message (format "Adding system path: %s" project-root))
+      (add-args jedi:server-args "--sys-path" project-root))
+
+    (when jedi-config:with-virtualenv
+      (message (format "Adding virtualenv: %s" jedi-config:with-virtualenv))
+      (add-args jedi:server-args "--virtual-env" jedi-config:with-virtualenv))))
+
+(defun jedi-setup-venv ()
+  "Activates the virtualenv of the current buffer."
+  (let ((project-name (project-name buffer-file-name)))
+    (when project-name (venv-workon project-name))))
 
 (provide 'functions)
 ;;; functions.el ends here
