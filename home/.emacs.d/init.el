@@ -5,11 +5,20 @@
 
 ;;; Code:
 
+;;; Package manager settings
+(require 'package)
+(add-to-list 'package-archives
+   '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+   '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(package-initialize)
+
+(setq load-path (append load-path '("~/.emacs.d/plugins")))
 (load-file "~/.emacs.d/functions.el")
 (add-hook 'after-init-hook 'load-packages)
 
 (load-file "~/.emacs.d/configurations.el")
-(setq load-path (append load-path '("~/.emacs.d/plugins")))
+
 ;; (require 'functions)
 ;; (require 'configurations)
 (when (not package-archive-contents)
@@ -29,10 +38,13 @@
 (projectile-global-mode)
 (global-whitespace-mode)
 (global-auto-revert-mode t)
+(global-evil-leader-mode)
+(evil-leader/set-leader "'")
+(evil-mode 1)
 (elscreen-start)
-(elscreen-restore)
-(run-with-timer 0 (* 30 60) 'elscreen-store)
-(powerline-center-theme)
+;; (elscreen-restore)
+(run-with-timer 300 (* 10 60) 'elscreen-store)
+;; (powerline-center-theme)
 (autoload 'turn-on-ctags-auto-update-mode "ctags-update" "turn on `ctags-auto-update-mode'." t)
 
 (require 'jedi)
@@ -60,10 +72,14 @@
 (add-hook 'python-mode-hook 'fci-mode)
 (add-hook 'python-mode-hook 'default-minor-modes)
 (add-hook 'python-mode-hook 'nose-mode)
-(add-hook 'python-mode-hook 'jedi-config:setup-server-args)
 (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
 (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+(add-hook 'window-configuration-change-hook
+          (lambda ()
+            (when (equal major-mode 'python-mode)
+              (jedi-setup-venv)
+              (jedi:setup))))
 (eval-after-load 'tern
   '(progn
      (require 'tern-auto-complete)

@@ -11,14 +11,6 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin"))
 (setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin")))
 
-;;; Package manager settings
-(require 'package)
-(add-to-list 'package-archives
-   '("melpa" . "http://melpa.milkbox.net/packages/") t)
-(add-to-list 'package-archives
-   '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(package-initialize)
-
 (setq ido-enable-flex-matching t)
 
 (setq whitespace-line-column 150)
@@ -48,6 +40,8 @@
 (setq tern-command (cons (executable-find "tern") '()))
 (setq tern-ac-dot-complete t)
 
+(setq frame-title-format "emacs - %f -- %m")
+
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
 
@@ -75,6 +69,8 @@
 
 ; To automatically enter closing pair when opening pair is entered
 (electric-pair-mode +1)
+
+(electric-indent-mode -1)
 
 ;; Ruby
 ;; Don't indent parameters inside parens more than normal
@@ -126,8 +122,6 @@
 (ido-mode t)
 
 (setq evil-toggle-key "C-`")
-(require 'evil)
-(evil-mode 1)
 
 ;;
 ;; Unscroll support
@@ -147,6 +141,7 @@
 
 (when window-system
   (blink-cursor-mode 0))
+(set-cursor-color "#ffffff")
 
 (defvar emacs-configuration-directory
     "~/.emacs.d/"
