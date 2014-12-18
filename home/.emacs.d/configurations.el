@@ -29,26 +29,32 @@
 (setq sr-speedbar-right-side nil)
 (setq sr-speedbar-skip-other-window-p t)
 
-(setq ac-auto-show-menu t)
-(setq ac-expand-on-auto-complete t)
-(setq ac-show-menu-immediately-on-auto-complete t)
-(setq ac-fuzzy-enable t)
+;; (setq ac-auto-show-menu t)
+;; (setq ac-expand-on-auto-complete t)
+;; (setq ac-show-menu-immediately-on-auto-complete t)
+;; (setq ac-fuzzy-enable t)
 
 (setq jedi:complete-on-dot t)
 (setq jedi:setup-keys t)
 
-(setq tern-command (cons (executable-find "tern") '()))
-(setq tern-ac-dot-complete t)
+(setq flycheck-flake8-maximum-complexity 10)
 
-(setq frame-title-format "emacs - %f -- %m")
+(setq tern-command (cons (executable-find "tern") '()))
+;; (setq tern-ac-dot-complete t)
+
+(setq frame-title-format "emacs -- %f -- %m")
 
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
 
+(setq scroll-step 1)
+(setq scroll-conservatively 10000)
+(setq auto-window-vscroll nil)
+
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
-;; (setq-default tab-always-indent nil)
-;; (setq indent-line-function 'insert-tab)
+(setq-default tab-always-indent 'complete)
+(setq indent-line-function 'indent-for-tab-command)
 
 (require 'nose)
 
@@ -56,12 +62,12 @@
 ;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
 ;; (setq wg-session-load-on-start 1)
 
-(setq company-idle-delay t)
+(setq company-idle-delay 0)
 
 (set-face-attribute 'default nil :font "Source Code Pro-9")
 
-(defvar newline-and-indent t
-  "Modify the behavior of the open-*-line functions to cause them to autoindent.")
+;; (defvar newline-and-indent t
+;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
 
 
 ;; (scroll-bar-mode -1)
@@ -70,7 +76,7 @@
 ; To automatically enter closing pair when opening pair is entered
 (electric-pair-mode +1)
 
-(electric-indent-mode -1)
+(electric-indent-mode 1)
 
 ;; Ruby
 ;; Don't indent parameters inside parens more than normal
@@ -107,8 +113,11 @@
 (global-set-key (kbd "M-s t") 'speedbar)
 (global-set-key (kbd "M-s f") 'speedbar-get-focus)
 
-(global-set-key (kbd "C-x :") 'goto-line)
 (global-set-key (kbd "RET") 'newline-and-indent)
+
+(global-set-key (kbd "C-c C-.") 'anaconda-mode-goto)
+(global-set-key (kbd "C-c C-,") 'anaconda-nav-pop-marker)
+(global-set-key (kbd "C-c /") 'anaconda-mode-usages)
 ;; Show matching parens
 (show-paren-mode)
 
