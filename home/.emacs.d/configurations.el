@@ -54,6 +54,7 @@
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-always-indent 'complete)
+(setq-default major-mode 'text-mode)
 (setq indent-line-function 'indent-for-tab-command)
 
 (require 'nose)
@@ -62,7 +63,9 @@
 ;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
 ;; (setq wg-session-load-on-start 1)
 
-(setq company-idle-delay 0)
+(setq company-idle-delay 5)
+(setq company-auto-complete nil)
+(setq company-minimum-prefix-length 0)
 
 (set-face-attribute 'default nil :font "Source Code Pro-9")
 
@@ -118,6 +121,7 @@
 (global-set-key (kbd "C-c C-.") 'anaconda-mode-goto)
 (global-set-key (kbd "C-c C-,") 'anaconda-nav-pop-marker)
 (global-set-key (kbd "C-c /") 'anaconda-mode-usages)
+
 ;; Show matching parens
 (show-paren-mode)
 
@@ -170,8 +174,6 @@
 ;;;
 ;;; MMM-Mode definitions
 ;;;
-
-(require 'mmm-mode)
 
 (setq mmm-submode-decoration-level 1)
 
