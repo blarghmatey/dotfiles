@@ -3,10 +3,11 @@
 ;;; This file contains configuration options for various packages and editor options
 
 ;;; Code:
-(setq mac-option-key-is-meta nil)
-(setq mac-command-key-is-meta t)
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
+;; (setq mac-option-key-is-meta nil)
+;; (setq mac-command-key-is-meta t)
+;; (setq mac-command-modifier 'meta)
+;; (setq mac-option-modifier nil)
+;; (setq debug-on-error t)
 
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin"))
 (setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin")))
@@ -34,8 +35,8 @@
 ;; (setq ac-show-menu-immediately-on-auto-complete t)
 ;; (setq ac-fuzzy-enable t)
 
-(setq jedi:complete-on-dot t)
-(setq jedi:setup-keys t)
+;; (setq jedi:complete-on-dot t)
+;; (setq jedi:setup-keys t)
 
 (setq flycheck-flake8-maximum-complexity 10)
 
@@ -50,6 +51,8 @@
 (setq scroll-step 1)
 (setq scroll-conservatively 10000)
 (setq auto-window-vscroll nil)
+(setq split-width-threshold 80)
+(setq split-height-threshold nil)
 
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
@@ -57,17 +60,19 @@
 (setq-default major-mode 'text-mode)
 (setq indent-line-function 'indent-for-tab-command)
 
+(setq magit-last-seen-setup-instructions "1.4.0")
+
 (require 'nose)
 
 ;; (require 'workgroups2)
 ;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
 ;; (setq wg-session-load-on-start 1)
 
-(setq company-idle-delay 5)
+(setq company-idle-delay 1)
 (setq company-auto-complete nil)
 (setq company-minimum-prefix-length 0)
 
-(set-face-attribute 'default nil :font "Source Code Pro-9")
+(set-face-attribute 'default nil :font "Source Code Pro-7")
 
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
@@ -135,6 +140,10 @@
 (ido-mode t)
 
 (setq evil-toggle-key "C-`")
+;; (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+;; (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
+;; (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
+;; (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
 
 ;;
 ;; Unscroll support
@@ -203,7 +212,7 @@
 ;;                   :back-offset 1)))
 
 (mmm-add-mode-ext-class 'yaml-mode "\\.sls\\'" 'saltstack-mode)
-(setq mmm-global-mode t)
+(setq mmm-global-mode nil)
 ;;; end MMM-Mode
 
 ;; Jedi Mode

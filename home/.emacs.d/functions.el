@@ -110,7 +110,6 @@ version control if file is under version control."
 (defun default-minor-modes ()
   "Enable several minor modes that are generally applicable."
   (interactive)
-  (helm-mode 1)
   (rainbow-mode 1)
   (eldoc-mode 1)
   (turn-on-ctags-auto-update-mode)
@@ -260,7 +259,10 @@ is considered to be a project root."
     (while (and root-dir
                 (not (file-exists-p (concat root-dir ".git")))
                 (not (file-exists-p (concat root-dir ".hg")))
-                (not (file-exists-p (concat root-dir ".jedi"))))
+                (not (file-exists-p (concat root-dir ".jedi")))
+                (not (file-exists-p (concat root-dir ".dir-locals.el")))
+                (not (file-exists-p (concat root-dir ".env")))
+                (not (file-exists-p (concat root-dir "requirements.txt"))))
       (setq root-dir
             (if (equal root-dir "/")
                 nil
