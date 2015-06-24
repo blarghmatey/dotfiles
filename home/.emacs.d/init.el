@@ -50,7 +50,6 @@
 (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
 (elscreen-start)
 (run-with-timer 300 (* 5 60) 'elscreen-store)
-;; (powerline-center-theme)
 (autoload 'turn-on-ctags-auto-update-mode "ctags-update" "turn on `ctags-auto-update-mode'." t)
 
 ;; (require 'jedi)
@@ -82,12 +81,12 @@
               (setup-venv)
               (anaconda-mode-virtualenv-has-been-changed)
               )))
-(eval-after-load 'tern
-  '(progn
-     ;; (require 'tern-auto-complete)
-     ;; (tern-ac-setup)
-     (company-tern)
-     ))
+;; (eval-after-load 'tern
+;;   '(progn
+;;      ;; (require 'tern-auto-complete)
+;;      ;; (tern-ac-setup)
+;;      (company-tern)
+;;      ))
 (add-hook 'js2-mode-hook 'default-minor-modes)
 (add-hook 'yaml-mode-hook 'default-minor-modes)
 (add-hook 'yaml-mode-hook (lambda () (setq-local electric-indent-mode -1)))

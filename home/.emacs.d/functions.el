@@ -100,11 +100,15 @@ version control if file is under version control."
           (set-visited-file-name new-name)
           (set-buffer-modified-p nil)))))))
 
+(defun installed-packages ()
+  "Return the list of installed packages."
+  (mapcar 'car package-alist))
+
 (defun save-package-list ()
   "Save the list of installed packages to a file."
   (interactive)
   (with-temp-file "~/Dropbox/.emacs-packages-installed.el"
-    (insert (format "(defvar my-packages '%s)" package-activated-list))))
+    (insert (format "(defvar my-packages '%s)" 'installed-packages))))
 
 ;; Enable minor modes for given major modes
 (defun default-minor-modes ()
@@ -299,14 +303,14 @@ is considered to be a project root."
 (defun elscreen-store ()
     "Store the elscreen tab configuration."
     (interactive)
-    (if (desktop-save emacs-configuration-directory)
+    (if (desktop-save (concat emacs-configuration-directory "elscreen-desktop") t)
         (with-temp-file elscreen-tab-configuration-store-filename
             (insert (prin1-to-string (elscreen-get-screen-to-name-alist))))))
 
 (defun elscreen-restore ()
     "Restore the elscreen tab configuration."
     (interactive)
-    (if (desktop-read)
+    (if (desktop-read (concat emacs-configuration-directory "elscreen-desktop"))
         (let ((screens (reverse
                         (read
                          (with-temp-buffer
