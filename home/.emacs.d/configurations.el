@@ -52,9 +52,11 @@
 (setq scroll-conservatively 10000)
 (setq auto-window-vscroll nil)
 (setq split-width-threshold 80)
-(setq split-height-threshold nil)
+(setq split-height-threshold 80)
+(setq apropos-sort-by-scores t)
 
 (setq-default tab-width 4)
+(setq default-tab-width 4)
 (setq-default indent-tabs-mode nil)
 (setq-default tab-always-indent 'complete)
 (setq-default major-mode 'text-mode)
@@ -73,7 +75,7 @@
 (setq company-minimum-prefix-length 0)
 
 ;(set-face-attribute 'default nil :font "Source Code Pro-7")  ;; Had to use default-frame-alist to fix crash when starting in daemon mode
-(setq default-frame-alist '((font . "Source Code Pro-7")))
+(setq default-frame-alist '((font . "Hack-7")))
 
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
@@ -93,7 +95,7 @@
 
 ;; Font size
 (define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
+(define-key global-map (kbd "C-_") 'text-scale-decrease)
 
 (global-set-key (kbd "C-c e") 'eval-and-replace)
 (global-set-key (kbd "C-x p") 'other-window-backward)
@@ -104,7 +106,7 @@
 
 (global-set-key (kbd "C-c D")  'delete-file-and-buffer)
 
-(global-set-key (kbd "C-x :") 'goto-line)
+(global-set-key (kbd "C-:") 'goto-line)
 
 (global-set-key (kbd "C-M-z") 'indent-defun)
 ; (global-set-key (kbd "C-c o") 'open-with)
@@ -128,6 +130,25 @@
 (global-set-key (kbd "C-c C-,") 'anaconda-nav-pop-marker)
 (global-set-key (kbd "C-c /") 'anaconda-mode-usages)
 
+(global-set-key (kbd "C-c l") `windmove-right)
+(global-set-key (kbd "C-c k") `windmove-up)
+(global-set-key (kbd "C-c j") `windmove-down)
+(global-set-key (kbd "C-c h") `windmove-left)
+
+(global-set-key (kbd "C->") 'indent-rigidly-right-to-tab-stop)
+(global-set-key (kbd "C-<") 'indent-rigidly-left-to-tab-stop)
+
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
+
+(global-set-key (kbd "C-c L") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+
+(global-set-key (kbd "C-c C-\"") 'insert-pair)
+(global-set-key (kbd "C-c C-'") 'insert-pair)
+(global-set-key (kbd "C-c C-(") 'insert-pair)
+(global-set-key (kbd "C-c C-{") 'insert-pair)
+(global-set-key (kbd "C-c C-[") 'insert-pair)
+(setq org-log-done t)
 ;; Show matching parens
 (show-paren-mode)
 
@@ -140,12 +161,12 @@
 (require 'ido)
 (ido-mode t)
 
-(setq evil-toggle-key "C-`")
+;; (setq evil-toggle-key "C-`")
 ;; (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
 ;; (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
 ;; (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
 ;; (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-(setq evil-default-cursor "white")
+;; (setq evil-default-cursor "white")
 
 ;;
 ;; Unscroll support

@@ -108,7 +108,7 @@ version control if file is under version control."
   "Save the list of installed packages to a file."
   (interactive)
   (with-temp-file "~/Dropbox/.emacs-packages-installed.el"
-    (insert (format "(defvar my-packages '%s)" 'installed-packages))))
+    (insert (format "(defvar my-packages '%s)" (installed-packages)))))
 
 ;; Enable minor modes for given major modes
 (defun default-minor-modes ()
@@ -203,22 +203,22 @@ by using nxml's indentation rules."
         (setq unscroll-hscroll (window-hscroll)))))
 
 (defadvice scroll-up (before remember-for-unscroll
-			     activate compile)
+                 activate compile)
   "Remember where we started from, for 'unscroll'."
   (unscroll-maybe-remember))
 
 (defadvice scroll-down (before remember-for-unscroll
-			     activate compile)
+                 activate compile)
   "Remember where we started from, for 'unscroll'."
   (unscroll-maybe-remember))
 
 (defadvice scroll-left (before remember-for-unscroll
-			     activate compile)
+                 activate compile)
   "Remember where we started from, for 'unscroll'."
   (unscroll-maybe-remember))
 
 (defadvice scroll-right (before remember-for-unscroll
-			     activate compile)
+                 activate compile)
   "Remember where we started from, for 'unscroll'."
   (unscroll-maybe-remember))
 
@@ -266,6 +266,8 @@ is considered to be a project root."
                 (not (file-exists-p (concat root-dir ".jedi")))
                 (not (file-exists-p (concat root-dir ".dir-locals.el")))
                 (not (file-exists-p (concat root-dir ".env")))
+                (not (file-exists-p (concat root-dir ".envrc")))
+                (not (file-exists-p (concat root-dir ".dir-locals.el")))
                 (not (file-exists-p (concat root-dir "requirements.txt"))))
       (setq root-dir
             (if (equal root-dir "/")
@@ -370,7 +372,8 @@ is considered to be a project root."
   (let ((project-title (project-name buffer-file-name)))
     (let ((members (member-ignore-case project-title (venv-get-candidates-dir "/home/tmacey/.virtualenvs"))))
       (if members
-        (venv-workon project-title)))))
+          (ignore-errors
+            (venv-workon project-title))))))
 
 (defun python-2to3 ()
   "Convert current buffer from python 2 to python 3.
