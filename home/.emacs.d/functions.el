@@ -329,6 +329,10 @@ is considered to be a project root."
                     (setq buffers (cdr buffers)))
                 (setq screens (cdr screens))))))
 
+(defun toggle-fold-to-signatures ()
+  "Toggle selective display of only function signatures."
+  (interactive)
+  (set-selective-display (if selective-display nil 1)))
 
 (defun hexcolor-add-to-font-lock ()
   (font-lock-add-keywords nil hexcolor-keywords))

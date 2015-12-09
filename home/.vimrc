@@ -108,6 +108,7 @@ let g:neobundle#types#git#default_protocol = 'ssh'
 let g:neocomplcache_enable_at_startup = 1
 let g:used_javascript_libs = 'jquery,angularjs'
 let g:pymode_rope_completion = 0
+let g:pymode_rope = 0
 let g:pymode_virtualenv = 1
 let g:pymode_folding = 0
 let g:syntastic_check_on_open = 1

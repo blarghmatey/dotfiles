@@ -12,6 +12,10 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin"))
 (setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin")))
 
+(helm-autoresize-mode 1)
+(setq helm-mode-fuzzy-match 1)
+(setq helm-completion-in-region-fuzzy-match 1)
+
 (setq ido-enable-flex-matching t)
 
 (setq whitespace-line-column 150)
@@ -22,6 +26,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.sls\\'" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.html" . web-mode))
 
 (setq speedbar-indentation-width 2)
 (setq speedbar-show-unknown-files t)
@@ -38,7 +43,11 @@
 ;; (setq jedi:complete-on-dot t)
 ;; (setq jedi:setup-keys t)
 
-(setq flycheck-flake8-maximum-complexity 10)
+(setq flycheck-flake8-maximum-complexity 15)
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(javascript-jshint)))
+(flycheck-add-mode 'javascript-eslint 'js2-mode)
 
 (setq tern-command (cons (executable-find "tern") '()))
 ;; (setq tern-ac-dot-complete t)
@@ -75,7 +84,7 @@
 (setq company-minimum-prefix-length 0)
 
 ;(set-face-attribute 'default nil :font "Source Code Pro-7")  ;; Had to use default-frame-alist to fix crash when starting in daemon mode
-(setq default-frame-alist '((font . "Hack-7")))
+(setq default-frame-alist '((font . "Hack-7") (load-theme 'material)))
 
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
@@ -148,6 +157,13 @@
 (global-set-key (kbd "C-c C-(") 'insert-pair)
 (global-set-key (kbd "C-c C-{") 'insert-pair)
 (global-set-key (kbd "C-c C-[") 'insert-pair)
+
+(global-set-key (kbd "C-M-p") 'projectile-find-file)
+
+(global-set-key (kbd "M-%") 'query-replace-regexp)
+
+(global-set-key [f1] 'toggle-fold-to-signatures)
+
 (setq org-log-done t)
 ;; Show matching parens
 (show-paren-mode)
