@@ -14,10 +14,13 @@
 
 (require 'helm)
 (helm-autoresize-mode 1)
-(setq helm-mode-fuzzy-match 1)
-(setq helm-completion-in-region-fuzzy-match 1)
+(setq helm-mode-fuzzy-match t)
+(setq helm-completion-in-region-fuzzy-match t)
+(setq helm-M-x-fuzzy-match t)
+(setq helm-buffers-fuzzy-matching t)
 (global-set-key (kbd "C-x b") 'helm-buffers-list)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "M-x") 'helm-M-x)
 
 (setq ido-enable-flex-matching t)
 
@@ -87,9 +90,10 @@
 (setq company-auto-complete nil)
 (setq company-minimum-prefix-length 0)
 
-;(set-face-attribute 'default nil :font "Source Code Pro-7")  ;; Had to use default-frame-alist to fix crash when starting in daemon mode
+;; (set-face-attribute 'default nil :font "Source Code Pro-12")
+;; Had to use default-frame-alist to fix crash when starting in daemon mode
 (setq default-frame-alist '((font . "Source Code Pro-7") (load-theme 'material)))
-(load-theme 'material)
+;; (load-theme 'material)
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
 
@@ -109,7 +113,7 @@
 ;; Font size
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-_") 'text-scale-decrease)
-(global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-9")))
+(global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-8")))
 (global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-7")))
 
 (global-set-key (kbd "C-c e") 'eval-and-replace)
