@@ -104,11 +104,11 @@ version control if file is under version control."
   "Return the list of installed packages."
   (mapcar 'car package-alist))
 
-(defun save-package-list ()
-  "Save the list of installed packages to a file."
-  (interactive)
-  (with-temp-file "~/Dropbox/.emacs-packages-installed.el"
-    (insert (format "(defvar my-packages '%s)" (installed-packages)))))
+;(defun save-package-list ()
+  ;"Save the list of installed packages to a file."
+  ;(interactive)
+  ;(with-temp-file "~/Dropbox/.emacs-packages-installed.el"
+    ;(insert (format "(defvar my-packages '%s)" (installed-packages)))))
 
 ;; Enable minor modes for given major modes
 (defun default-minor-modes ()
@@ -294,13 +294,13 @@ is considered to be a project root."
   (add-hook 'hack-local-variables-hook 'flycheck-python-set-executables
             nil 'local))
 
-(defun load-packages ()
-  "Load package list and install missing packages."
-  (interactive)
-  (load-file "~/Dropbox/.emacs-packages-installed.el")
-  (dolist (p my-packages)
-    (when (not (package-installed-p p))
-      (package-install p))))
+;(defun load-packages ()
+  ;"Load package list and install missing packages."
+  ;(interactive)
+  ;(load-file "~/Dropbox/.emacs-packages-installed.el")
+  ;(dolist (p my-packages)
+    ;(when (not (package-installed-p p))
+      ;(package-install p))))
 
 (defun elscreen-store ()
     "Store the elscreen tab configuration."

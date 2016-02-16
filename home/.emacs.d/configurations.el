@@ -31,7 +31,6 @@
 (setq fci-rule-column 80)
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.sls\\'" . yaml-mode))
 (add-to-list 'auto-mode-alist '("\\.html" . web-mode))
 
 (setq speedbar-indentation-width 2)
@@ -92,7 +91,7 @@
 
 ;; (set-face-attribute 'default nil :font "Source Code Pro-12")
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
-(setq default-frame-alist '((font . "Source Code Pro-7") (load-theme 'material)))
+(setq default-frame-alist '((font . "Source Code Pro-10") (load-theme 'material)))
 ;; (load-theme 'material)
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
@@ -113,8 +112,9 @@
 ;; Font size
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-_") 'text-scale-decrease)
-(global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-8")))
-(global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-7")))
+(global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-14")))
+(global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-10")))
+(global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-6")))
 
 (global-set-key (kbd "C-c e") 'eval-and-replace)
 (global-set-key (kbd "C-x p") 'other-window-backward)
