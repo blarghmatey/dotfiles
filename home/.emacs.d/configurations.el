@@ -32,6 +32,8 @@
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.html" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jinja" . jinja2-mode))
+(add-to-list 'auto-mode-alist '("\\.sls" . yaml-mode))
 
 (setq speedbar-indentation-width 2)
 (setq speedbar-show-unknown-files t)
