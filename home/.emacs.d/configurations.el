@@ -22,6 +22,8 @@
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
 
+(setq helm-dash-browser-func 'eww)
+
 (setq ido-enable-flex-matching t)
 
 (setq whitespace-line-column 150)
@@ -49,6 +51,8 @@
 
 ;; (setq jedi:complete-on-dot t)
 ;; (setq jedi:setup-keys t)
+(require 'undohist)
+(undohist-initialize)
 
 (require 'flycheck)
 (setq flycheck-flake8-maximum-complexity 15)
@@ -81,7 +85,17 @@
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 
-(require 'nose)
+(setq create-lockfiles nil)
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+    '(("." . "~/.saves"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 ;; (require 'workgroups2)
 ;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
@@ -116,7 +130,9 @@
 (define-key global-map (kbd "C-_") 'text-scale-decrease)
 (global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-14")))
 (global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-10")))
-(global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-6")))
+(global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-5")))
+
+(global-set-key (kbd "C-c s l") 'linum-relative-toggle)
 
 (global-set-key (kbd "C-c e") 'eval-and-replace)
 (global-set-key (kbd "C-x p") 'other-window-backward)
