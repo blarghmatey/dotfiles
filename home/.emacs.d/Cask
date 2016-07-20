@@ -95,6 +95,7 @@
 (depends-on "fold-this")
 (depends-on "format-sql")
 (depends-on "fringe-helper")
+(depends-on "fsm")
 (depends-on "fuzzy")
 (depends-on "gh")
 (depends-on "gh-md")

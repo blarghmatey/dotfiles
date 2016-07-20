@@ -72,8 +72,8 @@
 (setq scroll-step 1)
 (setq scroll-conservatively 10000)
 (setq auto-window-vscroll nil)
-(setq split-width-threshold 80)
-(setq split-height-threshold 80)
+(setq split-width-threshold 70)
+(setq split-height-threshold 100)
 (setq apropos-sort-by-scores t)
 
 (setq-default tab-width 4)
