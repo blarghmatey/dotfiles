@@ -195,7 +195,12 @@
 
 (global-set-key [f1] 'toggle-fold-to-signatures)
 
+(setq org-directory "~/Dropbox/org/")
 (setq org-log-done t)
+(setq org-todo-keywords
+      '((sequence "TODO" "DOING" "|" "DONE")))
+(setq org-todo-keyword-faces
+      '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold))))
 ;; Show matching parens
 (show-paren-mode)
 
