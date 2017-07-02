@@ -79,6 +79,7 @@
 (setq-default tab-width 4)
 (setq default-tab-width 4)
 (setq-default indent-tabs-mode nil)
+(setq indent-tabs-mode nil)
 (setq-default tab-always-indent 'complete)
 (setq-default major-mode 'text-mode)
 (setq indent-line-function 'indent-for-tab-command)
@@ -131,6 +132,7 @@
 (global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-14")))
 (global-set-key (kbd "C-c f n") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-8")))
 (global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-10")))
+(global-set-key (kbd "C-c f n") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-7")))
 (global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-5")))
 
 (global-set-key (kbd "C-c s l") 'linum-relative-toggle)

@@ -89,7 +89,9 @@
 (add-hook 'python-mode-hook 'sphinx-doc-mode)
 ;; (add-hook 'ruby-mode-hook 'default-minor-modes)
 (add-hook 'emacs-lisp-mode-hook 'default-minor-modes)
-(add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+(add-hook 'js2-mode-hook (lambda ()
+                           (tern-mode t)
+                           (setq tab-width 2)))
 (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
 ;; (add-hook 'window-configuration-change-hook
 ;;           (lambda ()
@@ -162,7 +164,7 @@
  '(mmm-global-mode nil nil (mmm-mode))
  '(org-agenda-files
    (quote
-    ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org")))
+    ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org" "~/Dropbox/org/todo/bitlancer.org")))
  '(org-mobile-directory "~/Dropbox/org")
  '(package-selected-packages
    (quote
