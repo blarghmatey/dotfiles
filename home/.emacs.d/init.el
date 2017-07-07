@@ -164,7 +164,7 @@
  '(mmm-global-mode nil nil (mmm-mode))
  '(org-agenda-files
    (quote
-    ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org" "~/Dropbox/org/todo/bitlancer.org")))
+    ("~/Dropbox/org/todo/bitlancer.org" "~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org")))
  '(org-mobile-directory "~/Dropbox/org")
  '(package-selected-packages
    (quote

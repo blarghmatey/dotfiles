@@ -108,7 +108,7 @@
 
 ;; (set-face-attribute 'default nil :font "Source Code Pro-12")
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
-(setq default-frame-alist '((font . "Source Code Pro-10") (load-theme 'material)))
+(setq default-frame-alist '((font . "Source Code Pro-10") (load-theme 'tsdh-dark)))
 ;; (load-theme 'material)
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
@@ -197,7 +197,10 @@
 
 (global-set-key [f1] 'toggle-fold-to-signatures)
 
+(require 'org-trello)
 (setq org-directory "~/Dropbox/org/")
+(setq org-mobile-directory "~/Dropbox/org-mobile/")
+(setq org-mobile-inbox-for-pull "~/Dropbox/org-mobile/inbox.org")
 (setq org-log-done t)
 (setq org-todo-keywords
       '((sequence "TODO" "DOING" "|" "DONE")))
