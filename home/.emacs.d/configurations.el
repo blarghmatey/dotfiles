@@ -206,6 +206,8 @@
       '((sequence "TODO" "DOING" "|" "DONE")))
 (setq org-todo-keyword-faces
       '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold))))
+(setq org-log-redeadline (quote time))
+(setq org-log-reschedule (quote time))
 ;; Show matching parens
 (show-paren-mode)
 
