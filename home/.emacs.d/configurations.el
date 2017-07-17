@@ -198,6 +198,8 @@
 (global-set-key [f1] 'toggle-fold-to-signatures)
 
 (require 'org-trello)
+(require 'org-alert)
+(setq alert-default-style 'libnotify)
 (setq org-directory "~/Dropbox/org/")
 (setq org-mobile-directory "~/Dropbox/org-mobile/")
 (setq org-mobile-inbox-for-pull "~/Dropbox/org-mobile/inbox.org")
