@@ -161,6 +161,7 @@
      (erc-track-minor-mode nil)
      (savehist-mode nil)
      (eproject-mode eproject-maybe-turn-on))))
+ '(diary-file "~/Dropbox/emacs/diary")
  '(elpy-mode-hook (quote (subword-mode hl-line-mode)))
  '(elpy-modules
    (quote
@@ -175,10 +176,15 @@
  '(org-journal-date-format "%Y-%m-%d")
  '(org-journal-dir "~/Dropbox/org/journal")
  '(org-journal-file-format "%Y-%m-%d.org")
- '(org-mobile-directory "~/Dropbox/org" t)
  '(org-agenda-files
    (quote
     ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org" "~/Dropbox/org/todo/bitlancer.org")))
+ '(org-agenda-time-grid
+   (quote
+    ((daily weekly today require-timed)
+     "----------------"
+     (800 1000 1200 1400 1600 1800 2000))))
+ '(org-mobile-directory "~/Dropbox/org")
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(package-selected-packages
    (quote
