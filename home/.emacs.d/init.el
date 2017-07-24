@@ -173,9 +173,6 @@
  '(magit-commit-arguments (quote ("-S")))
  '(magit-log-section-arguments (quote ("-n256" "--decorate")))
  '(mmm-global-mode nil nil (mmm-mode))
- '(org-journal-date-format "%Y-%m-%d")
- '(org-journal-dir "~/Dropbox/org/journal")
- '(org-journal-file-format "%Y-%m-%d.org")
  '(org-agenda-files
    (quote
     ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org" "~/Dropbox/org/todo/bitlancer.org")))
@@ -184,6 +181,10 @@
     ((daily weekly today require-timed)
      "----------------"
      (800 1000 1200 1400 1600 1800 2000))))
+ '(org-journal-date-format "%Y-%m-%d")
+ '(org-journal-dir "~/Dropbox/org/journal/")
+ '(org-journal-file-format "%Y-%m-%d.org")
+ '(org-journal-search-results-order-by :desc)
  '(org-mobile-directory "~/Dropbox/org")
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(package-selected-packages

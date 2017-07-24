@@ -199,6 +199,7 @@
 
 (require 'org-trello)
 (require 'org-alert)
+(setq org-agenda-restore-windows-after-quit t)
 (setq alert-default-style 'libnotify)
 (setq org-directory "~/Dropbox/org/")
 (setq org-mobile-directory "~/Dropbox/org-mobile/")
