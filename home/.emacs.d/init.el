@@ -119,6 +119,8 @@
 (add-hook 'ruby-mode-hook 'robe-mode)
 (add-hook 'markdown-mode-hook (lambda () (setq-local whitespace-style
       '(face trailing empty tab-mark))))
+(add-hook 'org-mode-hook (lambda () (setq-local whitespace-style
+      '(face trailing empty tab-mark))))
 
 (add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'after-init-hook 'global-flycheck-mode)

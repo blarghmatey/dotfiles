@@ -1,0 +1,33 @@
+# -*- mode: python -*-
+from datetime import datetime
+from xonsh.prompt.gitstatus import gitstatus_prompt
+from glob import glob
+
+$XONSH_SHOW_TRACEBACK=True
+$XONSH_AUTO_PAIR=True
+$XONSH_DATETIME_FORMAT='%Y-%m-%dT%H:%M:%S'
+
+def _current_time():
+    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+$PROMPT_FIELDS['current_time'] = _current_time
+$PROMPT_FIELDS['gitstatus'] = gitstatus_prompt
+$PROMPT = ('{env_name:{} }{BOLD_GREEN}{user}@{hostname}{BOLD_BLUE} '
+           '{cwd} {branch_color}{gitstatus}{NO_COLOR} {current_time}  '
+           '{BOLD_BLUE}{ret_code_color}{ret_code}{prompt_end}{NO_COLOR} ')
+
+$fzf_history_binding = Keys.ControlR
+$fzf_ssh_binding = Keys.ControlS
+
+def ssh_host_completer(prefix, line, begidx, endidx, ctx):
+    if not line.startswith('ssh'):
+        return None
+    hostlist = []
+    with open("{}/.ssh/known_hosts".format($HOME), 'r') as known_hosts:
+        for hostline in known_hosts:
+            namelist = hostline.split(' ')[0]
+            hostlist += namelist.split(',')
+    prefix_length = len(prefix)
+    return (set([target for target in hostlist if prefix in target]), prefix_length)
+
+completer add ssh ssh_host_completer
