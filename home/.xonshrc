@@ -23,11 +23,12 @@ def ssh_host_completer(prefix, line, begidx, endidx, ctx):
     if not line.startswith('ssh'):
         return None
     hostlist = []
+    host_prefix = prefix.split('@')[-1]
     with open("{}/.ssh/known_hosts".format($HOME), 'r') as known_hosts:
         for hostline in known_hosts:
             namelist = hostline.split(' ')[0]
             hostlist += namelist.split(',')
-    prefix_length = len(prefix)
-    return (set([target for target in hostlist if prefix in target]), prefix_length)
+    prefix_length = len(host_prefix)
+    return (set([target for target in hostlist if host_prefix in target]), prefix_length)
 
 completer add ssh ssh_host_completer
