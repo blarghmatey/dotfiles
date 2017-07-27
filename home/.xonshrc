@@ -10,11 +10,40 @@ $XONSH_DATETIME_FORMAT='%Y-%m-%dT%H:%M:%S'
 def _current_time():
     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+__return_code_map = {
+    1: 'Error',
+    2: 'Misuse of shell builtins',
+    126: 'Command invoked cannot execute',
+    127: 'Command not found',
+    128: 'Invalid argument to "exit"',
+    255: "Exit status out of range"
+}
+__kill_codes = re.findall('\d{1,2} \w+', $(kill -L))
+for code in __kill_codes:
+    code_val, code_name = code.split(' ')
+    __return_code_map[127 + int(code_val)] = "Process terminated by SIG{}".format(code_name)
+
+def _return_code_output():
+    try:
+        return_code = __xonsh_history__.rtns[-1]
+    except IndexError:
+        return ''
+    if return_code != 0:
+        code_description = __return_code_map.get(return_code, '')
+        prompt_string = '{{BOLD_RED}}(╯°□°）╯︵ ┻━┻ {} {} '.format(return_code, code_description)
+    else:
+        prompt_string = ''
+    return prompt_string
+
+
 $PROMPT_FIELDS['current_time'] = _current_time
 $PROMPT_FIELDS['gitstatus'] = gitstatus_prompt
-$PROMPT = ('{env_name:{} }{BOLD_GREEN}{user}@{hostname}{BOLD_BLUE} '
-           '{cwd} {branch_color}{gitstatus}{NO_COLOR} {current_time}  '
-           '{BOLD_BLUE}{ret_code_color}{ret_code}{prompt_end}{NO_COLOR} ')
+$PROMPT_FIELDS['exit_status'] = _return_code_output
+$PROMPT_FIELDS['prompt_end'] = '\u21C9'
+$PROMPT = ('\n\u256D-{env_name:{} }{BOLD_YELLOW}{user}{BLACK}@{BOLD_RED}{hostname}{BOLD_BLUE} '
+           '{cwd} {branch_color}{gitstatus}{NO_COLOR} '
+           '\n\u2570-{BOLD_BLACK}{BACKGROUND_WHITE} {current_time} {NO_COLOR} '
+           '{BOLD_BLUE}{exit_status}{prompt_end}{NO_COLOR} ')
 
 $fzf_history_binding = Keys.ControlR
 $fzf_ssh_binding = Keys.ControlS
