@@ -11,6 +11,15 @@ $XONSH_DATETIME_FORMAT='%Y-%m-%dT%H:%M:%S'
 $CASE_SENSITIVE_COMPLETIONS = False
 $PATH.append('/home/tmacey/.local/bin')
 
+if glob('/tmp/ssh-*/agent.*'):
+    $SSH_AUTH_SOCK=glob('/tmp/ssh-*/agent.*')[0]
+else:
+    $[ssh-agent]
+    $SSH_AUTH_SOCK=glob('/tmp/ssh-*/agent.*')[0]
+    $[ssh-add ~/.ssh/id_rsa]
+    $[ssh-add ~/.ssh/odl_rsa]
+    $[ssh-add ~/.ssh/odl_app]
+
 def _current_time():
     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
