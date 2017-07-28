@@ -3,9 +3,13 @@ from datetime import datetime
 from xonsh.prompt.gitstatus import gitstatus_prompt
 from glob import glob
 
+_ORIG_PATH = list($PATH)
+_ORIG_PROMPT = $PROMPT
 $XONSH_SHOW_TRACEBACK=True
 $XONSH_AUTO_PAIR=True
 $XONSH_DATETIME_FORMAT='%Y-%m-%dT%H:%M:%S'
+$CASE_SENSITIVE_COMPLETIONS = False
+$PATH.append('/home/tmacey/.local/bin')
 
 def _current_time():
     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -44,6 +48,12 @@ $PROMPT = ('\n\u256D-{env_name:{} }{BOLD_YELLOW}{user}{BLACK}@{BOLD_RED}{hostnam
            '{cwd} {branch_color}{gitstatus}{NO_COLOR} '
            '\n\u2570-{BOLD_BLACK}{BACKGROUND_WHITE} {current_time} {NO_COLOR} '
            '{BOLD_BLUE}{exit_status}{prompt_end}{NO_COLOR} ')
+# $PROMPT=('\n{env_name:{} }{BOLD_RED}{user}{BOLD_BLUE}@{BOLD_WHITE}{hostname} '
+#          '{BACKGROUND_INTENSE_BLUE}{cwd}{NO_COLOR} '
+#          '{branch_color}{gitstatus}{NO_COLOR} \n'
+#          '{current_time}{NO_COLOR} {BOLD_GREEN}\u03BC {BOLD_RED}\u03BB '
+#          '{BOLD_BLUE}{ret_code_color}{ret_code}>{NO_COLOR} ')
+
 
 $fzf_history_binding = Keys.ControlR
 $fzf_ssh_binding = Keys.ControlS
@@ -61,3 +71,15 @@ def ssh_host_completer(prefix, line, begidx, endidx, ctx):
     return (set([target for target in hostlist if host_prefix in target]), prefix_length)
 
 completer add ssh ssh_host_completer
+
+def _to_bytes(what):
+    if isinstance(what, bytes):
+        return bytes
+    else:
+        return str.encode(what)
+
+def _write_bytes(what):
+    sys.stdout.buffer.write(what)
+
+aliases['hex_encode'] = lambda a,i=None: _write_bytes(binascii.hexlify(_to_bytes(i.strip() or a[0])) + b'\n')
+aliases['hex_decode'] = lambda a,i=None: _write_bytes(binascii.unhexlify(_to_bytes(i.strip() or a[0])) + b'\n')
