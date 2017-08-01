@@ -121,6 +121,10 @@
       '(face trailing empty tab-mark))))
 (add-hook 'org-mode-hook (lambda () (setq-local whitespace-style
       '(face trailing empty tab-mark))))
+(add-hook 'js2-mode-hook (lambda ()
+                           (setq-local js-indent-level 2)))
+(add-hook 'json-mode-hook (lambda ()
+                           (setq-local js-indent-level 2)))
 
 (add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'after-init-hook 'global-flycheck-mode)
