@@ -62,12 +62,6 @@ $PROMPT = ('\n\u256D-{env_name:{} }{BOLD_YELLOW}{user}{BLACK}@{BOLD_RED}{hostnam
            '{cwd} {branch_color}{gitstatus}{NO_COLOR} '
            '\n\u2570-{BOLD_BLACK}{BACKGROUND_WHITE} {current_time} {NO_COLOR} '
            '{BOLD_BLUE}{exit_status}{prompt_end}{NO_COLOR} ')
-# $PROMPT=('\n{env_name:{} }{BOLD_RED}{user}{BOLD_BLUE}@{BOLD_WHITE}{hostname} '
-#          '{BACKGROUND_INTENSE_BLUE}{cwd}{NO_COLOR} '
-#          '{branch_color}{gitstatus}{NO_COLOR} \n'
-#          '{current_time}{NO_COLOR} {BOLD_GREEN}\u03BC {BOLD_RED}\u03BB '
-#          '{BOLD_BLUE}{ret_code_color}{ret_code}>{NO_COLOR} ')
-
 
 $fzf_history_binding = Keys.ControlR
 $fzf_ssh_binding = Keys.ControlS

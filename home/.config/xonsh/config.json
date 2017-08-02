@@ -1,0 +1,11 @@
+{
+  "xontribs": [
+    "bashisms",
+    "coreutils",
+    "docker_tabcomplete",
+    "fzf-widgets",
+    "jedi",
+    "mpl",
+    "vox"
+  ]
+}
