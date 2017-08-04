@@ -211,6 +211,21 @@
       '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold))))
 (setq org-log-redeadline (quote time))
 (setq org-log-reschedule (quote time))
+
+(setq org-agenda-files
+   (quote
+    ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org" "~/Dropbox/org/todo/bitlancer.org")))
+ (setq org-agenda-time-grid
+   (quote
+    ((daily weekly today require-timed)
+     "----------------"
+     (800 1000 1200 1400 1600 1800 2000))))
+(setq org-journal-date-format "%Y-%m-%d")
+(setq org-journal-dir "~/Dropbox/org/journal/")
+(setq org-journal-file-format "%Y-%m-%d.org")
+(setq org-journal-search-results-order-by :desc)
+(setq org-mobile-directory "~/Dropbox/org")
+(setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
 ;; Show matching parens
 (show-paren-mode)
 
