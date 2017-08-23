@@ -3,9 +3,10 @@
     "bashisms",
     "coreutils",
     "docker_tabcomplete",
-    "fzf-widgets",
     "jedi",
     "mpl",
-    "vox"
+    "vox",
+    "vox_tabcomplete",
+    "schedule"
   ]
 }

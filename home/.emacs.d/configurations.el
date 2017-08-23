@@ -32,6 +32,8 @@
 
 (setq fci-rule-column 80)
 
+(setq-default fill-column 120)
+
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.html" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jinja" . jinja2-mode))
@@ -42,7 +44,7 @@
 (setq speedbar-smart-directory-expand-flag nil)
 (setq speedbar-use-images nil)
 (setq sr-speedbar-right-side nil)
-(setq sr-speedbar-skip-other-window-p t)
+(setq sr-speednbar-skip-other-window-p t)
 
 ;; (setq ac-auto-show-menu t)
 ;; (setq ac-expand-on-auto-complete t)
@@ -163,7 +165,7 @@
 (global-set-key (kbd "C-o") 'open-next-line)
 (global-set-key (kbd "M-o") 'open-previous-line)
 
-(global-set-key (kbd "M-s t") 'speedbar)
+(global-set-key (kbd "M-s t") 'sr-speedbar-toggle)
 (global-set-key (kbd "M-s f") 'speedbar-get-focus)
 
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -181,9 +183,6 @@
 (global-set-key (kbd "C-<") 'indent-rigidly-left-to-tab-stop)
 
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
-
-(global-set-key (kbd "C-c L") 'org-store-link)
-(global-set-key (kbd "C-c a") 'org-agenda)
 
 (global-set-key (kbd "C-c C-\"") 'insert-pair)
 (global-set-key (kbd "C-c C-'") 'insert-pair)
@@ -211,7 +210,6 @@
       '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold))))
 (setq org-log-redeadline (quote time))
 (setq org-log-reschedule (quote time))
-
 (setq org-agenda-files
    (quote
     ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org" "~/Dropbox/org/todo/bitlancer.org")))
@@ -226,6 +224,20 @@
 (setq org-journal-search-results-order-by :desc)
 (setq org-mobile-directory "~/Dropbox/org")
 (setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
+(setq org-default-notes-file (concat org-directory "notes.org"))
+(setq org-refile-targets `((org-agenda-files . (:maxlevel . 2))))
+(setq org-capture-templates
+      '(("t" "Todo" entry (file (concat org-directory "todo/todo.org"))
+         "** TODO %? :%^G\n:PROPERTIES:\n:Created: %U\n:END:")
+        ("n" "Note" entry (file org-default-notes-file)
+         "* %?\n:PROPERTIES:\n:Created: %U\n:END:")))
+
+(global-set-key (kbd "C-c L") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c o n") (lambda () (interactive) (find-file org-default-notes-file)))
+(global-set-key (kbd "C-c o t") (lambda () (interactive) (find-file (concat org-directory "todo/"))))
+
 ;; Show matching parens
 (show-paren-mode)
 
