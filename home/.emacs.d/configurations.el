@@ -110,7 +110,7 @@
 
 ;; (set-face-attribute 'default nil :font "Source Code Pro-12")
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
-(setq default-frame-alist '((font . "Source Code Pro-10") (load-theme 'tsdh-dark)))
+(setq default-frame-alist '((font . "Hack-10") (load-theme 'tsdh-dark)))
 ;; (load-theme 'material)
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
@@ -131,11 +131,11 @@
 ;; Font size
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-_") 'text-scale-decrease)
-(global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-14")))
-(global-set-key (kbd "C-c f n") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-8")))
-(global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-10")))
-(global-set-key (kbd "C-c f n") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-7")))
-(global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Source Code Pro-5")))
+(global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-14")))
+(global-set-key (kbd "C-c f N") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-8")))
+(global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-10")))
+(global-set-key (kbd "C-c f n") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-7")))
+(global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-5")))
 
 (global-set-key (kbd "C-c s l") 'linum-relative-toggle)
 
@@ -196,7 +196,8 @@
 
 (global-set-key [f1] 'toggle-fold-to-signatures)
 
-(require 'org-trello)
+;; (require 'org-trello)
+;; (setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
 (require 'org-alert)
 (setq org-agenda-restore-windows-after-quit t)
 (setq alert-default-style 'libnotify)
@@ -223,7 +224,6 @@
 (setq org-journal-file-format "%Y-%m-%d.org")
 (setq org-journal-search-results-order-by :desc)
 (setq org-mobile-directory "~/Dropbox/org")
-(setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
 (setq org-default-notes-file (concat org-directory "notes.org"))
 (setq org-refile-targets `((org-agenda-files . (:maxlevel . 2))))
 (setq org-capture-templates

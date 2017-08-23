@@ -63,9 +63,6 @@ $PROMPT = ('\n\u256D-{env_name:{} }{BOLD_YELLOW}{user}{BLACK}@{BOLD_RED}{hostnam
            '\n\u2570-{BOLD_BLACK}{BACKGROUND_WHITE} {current_time} {NO_COLOR} '
            '{BOLD_BLUE}{exit_status}{prompt_end}{NO_COLOR} ')
 
-$fzf_history_binding = Keys.ControlR
-$fzf_ssh_binding = Keys.ControlS
-
 def ssh_host_completer(prefix, line, begidx, endidx, ctx):
     if not line.startswith('ssh ') or re.search(' ?-{1,2}\w*?$', line):
         return None
