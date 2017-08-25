@@ -18,7 +18,7 @@ Inbox ~/.mail/blarghmatey/Inbox
 Channel blarghmatey
 Master :blarghmatey-remote:
 Slave :blarghmatey-local:
-Patterns * ![Gmail]* "[Gmail]/Sent Mail"
+Patterns *
 Create Both
 SyncState *
 
@@ -42,7 +42,7 @@ Inbox ~/.mail/tobiasmacey/Inbox
 Channel tobiasmacey
 Master :tobiasmacey-remote:
 Slave :tobiasmacey-local:
-Patterns * ![Gmail]* "[Gmail]/Sent Mail"
+Patterns *
 Create Both
 SyncState *
 
@@ -66,7 +66,7 @@ Inbox ~/.mail/boundlessnotions/Inbox
 Channel boundlessnotions
 Master :boundlessnotions-remote:
 Slave :boundlessnotions-local:
-Patterns * ![Gmail]* "[Gmail]/Sent Mail"
+Patterns *
 Create Both
 SyncState *
 
@@ -90,7 +90,7 @@ Inbox ~/.mail/bitlancer/Inbox
 Channel bitlancer
 Master :bitlancer-remote:
 Slave :bitlancer-local:
-Patterns * ![Gmail]* "[Gmail]/Sent Mail"
+Patterns *
 Create Both
 SyncState *
 
@@ -138,6 +138,6 @@ Inbox ~/.mail/mitodl/Inbox
 Channel mitodl
 Master :mitodl-remote:
 Slave :mitodl-local:
-Patterns *
+Patterns * "!INBOX/Django*"
 Create Both
 SyncState *

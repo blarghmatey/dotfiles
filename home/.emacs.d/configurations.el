@@ -202,8 +202,10 @@
 ;; (require 'org-trello)
 ;; (setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
 (require 'org-alert)
+(require 'org-gcal)
 (setq org-agenda-restore-windows-after-quit t)
 (setq alert-default-style 'libnotify)
+(setq org-alert-enable t)
 (setq org-directory "~/Dropbox/org/")
 (setq org-mobile-directory "~/Dropbox/org-mobile/")
 (setq org-mobile-inbox-for-pull "~/Dropbox/org-mobile/inbox.org")
@@ -251,13 +253,108 @@
 (require `org-mu4e)
 (setq mu4e-maildir (expand-file-name "~/.mail"))
 (setq mu4e-use-fancy-chars t)
-(setq mu4e-view-show-images t)
+(setq mu4e-view-show-images t
+      mu4e-show-imagest t)
+(setq mu4e-html2text-command `mu4e-shr2text)
+(setq shr-color-visible-luminance-min 80)
+(setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-change-filenames-when-moving 0)
+(add-to-list 'mu4e-view-actions
+             '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+(add-to-list 'mu4e-view-actions
+  '("Eww view" . jcs-view-in-eww) t)
 (setq mu4e-contexts
       `( ,(make-mu4e-context
-           :name "Gmail - blarghmatey"
+           :name "blarghmatey"
            :match-func (lambda (msg)
                          (when msg
-                           (string-prefix-p "/blarghmatey" (mu4e-message-field msg :maildir)))))
+                           (string-prefix-p "/blarghmatey" (mu4e-message-field msg :maildir))))
+           :vars '((user-mail-address . "blarghmatey@gmail.com")
+                   (user-full-name . "Tobias Macey")
+                   (mu4e-compose-signature .
+                                           (concat
+                                            "Regards,\n"
+                                            "Tobias Macey\n"))
+                   ))
+         ,(make-mu4e-context
+           :name "tobiasmacey"
+           :match-func (lambda (msg)
+                         (when msg
+                           (string-prefix-p "/tobiasmacey" (mu4e-message-field msg :maildir))))
+           :vars '((user-mail-address . "tobias.macey@gmail.com")
+                   (user-full-name . "Tobias Macey")
+                   (mu4e-compose-signature .
+                                           (concat
+                                            "Regards,\n"
+                                            "Tobias Macey\n"))
+                   ))
+         ,(make-mu4e-context
+           :name "boundlessnotions"
+           :match-func (lambda (msg)
+                         (when msg
+                           (string-prefix-p "/boundlessnotions" (mu4e-message-field msg :maildir))))
+           :vars '((user-mail-address . "tmacey@boundlessnotions.com")
+                   (user-full-name . "Tobias Macey")
+                   (mu4e-compose-signature .
+                                           (concat
+                                            "Regards,\n"
+                                            "Tobias Macey\n"
+                                            "Owner and Chief Engineer\n"
+                                            "Boundless Notions, LLC.\n"
+                                            "https://www.boundlessnotions.com\n"))
+                   ))
+         ,(make-mu4e-context
+           :name "bitlancer"
+           :match-func (lambda (msg)
+                         (when msg
+                           (string-prefix-p "/bitlancer" (mu4e-message-field msg :maildir))))
+           :vars '((user-mail-address . "tmacey@bitlancer.com")
+                   (user-full-name . "Tobias Macey")
+                   (mu4e-trash-folder . "/bitlancer/Trash")
+                   (mu4e-drafts-folder . "/bitlancer/Drafts")
+                   (mu4e-get-mail-command "mbsync bitlancer")
+                   (mu4e-compose-signature .
+                                           (concat
+                                            "Regards,\n"
+                                            "Tobias Macey\n"
+                                            "Senior Cloud Architect\n"
+                                            "Bitlancer LLC.\n"
+                                            "https://www.bitlancer.com\n"))
+                   ))
+         ,(make-mu4e-context
+           :name "podcastinit"
+           :match-func (lambda (msg)
+                         (when msg
+                           (string-prefix-p "/podcastinit" (mu4e-message-field msg :maildir))))
+           :vars '((user-mail-address . "tmacey@podcastinit.com")
+                   (user-full-name . "Tobias Macey")
+                   (mu4e-compose-signature .
+                                           (concat
+                                            "Regards,\n"
+                                            "Tobias Macey\n"
+                                            "Host of Podcast.__init__\n"
+                                            "The podcast about Python and the people who make it great!\n"
+                                            "https://www.podcastinit.com\n"))
+                   ))
+         ,(make-mu4e-context
+           :name "mitodl"
+           :match-func (lambda (msg)
+                         (when msg
+                           (string-prefix-p "/mitodl" (mu4e-message-field msg :maildir))))
+           :vars '((user-mail-address . "tmacey@mit.edu")
+                   (user-full-name . "Tobias Macey")
+                   (mu4e-sent-folder . "/mitodl/Sent Items")
+                   (mu4e-trash-folder . "/mitodl/Trash")
+                   (mu4e-drafts-folder . "/mitodl/Drafts")
+                   (mu4e-get-mail-command "mbsync mitodl")
+                   (mu4e-compose-signature .
+                                           (concat
+                                            "Regards,\n"
+                                            "Tobias Macey\n"
+                                            "DevOps Engineering Manager\n"
+                                            "MIT Office of Digital Learning\n"
+                                            "https://engineering.odl.mit.edu\n"))
+                   ))
          ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

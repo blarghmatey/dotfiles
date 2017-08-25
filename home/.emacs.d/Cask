@@ -191,6 +191,7 @@
 (depends-on "mkdown")
 (depends-on "mmm-mako")
 (depends-on "mmm-mode")
+(depends-on "mu4e-alert")
 (depends-on "multi")
 (depends-on "multi-term")
 (depends-on "multi-web-mode")
