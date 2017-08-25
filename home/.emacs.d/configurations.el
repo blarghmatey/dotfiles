@@ -196,6 +196,9 @@
 
 (global-set-key [f1] 'toggle-fold-to-signatures)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ORGMODE CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (require 'org-trello)
 ;; (setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
 (require 'org-alert)
@@ -238,6 +241,25 @@
 (global-set-key (kbd "C-c o n") (lambda () (interactive) (find-file org-default-notes-file)))
 (global-set-key (kbd "C-c o t") (lambda () (interactive) (find-file (concat org-directory "todo/"))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; EMAIL CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
+(require `mu4e)
+(require `org-mu4e)
+(setq mu4e-maildir (expand-file-name "~/.mail"))
+(setq mu4e-use-fancy-chars t)
+(setq mu4e-view-show-images t)
+(setq mu4e-contexts
+      `( ,(make-mu4e-context
+           :name "Gmail - blarghmatey"
+           :match-func (lambda (msg)
+                         (when msg
+                           (string-prefix-p "/blarghmatey" (mu4e-message-field msg :maildir)))))
+         ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Show matching parens
 (show-paren-mode)
 

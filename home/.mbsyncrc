@@ -1,0 +1,114 @@
+# Gmail - blarghmatey
+IMAPAccount blarghmatey
+Host imap.gmail.com
+User blarghmatey@gmail.com
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/blarghmatey/creds.gpg"
+AuthMechs PLAIN
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore blarghmatey-remote
+Account blarghmatey
+
+MaildirStore blarghmatey-local
+Path ~/.mail/blarghmatey/
+Inbox ~/.mail/blarghmatey/Inbox
+
+Channel blarghmatey
+Master :blarghmatey-remote:
+Slave :blarghmatey-local:
+Patterns * ![Gmail]* "[Gmail]/Sent Mail"
+Create Both
+SyncState *
+
+# Gmail - tobiasmacey
+IMAPAccount tobiasmacey
+Host imap.gmail.com
+User tobias.macey@gmail.com
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/tobiasmacey/creds.gpg"
+AuthMechs PLAIN
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore tobiasmacey-remote
+Account tobiasmacey
+
+MaildirStore tobiasmacey-local
+Path ~/.mail/tobiasmacey/
+Inbox ~/.mail/tobiasmacey/Inbox
+
+Channel tobiasmacey
+Master :tobiasmacey-remote:
+Slave :tobiasmacey-local:
+Patterns * ![Gmail]* "[Gmail]/Sent Mail"
+Create Both
+SyncState *
+
+# Gmail - boundlessnotions
+IMAPAccount boundlessnotions
+Host imap.gmail.com
+User tmacey@boundlessnotions.com
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/boundlessnotions/creds.gpg"
+AuthMechs PLAIN
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore boundlessnotions-remote
+Account boundlessnotions
+
+MaildirStore boundlessnotions-local
+Path ~/.mail/boundlessnotions/
+Inbox ~/.mail/boundlessnotions/Inbox
+
+Channel boundlessnotions
+Master :boundlessnotions-remote:
+Slave :boundlessnotions-local:
+Patterns * ![Gmail]* "[Gmail]/Sent Mail"
+Create Both
+SyncState *
+
+# Gmail - Bitlancer
+IMAPAccount bitlancer
+Host imap.gmail.com
+User tmacey@bitlancer.com
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/bitlancer/creds.gpg"
+AuthMechs PLAIN
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore bitlancer-remote
+Account bitlancer
+
+MaildirStore bitlancer-local
+Path ~/.mail/bitlancer/
+Inbox ~/.mail/bitlancer/Inbox
+
+Channel bitlancer
+Master :bitlancer-remote:
+Slave :bitlancer-local:
+Patterns * ![Gmail]* "[Gmail]/Sent Mail"
+Create Both
+SyncState *
+
+# Podcastinit
+IMAPAccount podcastinit
+Host imap.zoho.com
+User tmacey@podcastinit.com
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/podcastinit/creds.gpg"
+AuthMechs PLAIN
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore podcastinit-remote
+Account podcastinit
+
+MaildirStore podcastinit-local
+Path ~/.mail/podcastinit/
+Inbox ~/.mail/podcastinit/Inbox
+
+Channel podcastinit
+Master :podcastinit-remote:
+Slave :podcastinit-local:
+Patterns *
+Create Both
+SyncState *
