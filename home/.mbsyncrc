@@ -5,6 +5,7 @@ User blarghmatey@gmail.com
 PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/blarghmatey/creds.gpg"
 AuthMechs PLAIN
 SSLType IMAPS
+SSLVersions TLSv1.2
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore blarghmatey-remote
@@ -28,6 +29,7 @@ User tobias.macey@gmail.com
 PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/tobiasmacey/creds.gpg"
 AuthMechs PLAIN
 SSLType IMAPS
+SSLVersions TLSv1.2
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore tobiasmacey-remote
@@ -51,6 +53,7 @@ User tmacey@boundlessnotions.com
 PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/boundlessnotions/creds.gpg"
 AuthMechs PLAIN
 SSLType IMAPS
+SSLVersions TLSv1.2
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore boundlessnotions-remote
@@ -74,6 +77,7 @@ User tmacey@bitlancer.com
 PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/bitlancer/creds.gpg"
 AuthMechs PLAIN
 SSLType IMAPS
+SSLVersions TLSv1.2
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore bitlancer-remote
@@ -97,6 +101,7 @@ User tmacey@podcastinit.com
 PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/podcastinit/creds.gpg"
 AuthMechs PLAIN
 SSLType IMAPS
+SSLVersions TLSv1.2
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore podcastinit-remote
@@ -109,6 +114,30 @@ Inbox ~/.mail/podcastinit/Inbox
 Channel podcastinit
 Master :podcastinit-remote:
 Slave :podcastinit-local:
+Patterns *
+Create Both
+SyncState *
+
+# MIT ODL
+IMAPAccount mitodl
+Host imap.exchange.mit.edu
+User tmacey
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/mitodl/creds.gpg"
+AuthMechs PLAIN
+SSLType IMAPS
+SSLVersions TLSv1.2
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore mitodl-remote
+Account mitodl
+
+MaildirStore mitodl-local
+Path ~/.mail/mitodl/
+Inbox ~/.mail/mitodl/Inbox
+
+Channel mitodl
+Master :mitodl-remote:
+Slave :mitodl-local:
 Patterns *
 Create Both
 SyncState *
