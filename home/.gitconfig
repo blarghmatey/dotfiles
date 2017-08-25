@@ -3,27 +3,98 @@
 
 [core]
   pager = less -FRSX
-  whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eolexcludesfile = ~/.gitignore_global
+  whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
   excludesfile = ~/.gitignore_global
 
 [alias]
-  co = checkout
-  ci = commit
-  st = status
-  pick = cherry-pick
+  # branch
+  b  = branch
+  bc = checkout -b
+  bl = branch -v
+  bL = branch -av
+  bx = branch -d
+  bX = branch -D
+  bm = branch -m
+  bM = branch -M
+  bs = show-branch
+  bS = show-branch -a
+
+  # checkout/fetch/merge/push/rebase
+  # checkout
+  co  = checkout
+  com = checkout master
+  co0 = checkout HEAD --
+  # fetch
+  f   = fetch
+  fm  = pull
+  fo  = fetch origin
+  # merge
+  m   = merge
+  mom = merge origin/master
+  # push
+  p   = push
+  pa  = push --all
+  pt  = push --tags
   ph = push origin HEAD
-  cm = checkout master
-  plh = pull origin HEAD
-  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+  # rebase
+  r   = rebase
+  ra  = rebase --abort
+  rc  = rebase --continue
+  ri  = rebase --interactive
+  rs  = rebase --skip
+  rom = rebase origin/master
+
+  # commit
+  c      = commit -v -S
+  ca     = commit --all -v -S
+  cm     = commit --message -S
+  cam    = commit --all --message -S
+  camend = commit --amend --reuse-message HEAD -S
+  commit = commit -S
+  cundo  = reset --soft "HEAD^"
+  cp     = cherry-pick
+
+  # diff
+  d    = diff          # Diff working dir to index
+  ds   = diff --staged # Diff index to HEAD
+  dc   = diff --staged # Diff index to HEAD
+  dh   = diff HEAD     # Diff working dir and index to HEAD
+  hub  = browse
+  hubd = compare
+
+  # index
+  s  = status
+  a  = add
+  ia = add
+  ir = reset
+
+  # log
+  l   = log --topo-order --pretty=format:'%C(yellow)%h %C(cyan)%cn %C(blue)%cr%C(reset) %s'
+  ls  = log --topo-order --stat --pretty=format:'%C(bold)%C(yellow)Commit:%C(reset) %C(yellow)%H%C(red)%d%n%C(bold)%C(yellow)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)%C(yellow)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
+  ld  = log --topo-order --stat --patch --full-diff --pretty=format:'%C(bold)%C(yellow)Commit:%C(reset) %C(yellow)%H%C(red)%d%n%C(bold)%C(yellow)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)%C(yellow)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
+  lg  = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  lga = log --topo-order --all --graph --pretty=format:'%C(yellow)%h %C(cyan)%cn%C(reset) %s %C(red)%d%C(reset)%n'
+  lm  = log --topo-order --pretty=format:'%s'
+  lh  = shortlog --summary --numbered
+  llf = fsck --lost-found
+
+  lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+
+  # remote
+  re  = remote
+  rel = remote --verbose
+  rea = remote add
+  rex = remote rm
+  rem = remote rename
+
   w = whatchanged
   search = "!f() { query=\"$1\"; shift; git log -S\"$query\" \"$@\"; }; f \"$@\""
-  b = branch
   rdiff = diff --summary head
   stat = diff --summary head
   mt = mergetool
   rc = rebase --continue
   pr = pull-request
-  f = fetch
   smc = log --author=\"Tobias Macey\" --grep=\"$1\"
 
 [mirror]
@@ -36,6 +107,10 @@
   interactive = auto
   ui = true
   pager = true
+  showbranch = auto
+
+[color "interactive"]
+    error = red bold
 
 [color "branch"]
   current = green reverse
@@ -47,11 +122,13 @@
   frag = magenta bold
   old = red bold
   new = green bold
+  whitespace = white reverse
 
 [color "status"]
   added = yellow
   changed = green
   untracked = red
+  branch = magenta
 
 [rerere]
   enabled = 1
@@ -67,9 +144,19 @@
 
 [merge]
   tool = kdiff3
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+
+[diff]
+  tool = icdiff
+
+[user]
+  name = Tobias Macey
+  signingkey = D6260C616BD0FA33
+
+[commit]
+  gpgsign = true
+
+[url "git@github.com:"]
+    insteadof = github:
+
+[push]
+    default = matching
