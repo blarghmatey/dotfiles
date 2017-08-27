@@ -261,6 +261,7 @@
 (setq mu4e-html2text-command `mu4e-shr2text)
 (setq shr-color-visible-luminance-min 80)
 (setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-completing-read-function 'completing-read)
 (setq mu4e-change-filenames-when-moving 0)
 (add-to-list 'mu4e-view-actions
              '("ViewInBrowser" . mu4e-action-view-in-browser) t)
@@ -307,7 +308,7 @@
                                             "Tobias Macey\n"))
                    ))
          ,(make-mu4e-context
-           :name "boundlessnotions"
+           :name "-boundlessnotions"
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/boundlessnotions" (mu4e-message-field msg :maildir))))
@@ -328,7 +329,7 @@
                                             "https://www.boundlessnotions.com\n"))
                    ))
          ,(make-mu4e-context
-           :name "bitlancer"
+           :name "+bitlancer"
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/bitlancer" (mu4e-message-field msg :maildir))))
@@ -355,6 +356,12 @@
                            (string-prefix-p "/podcastinit" (mu4e-message-field msg :maildir))))
            :vars '((user-mail-address . "tmacey@podcastinit.com")
                    (user-full-name . "Tobias Macey")
+                   (mu4e-trash-folder . "/podcastinit/Trash")
+                   (mu4e-drafts-folder . "/podcastinit/Drafts")
+                   (mu4e-get-mail-command . "mbsync podcastinit")
+                   (smtpmail-smtp-user . "tmacey@podcastinit.com")
+                   (smtpmail-smtp-server . "smtp.zoho.com")
+                   (smtpmail-smtp-service . 587)
                    (mu4e-compose-signature .
                                            (concat
                                             "Regards,\n"
