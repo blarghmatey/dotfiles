@@ -252,6 +252,9 @@
 (require 'mu4e)
 (require 'org-mu4e)
 (require 'smtpmail)
+(require 'mu4e-alert)
+(mu4e-alert-enable-mode-line-display)
+(mu4e-alert-enable-notifications)
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it)
 (setq mu4e-maildir (expand-file-name "~/.mail"))
@@ -296,6 +299,10 @@
                                            (concat
                                             "Regards,\n"
                                             "Tobias Macey\n"))
+                   (mu4e-maildir-shortcuts .
+                    (("/blarghmatey/Inbox" . ?i)
+                     ("/blarghmatey/[Gmail]/.Sent Mail" . ?s)
+                     ("/blarghmatey/[Gmail]/.Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "tobiasmacey"
@@ -314,6 +321,10 @@
                                            (concat
                                             "Regards,\n"
                                             "Tobias Macey\n"))
+                   (mu4e-maildir-shortcuts .
+                    (("/tobiasmacey/Inbox" . ?i)
+                     ("/tobiasmacey/[Gmail]/.Sent Mail" . ?s)
+                     ("/tobiasmacey/[Gmail]/.Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "-boundlessnotions"
@@ -335,6 +346,10 @@
                                             "Owner and Chief Engineer\n"
                                             "Boundless Notions, LLC.\n"
                                             "https://www.boundlessnotions.com\n"))
+                   (mu4e-maildir-shortcuts .
+                    (("/boundlessnotions/Inbox" . ?i)
+                     ("/boundlessnotions/[Gmail]/.Sent Mail" . ?s)
+                     ("/boundlessnotions/[Gmail]/.Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "+bitlancer"
@@ -356,6 +371,10 @@
                                             "Senior Cloud Architect\n"
                                             "Bitlancer LLC.\n"
                                             "https://www.bitlancer.com\n"))
+                   (mu4e-maildir-shortcuts .
+                    (("/bitlancer/Inbox" . ?i)
+                     ("/bitlancer/[Gmail]/.Sent Mail" . ?s)
+                     ("/bitlancer/[Gmail]/.Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "podcastinit"
@@ -377,6 +396,10 @@
                                             "Host of Podcast.__init__\n"
                                             "The podcast about Python and the people who make it great!\n"
                                             "https://www.podcastinit.com\n"))
+                   (mu4e-maildir-shortcuts .
+                    (("/podcastinit/Inbox" . ?i)
+                     ("/podcastinit/Sent" . ?s)
+                     ("/podcastinit/Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "mitodl"
@@ -389,7 +412,7 @@
                    (mu4e-trash-folder . "/mitodl/Trash")
                    (mu4e-drafts-folder . "/mitodl/Drafts")
                    ;; (mu4e-get-mail-command "mbsync mitodl")
-                   (smtpmail-smtp-user . "tmacey@mit.edu")
+                   (smtpmail-smtp-user . "tmacey")
                    (smtpmail-smtp-server . "outgoing.mit.edu")
                    (smtpmail-smtp-service . 587)
                    (mu4e-compose-signature .
@@ -399,6 +422,10 @@
                                             "DevOps Engineering Manager\n"
                                             "MIT Office of Digital Learning\n"
                                             "https://engineering.odl.mit.edu\n"))
+                   (mu4e-maildir-shortcuts .
+                    (("/mitodl/Inbox" . ?i)
+                     ("/mitodl/Sent Items" . ?s)
+                     ("/mitodl/Drafts" . ?d)))
                    ))
          ))
 
