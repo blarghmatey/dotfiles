@@ -20,6 +20,7 @@ Master :blarghmatey-remote:
 Slave :blarghmatey-local:
 Patterns *
 Create Both
+Expunge Both
 SyncState *
 
 # Gmail - tobiasmacey
@@ -44,6 +45,7 @@ Master :tobiasmacey-remote:
 Slave :tobiasmacey-local:
 Patterns *
 Create Both
+Expunge Both
 SyncState *
 
 # Gmail - boundlessnotions
@@ -68,6 +70,7 @@ Master :boundlessnotions-remote:
 Slave :boundlessnotions-local:
 Patterns *
 Create Both
+Expunge Both
 SyncState *
 
 # Gmail - Bitlancer
@@ -92,6 +95,7 @@ Master :bitlancer-remote:
 Slave :bitlancer-local:
 Patterns *
 Create Both
+Expunge Both
 SyncState *
 
 # Podcastinit
@@ -116,6 +120,7 @@ Master :podcastinit-remote:
 Slave :podcastinit-local:
 Patterns *
 Create Both
+Expunge Both
 SyncState *
 
 # MIT ODL
@@ -138,6 +143,7 @@ Inbox ~/.mail/mitodl/Inbox
 Channel mitodl
 Master :mitodl-remote:
 Slave :mitodl-local:
-Patterns * "!INBOX/Django*"
+Patterns *
 Create Both
+Expunge Both
 SyncState *

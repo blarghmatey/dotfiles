@@ -218,7 +218,7 @@
 (setq org-log-reschedule (quote time))
 (setq org-agenda-files
    (quote
-    ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org" "~/Dropbox/org/todo/bitlancer.org")))
+    ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org" "~/Dropbox/org/todo/bitlancer.org" "~/Dropbox/org/todo/todo.org" "~/Dropbox/org/calendars")))
  (setq org-agenda-time-grid
    (quote
     ((daily weekly today require-timed)
@@ -264,8 +264,8 @@
 (setq mu4e-html2text-command `mu4e-shr2text)
 (setq shr-color-visible-luminance-min 80)
 (setq mu4e-get-mail-command "mbsync -a")
+(setq mu4e-change-filenames-when-moving t)
 (setq mu4e-completing-read-function 'completing-read)
-(setq mu4e-change-filenames-when-moving 0)
 (add-to-list 'mu4e-view-actions
              '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 (add-to-list 'mu4e-view-actions
