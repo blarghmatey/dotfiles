@@ -261,7 +261,7 @@
 (setq mu4e-use-fancy-chars t)
 (setq mu4e-view-show-images t
       mu4e-show-imagest t)
-(setq mu4e-html2text-command `mu4e-shr2text)
+(setq mu4e-html2text-command "w3m -T text/html")
 (setq shr-color-visible-luminance-min 80)
 (setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-change-filenames-when-moving t)
@@ -279,6 +279,8 @@
 (setq mu4e-view-prefer-html t)
 (setq mu4e-context-policy nil)
 (setq message-kill-buffer-on-exit t)
+(setq org-mu4e-convert-to-html t)
+(setq mu4e-compose-dont-reply-to-self t)
 (setq mu4e-contexts
       `( ,(make-mu4e-context
            :name "blarghmatey"
@@ -298,7 +300,8 @@
                    (mu4e-compose-signature .
                                            (concat
                                             "Regards,\n"
-                                            "Tobias Macey\n"))
+                                            "Tobias Macey\n"
+                                            "https://linkedin.com/in/tmacey\n"))
                    (mu4e-maildir-shortcuts .
                     (("/blarghmatey/Inbox" . ?i)
                      ("/blarghmatey/[Gmail]/.Sent Mail" . ?s)
@@ -320,18 +323,19 @@
                    (mu4e-compose-signature .
                                            (concat
                                             "Regards,\n"
-                                            "Tobias Macey\n"))
+                                            "Tobias Macey\n"
+                                            "https://linkedin.com/in/tmacey\n"))
                    (mu4e-maildir-shortcuts .
                     (("/tobiasmacey/Inbox" . ?i)
                      ("/tobiasmacey/[Gmail]/.Sent Mail" . ?s)
                      ("/tobiasmacey/[Gmail]/.Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
-           :name "-boundlessnotions"
+           :name "xboundlessnotions"
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/boundlessnotions" (mu4e-message-field msg :maildir))))
-           :vars '((user-mail-address . "tmacey@boundlessnotions.com")
+           :vars '((mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com" "tmacey@renaissancedev.com"))
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/boundlessnotions/[Gmail]/.Trash")
                    (mu4e-drafts-folder . "/boundlessnotions/[Gmail]/.Drafts")
@@ -352,7 +356,7 @@
                      ("/boundlessnotions/[Gmail]/.Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
-           :name "+bitlancer"
+           :name "zbitlancer"
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/bitlancer" (mu4e-message-field msg :maildir))))
