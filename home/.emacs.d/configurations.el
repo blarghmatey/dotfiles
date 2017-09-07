@@ -436,7 +436,8 @@
                    (mu4e-maildir-shortcuts .
                     (("/mitodl/Inbox" . ?i)
                      ("/mitodl/Sent Items" . ?s)
-                     ("/mitodl/Drafts" . ?d)))
+                     ("/mitodl/Drafts" . ?d)
+                     ("/mitodl/Inbox/.Django Errors" . ?e)))
                    ))
          ))
 
