@@ -281,6 +281,13 @@
 (setq message-kill-buffer-on-exit t)
 (setq org-mu4e-convert-to-html t)
 (setq mu4e-compose-dont-reply-to-self t)
+(setq mu4e-user-mail-address-list '("tmacey@boundlessnotions.com"
+                                    "tmacey@renaissancedev.com"
+                                    "tmacey@bitlancer.com"
+                                    "tmacey@mit.edu"
+                                    "tmacey@podcastinit.com"
+                                    "blarghmatey@gmail.com"
+                                    "tobias.macey@gmail.com"))
 (setq mu4e-contexts
       `( ,(make-mu4e-context
            :name "blarghmatey"
