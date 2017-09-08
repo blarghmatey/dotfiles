@@ -203,6 +203,9 @@
 ;; (setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
 (require 'org-alert)
 (require 'org-gcal)
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "listings"))
+(add-to-list 'org-latex-packages-alist '("" "color"))
 (setq org-agenda-restore-windows-after-quit t)
 (setq alert-default-style 'libnotify)
 (setq org-alert-enable t)
@@ -253,14 +256,15 @@
 (require 'org-mu4e)
 (require 'smtpmail)
 (require 'mu4e-alert)
+(require 'mu4e-contrib)
 (mu4e-alert-enable-mode-line-display)
 (mu4e-alert-enable-notifications)
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it)
 (setq mu4e-maildir (expand-file-name "~/.mail"))
 (setq mu4e-use-fancy-chars t)
-(setq mu4e-view-show-images t
-      mu4e-show-imagest t)
+(setq mu4e-view-show-images t)
+(setq mu4e-show-images t)
 (setq mu4e-html2text-command 'mu4e-shr2text)
 (setq shr-color-visible-luminance-min 80)
 (setq mu4e-get-mail-command "mbsync -a")
@@ -280,6 +284,8 @@
 (setq mu4e-context-policy nil)
 (setq message-kill-buffer-on-exit t)
 (setq org-mu4e-convert-to-html t)
+(setq mu4e-view-show-addresses t)
+(setq mu43-scroll-to-next nil)
 (setq mu4e-compose-dont-reply-to-self t)
 (setq org-mime-export-options '(:section-numbers nil
                                 :with-author nil
