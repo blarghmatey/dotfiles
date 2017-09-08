@@ -261,7 +261,7 @@
 (setq mu4e-use-fancy-chars t)
 (setq mu4e-view-show-images t
       mu4e-show-imagest t)
-(setq mu4e-html2text-command "w3m -T text/html")
+(setq mu4e-html2text-command 'mu4e-shr2text)
 (setq shr-color-visible-luminance-min 80)
 (setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-change-filenames-when-moving t)
@@ -281,6 +281,9 @@
 (setq message-kill-buffer-on-exit t)
 (setq org-mu4e-convert-to-html t)
 (setq mu4e-compose-dont-reply-to-self t)
+(setq org-mime-export-options '(:section-numbers nil
+                                :with-author nil
+                                :with-toc nil))
 (setq mu4e-user-mail-address-list '("tmacey@boundlessnotions.com"
                                     "tmacey@renaissancedev.com"
                                     "tmacey@bitlancer.com"
