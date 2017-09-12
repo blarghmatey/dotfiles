@@ -239,6 +239,12 @@
          "** TODO %? :%^G\n:PROPERTIES:\n:Created: %U\n:END:")
         ("n" "Note" entry (file org-default-notes-file)
          "* %?\n:PROPERTIES:\n:Created: %U\n:END:")))
+(ignore-errors (load-file "~/.org-gcal-client-secrets.el.gpg"))
+(setq org-gcal-file-alist `(("blarghmatey@gmail.com" . ,(concat org-directory "calendars/blarghmatey.org"))
+                            ("tobias.macey@gmail.com" . ,(concat org-directory "calendars/tobiasmacey.org"))
+                            ("tmacey@bitlancer.com" . ,(concat org-directory "calendars/bitlancer.org"))
+                            ("tmacey@boundlessnotions.com" . ,(concat org-directory "calendars/boundlessnotions.org"))))
+
 
 (global-set-key (kbd "C-c L") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -313,6 +319,7 @@
                    (smtpmail-smtp-user . "blarghmatey@gmail.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
+                   (mu4e-compose-dont-reply-to-self t)
                    (mu4e-compose-signature .
                                            (concat
                                             "Regards,\n"
@@ -336,6 +343,7 @@
                    (smtpmail-smtp-user . "tobias.macey@gmail.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
+                   (mu4e-compose-dont-reply-to-self . t)
                    (mu4e-compose-signature .
                                            (concat
                                             "Regards,\n"
@@ -359,6 +367,7 @@
                    (smtpmail-smtp-user . "tmacey@boundlessnotions.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
+                   (mu4e-compose-dont-reply-to-self . t)
                    (mu4e-compose-signature .
                                            (concat
                                             "Regards,\n"
@@ -384,6 +393,7 @@
                    (smtpmail-smtp-user . "tmacey@bitlancer.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
+                   (mu4e-compose-dont-reply-to-self . t)
                    (mu4e-compose-signature .
                                            (concat
                                             "Regards,\n"
@@ -409,6 +419,7 @@
                    (smtpmail-smtp-user . "tmacey@podcastinit.com")
                    (smtpmail-smtp-server . "smtp.zoho.com")
                    (smtpmail-smtp-service . 587)
+                   (mu4e-compose-dont-reply-to-self . t)
                    (mu4e-compose-signature .
                                            (concat
                                             "Regards,\n"
@@ -435,6 +446,7 @@
                    (smtpmail-smtp-user . "tmacey")
                    (smtpmail-smtp-server . "outgoing.mit.edu")
                    (smtpmail-smtp-service . 587)
+                   (mu4e-compose-dont-reply-to-self . t)
                    (mu4e-compose-signature .
                                            (concat
                                             "Regards,\n"
