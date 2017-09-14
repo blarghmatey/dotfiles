@@ -273,7 +273,7 @@
 (setq mu4e-view-show-images t)
 (setq mu4e-show-images t)
 (setq mu4e-html2text-command 'mu4e-shr2text)
-(setq shr-color-visible-luminance-min 80)
+(setq shr-use-colors nil)
 (setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-change-filenames-when-moving t)
 (setq mu4e-completing-read-function 'completing-read)
