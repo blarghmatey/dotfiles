@@ -87,6 +87,10 @@
 (setq indent-line-function 'indent-for-tab-command)
 
 (setq magit-last-seen-setup-instructions "1.4.0")
+(use-package magithub
+  :after magit
+  :ensure t
+  :config (magithub-feature-autoinject t))
 
 (setq create-lockfiles nil)
 (setq
@@ -222,7 +226,7 @@
 (setq org-log-reschedule (quote time))
 (setq org-agenda-files
    (quote
-    ("~/Dropbox/org/todo/personal.org" "~/Dropbox/org/todo/mit.org" "~/Dropbox/org/todo/bitlancer.org" "~/Dropbox/org/todo/todo.org" "~/Dropbox/org/calendars")))
+    ("~/Dropbox/org/todo/" "~/Dropbox/org/calendars" "~/Dropbox/org/journal")))
 (setq org-agenda-time-grid
       (quote
        ((daily weekly today require-timed)
@@ -237,16 +241,17 @@
 (setq org-default-notes-file (concat org-directory "notes.org"))
 (setq org-refile-targets `((org-agenda-files . (:maxlevel . 2))))
 (setq org-capture-templates
-      '(("t" "Todo" entry (file (concat org-directory "todo/todo.org"))
+      `(("t" "Todo" entry (file ,(concat org-directory "todo/todo.org"))
          "** TODO %? :%^G\n:PROPERTIES:\n:Created: %U\n:END:")
         ("n" "Note" entry (file org-default-notes-file)
          "* %?\n:PROPERTIES:\n:Created: %U\n:END:")))
 (ignore-errors (load-file "~/.org-gcal-client-secrets.el.gpg"))
 (setq org-gcal-file-alist `(("blarghmatey@gmail.com" . ,(concat org-directory "calendars/blarghmatey.org"))
+                            ("sabrinaleevt@gmail.com" . ,(concat org-directory "calendars/sabrinaleevt.org"))
                             ("tobias.macey@gmail.com" . ,(concat org-directory "calendars/tobiasmacey.org"))
+                            ("cks7rp25je0uau65oiq6nh4trs@group.calendar.google.com" . ,(concat org-directory "calendars/mit-engineering.org"))
                             ("tmacey@bitlancer.com" . ,(concat org-directory "calendars/bitlancer.org"))
                             ("tmacey@boundlessnotions.com" . ,(concat org-directory "calendars/boundlessnotions.org"))))
-
 
 (global-set-key (kbd "C-c L") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -264,8 +269,6 @@
 (require 'org-mu4e)
 (require 'smtpmail)
 (require 'mu4e-contrib)
-(mu4e-alert-enable-mode-line-display)
-(mu4e-alert-enable-notifications)
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it)
 (setq mu4e-maildir (expand-file-name "~/.mail"))
@@ -282,6 +285,8 @@
 (add-to-list 'mu4e-view-actions
              '("Eww view" . jcs-view-in-eww) t)
 (add-to-list 'mu4e-headers-fields '(:maildir))
+(define-key mu4e-view-mode-map "\t" 'shr-next-link)
+(define-key mu4e-view-mode-map (kbd "<backtab>") 'shr-previous-link)
 (when (fboundp 'imagemagick-register-types)
   (imagemagick-register-types))
 (setq mu4e-compose-format-flowed t)
@@ -319,9 +324,9 @@
                                                    "blarghmatey@gmail.com"
                                                    "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/blarghmatey/[Gmail]/.Trash")
-                   (mu4e-drafts-folder . "/blarghmatey/[Gmail]/.Drafts")
-                   (mu4e-sent-folder . "/blarghmatey/[Gmail]/.Sent Mail")
+                   (mu4e-trash-folder . "/blarghmatey/[Gmail]/Trash")
+                   (mu4e-drafts-folder . "/blarghmatey/[Gmail]/Drafts")
+                   (mu4e-sent-folder . "/blarghmatey/[Gmail]/Sent Mail")
                    ;; (mu4e-get-mail-command . "mbsync blarghmatey")
                    (mu4e-sent-messages-behavior . delete)
                    (smtpmail-smtp-user . "blarghmatey@gmail.com")
@@ -335,8 +340,8 @@
                                             "https://linkedin.com/in/tmacey\n"))
                    (mu4e-maildir-shortcuts .
                     (("/blarghmatey/Inbox" . ?i)
-                     ("/blarghmatey/[Gmail]/.Sent Mail" . ?s)
-                     ("/blarghmatey/[Gmail]/.Drafts" . ?d)))
+                     ("/blarghmatey/[Gmail]/Sent Mail" . ?s)
+                     ("/blarghmatey/[Gmail]/Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "tobiasmacey"
@@ -352,8 +357,8 @@
                                                    "blarghmatey@gmail.com"
                                                    "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/tobiasmacey/[Gmail]/.Trash")
-                   (mu4e-drafts-folder . "/tobiasmacey/[Gmail]/.Drafts")
+                   (mu4e-trash-folder . "/tobiasmacey/[Gmail]/Trash")
+                   (mu4e-drafts-folder . "/tobiasmacey/[Gmail]/Drafts")
                    ;; (mu4e-get-mail-command . "mbsync tobiasmacey")
                    (smtpmail-smtp-user . "tobias.macey@gmail.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
@@ -366,8 +371,8 @@
                                             "https://linkedin.com/in/tmacey\n"))
                    (mu4e-maildir-shortcuts .
                     (("/tobiasmacey/Inbox" . ?i)
-                     ("/tobiasmacey/[Gmail]/.Sent Mail" . ?s)
-                     ("/tobiasmacey/[Gmail]/.Drafts" . ?d)))
+                     ("/tobiasmacey/[Gmail]/Sent Mail" . ?s)
+                     ("/tobiasmacey/[Gmail]/Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "xboundlessnotions"
@@ -383,8 +388,8 @@
                                                    "blarghmatey@gmail.com"
                                                    "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/boundlessnotions/[Gmail]/.Trash")
-                   (mu4e-drafts-folder . "/boundlessnotions/[Gmail]/.Drafts")
+                   (mu4e-trash-folder . "/boundlessnotions/[Gmail]/Trash")
+                   (mu4e-drafts-folder . "/boundlessnotions/[Gmail]/Drafts")
                    ;; (mu4e-get-mail-command . "mbsync boundlessnotions")
                    (smtpmail-smtp-user . "tmacey@boundlessnotions.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
@@ -399,8 +404,8 @@
                                             "https://www.boundlessnotions.com\n"))
                    (mu4e-maildir-shortcuts .
                     (("/boundlessnotions/Inbox" . ?i)
-                     ("/boundlessnotions/[Gmail]/.Sent Mail" . ?s)
-                     ("/boundlessnotions/[Gmail]/.Drafts" . ?d)))
+                     ("/boundlessnotions/[Gmail]/Sent Mail" . ?s)
+                     ("/boundlessnotions/[Gmail]/Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "zbitlancer"
@@ -416,8 +421,8 @@
                                                    "blarghmatey@gmail.com"
                                                    "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/bitlancer/[Gmail]/.Trash")
-                   (mu4e-drafts-folder . "/bitlancer/[Gmail]/.Drafts")
+                   (mu4e-trash-folder . "/bitlancer/[Gmail]/Trash")
+                   (mu4e-drafts-folder . "/bitlancer/[Gmail]/Drafts")
                    ;; (mu4e-get-mail-command . "mbsync bitlancer")
                    (smtpmail-smtp-user . "tmacey@bitlancer.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
@@ -432,8 +437,8 @@
                                             "https://www.bitlancer.com\n"))
                    (mu4e-maildir-shortcuts .
                     (("/bitlancer/Inbox" . ?i)
-                     ("/bitlancer/[Gmail]/.Sent Mail" . ?s)
-                     ("/bitlancer/[Gmail]/.Drafts" . ?d)))
+                     ("/bitlancer/[Gmail]/Sent Mail" . ?s)
+                     ("/bitlancer/[Gmail]/Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "podcastinit"
@@ -501,7 +506,7 @@
                     (("/mitodl/Inbox" . ?i)
                      ("/mitodl/Sent Items" . ?s)
                      ("/mitodl/Drafts" . ?d)
-                     ("/mitodl/Inbox/.Django Errors" . ?e)))
+                     ("/mitodl/Inbox/Django Errors" . ?e)))
                    ))
          ))
 

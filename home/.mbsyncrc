@@ -1,3 +1,5 @@
+CopyArrivalDate yes
+
 # Gmail - blarghmatey
 IMAPAccount blarghmatey
 Host imap.gmail.com
@@ -12,6 +14,7 @@ IMAPStore blarghmatey-remote
 Account blarghmatey
 
 MaildirStore blarghmatey-local
+SubFolders Verbatim
 Path ~/.mail/blarghmatey/
 Inbox ~/.mail/blarghmatey/Inbox
 
@@ -37,6 +40,7 @@ IMAPStore tobiasmacey-remote
 Account tobiasmacey
 
 MaildirStore tobiasmacey-local
+SubFolders Verbatim
 Path ~/.mail/tobiasmacey/
 Inbox ~/.mail/tobiasmacey/Inbox
 
@@ -62,6 +66,7 @@ IMAPStore boundlessnotions-remote
 Account boundlessnotions
 
 MaildirStore boundlessnotions-local
+SubFolders Verbatim
 Path ~/.mail/boundlessnotions/
 Inbox ~/.mail/boundlessnotions/Inbox
 
@@ -87,6 +92,7 @@ IMAPStore bitlancer-remote
 Account bitlancer
 
 MaildirStore bitlancer-local
+SubFolders Verbatim
 Path ~/.mail/bitlancer/
 Inbox ~/.mail/bitlancer/Inbox
 
@@ -112,6 +118,7 @@ IMAPStore podcastinit-remote
 Account podcastinit
 
 MaildirStore podcastinit-local
+SubFolders Verbatim
 Path ~/.mail/podcastinit/
 Inbox ~/.mail/podcastinit/Inbox
 
@@ -137,6 +144,7 @@ IMAPStore mitodl-remote
 Account mitodl
 
 MaildirStore mitodl-local
+SubFolders Verbatim
 Path ~/.mail/mitodl/
 Inbox ~/.mail/mitodl/Inbox
 

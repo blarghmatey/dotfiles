@@ -27,8 +27,7 @@
 (pallet-mode t)
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")
-        ("marmalade" . "https://marmalade-repo.org/packages/")))
+        ("melpa" . "https://melpa.org/packages/")))
 ;; (add-to-list 'package-archives
 ;;    '("melpa" . "https://melpa.org/packages/") t)
 ;; (add-to-list 'package-archives
@@ -62,6 +61,7 @@
 (projectile-global-mode)
 (global-whitespace-mode)
 (global-auto-revert-mode t)
+(display-time-mode 1)
 (require 'git-gutter-fringe+)
 (global-git-gutter+-mode)
 (elscreen-start)
@@ -121,6 +121,10 @@
       '(face trailing empty tab-mark))))
 (add-hook 'org-mode-hook (lambda () (setq-local whitespace-style
       '(face trailing empty tab-mark))))
+(add-hook 'org-mime-html-hook
+          (lambda ()
+            (org-mime-change-element-style
+             "blockquote" "border-left: 2px solid gray; padding-left: 4px;"))) 
 (add-hook 'js2-mode-hook (lambda ()
                            (setq-local js-indent-level 2)))
 (add-hook 'json-mode-hook (lambda ()
