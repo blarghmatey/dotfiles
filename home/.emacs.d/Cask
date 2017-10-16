@@ -1,5 +1,4 @@
 (source gnu)
-(source marmalade)
 (source melpa)
 
 (depends-on "ag")
@@ -300,6 +299,7 @@
 (depends-on "undo-tree")
 (depends-on "undohist")
 (depends-on "url-http-ntlm")
+(depends-on "use-package")
 (depends-on "vagrant")
 (depends-on "virtualenvwrapper")
 (depends-on "web-completion-data")

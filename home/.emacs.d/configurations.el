@@ -230,9 +230,8 @@
 (setq org-agenda-time-grid
       (quote
        ((daily weekly today require-timed)
-        (800 1000 1200 1400 1600 1800 2000)
-        "......"
-        "----------------")))
+        "----------------"
+        (800 1000 1200 1400 1600 1800 2000))))
 (setq org-journal-date-format "%Y-%m-%d")
 (setq org-journal-dir "~/Dropbox/org/journal/")
 (setq org-journal-file-format "%Y-%m-%d.org")
@@ -277,6 +276,8 @@
 (setq mu4e-show-images t)
 (setq mu4e-html2text-command 'mu4e-shr2text)
 (setq shr-use-colors nil)
+(define-key mu4e-view-mode-map "\t" 'shr-next-link)
+(define-key mu4e-view-mode-map (kbd "<backtab>") 'shr-previous-link)
 (setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-change-filenames-when-moving t)
 (setq mu4e-completing-read-function 'completing-read)
@@ -309,6 +310,8 @@
                                     "tmacey@podcastinit.com"
                                     "blarghmatey@gmail.com"
                                     "tobias.macey@gmail.com"))
+(add-to-list 'mu4e-bookmarks
+             '("date:7d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Week View" ?W))
 (setq mu4e-contexts
       `( ,(make-mu4e-context
            :name "blarghmatey"
