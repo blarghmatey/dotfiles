@@ -119,7 +119,7 @@
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
 
-
+(setq ctags-update-prompt-create-tags nil)
 ;; (scroll-bar-mode -1)
 (tool-bar-mode -1)
 
@@ -218,12 +218,13 @@
 (setq org-mobile-directory "~/Dropbox/org-mobile/")
 (setq org-mobile-inbox-for-pull "~/Dropbox/org-mobile/inbox.org")
 (setq org-log-done t)
-(setq org-todo-keywords
-      '((sequence "TODO" "DOING" "|" "DONE")))
-(setq org-todo-keyword-faces
-      '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold))))
 (setq org-log-redeadline (quote time))
 (setq org-log-reschedule (quote time))
+(setq org-log-into-drawer t)
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "DOING(d!)" "|" "DONE(D!)")))
+(setq org-todo-keyword-faces
+      '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold))))
 (setq org-agenda-files
    (quote
     ("~/Dropbox/org/todo/" "~/Dropbox/org/calendars" "~/Dropbox/org/journal")))
@@ -493,7 +494,7 @@
                    (mu4e-sent-folder . "/mitodl/Sent Items")
                    (mu4e-trash-folder . "/mitodl/Trash")
                    (mu4e-drafts-folder . "/mitodl/Drafts")
-                   ;; (mu4e-get-mail-command "mbsync mitodl")
+                   ;; (mu4e-get-mail-command . "mbsync mitodl")
                    (smtpmail-smtp-user . "tmacey")
                    (smtpmail-smtp-server . "outgoing.mit.edu")
                    (smtpmail-smtp-service . 587)
