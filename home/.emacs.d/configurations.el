@@ -195,7 +195,7 @@
 (global-set-key (kbd "C-c C-{") 'insert-pair)
 (global-set-key (kbd "C-c C-[") 'insert-pair)
 
-(global-set-key (kbd "C-M-p") 'projectile-find-file)
+(global-set-key (kbd "M-P") 'projectile-find-file)
 
 (global-set-key (kbd "M-%") 'query-replace-regexp)
 
@@ -476,6 +476,40 @@
                     (("/podcastinit/Inbox" . ?i)
                      ("/podcastinit/Sent" . ?s)
                      ("/podcastinit/Drafts" . ?d)))
+                   ))
+         ,(make-mu4e-context
+           :name "dataengineering"
+           :match-func (lambda (msg)
+                         (when msg
+                           (string-prefix-p "/dataengineering" (mu4e-message-field msg :maildir))))
+           :vars '((user-mail-address . "tmacey@dataengineeringpodcast.com")
+                   (mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com"
+                                                   "tmacey@renaissancedev.com"
+                                                   "tmacey@bitlancer.com"
+                                                   "tmacey@mit.edu"
+                                                   "tmacey@podcastinit.com"
+                                                   "tmacey@dataengineeringpodcast.com"
+                                                   "blarghmatey@gmail.com"
+                                                   "tobias.macey@gmail.com"))
+                   (user-full-name . "Tobias Macey")
+                   (mu4e-trash-folder . "/dataengineering/Trash")
+                   (mu4e-drafts-folder . "/dataengineering/Drafts")
+                   ;; (mu4e-get-mail-command . "mbsync podcastinit")
+                   (smtpmail-smtp-user . "tmacey@dataengineeringpodcast.com")
+                   (smtpmail-smtp-server . "smtp.migadu.com")
+                   (smtpmail-smtp-service . 587)
+                   (mu4e-compose-dont-reply-to-self . t)
+                   (mu4e-compose-signature .
+                                           (concat
+                                            "Regards,\n"
+                                            "Tobias Macey\n"
+                                            "Host of the Data Engineering Pdocast\n"
+                                            "The podcast about modern data management and the people who make it possible.\n"
+                                            "https://www.dataengineeringpodcast.com\n"))
+                   (mu4e-maildir-shortcuts .
+                    (("/dataengineering/Inbox" . ?i)
+                     ("/dataengineering/Sent" . ?s)
+                     ("/dataengineering/Drafts" . ?d)))
                    ))
          ,(make-mu4e-context
            :name "mitodl"

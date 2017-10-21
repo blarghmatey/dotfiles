@@ -130,6 +130,32 @@ Create Both
 Expunge Both
 SyncState *
 
+# Podcastinit
+IMAPAccount dataengineering
+Host imap.migadu.com
+User tmacey@dataengineeringpodcast.com
+PassCmd "gpg -q --for-your-eyes-only --no-tty -d ~/.mail/dataengineering/creds.gpg"
+AuthMechs PLAIN
+SSLType IMAPS
+SSLVersions TLSv1.2
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore dataengineering-remote
+Account dataengineering
+
+MaildirStore dataengineering-local
+SubFolders Verbatim
+Path ~/.mail/dataengineering/
+Inbox ~/.mail/dataengineering/Inbox
+
+Channel dataengineering
+Master :dataengineering-remote:
+Slave :dataengineering-local:
+Patterns *
+Create Both
+Expunge Both
+SyncState *
+
 # MIT ODL
 IMAPAccount mitodl
 Host imap.exchange.mit.edu
