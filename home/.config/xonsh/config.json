@@ -2,7 +2,6 @@
   "xontribs": [
     "bashisms",
     "coreutils",
-    "docker_tabcomplete",
     "jedi",
     "mpl",
     "vox",

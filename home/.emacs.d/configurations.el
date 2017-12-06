@@ -114,7 +114,7 @@
 
 ;; (set-face-attribute 'default nil :font "Source Code Pro-12")
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
-(setq default-frame-alist '((font . "Hack-10") (load-theme 'tsdh-dark)))
+(setq default-frame-alist '((font . "Hack-10") (load-theme 'lush)))
 ;; (load-theme 'material)
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
@@ -139,7 +139,7 @@
 (global-set-key (kbd "C-c f N") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-8")))
 (global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-10")))
 (global-set-key (kbd "C-c f n") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-7")))
-(global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-5")))
+(global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-6")))
 
 ;; Use C-c t as a prefix for toggling things
 (global-set-key (kbd "C-c t l") 'linum-relative-toggle)
@@ -227,12 +227,12 @@
       '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold))))
 (setq org-agenda-files
    (quote
-    ("~/Dropbox/org/todo/" "~/Dropbox/org/calendars" "~/Dropbox/org/journal")))
+    ("~/Dropbox/org/todo/" "~/Dropbox/org/calendars/" "~/Dropbox/org/journal")))
 (setq org-agenda-time-grid
-      (quote
-       ((daily weekly today require-timed)
-        "----------------"
-        (800 1000 1200 1400 1600 1800 2000))))
+      '((daily today require-timed)
+        (800 1000 1200 1400 1600 1800 2000)
+        "......"
+        "----------------"))
 (setq org-journal-date-format "%Y-%m-%d")
 (setq org-journal-dir "~/Dropbox/org/journal/")
 (setq org-journal-file-format "%Y-%m-%d.org")
@@ -264,7 +264,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; EMAIL CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e")
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
 (require 'org-mu4e)
 (require 'smtpmail)
@@ -363,6 +363,7 @@
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/tobiasmacey/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/tobiasmacey/[Gmail]/Drafts")
+                   (mu4e-sent-folder . "/tobiasmacey/[Gmail]/Sent Mail")
                    ;; (mu4e-get-mail-command . "mbsync tobiasmacey")
                    (smtpmail-smtp-user . "tobias.macey@gmail.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
@@ -394,6 +395,7 @@
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/boundlessnotions/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/boundlessnotions/[Gmail]/Drafts")
+                   (mu4e-sent-folder . "/boundlessnotions/[Gmail]/Sent Mail")
                    ;; (mu4e-get-mail-command . "mbsync boundlessnotions")
                    (smtpmail-smtp-user . "tmacey@boundlessnotions.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
@@ -427,6 +429,7 @@
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/bitlancer/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/bitlancer/[Gmail]/Drafts")
+                   (mu4e-sent-folder . "/bitlancer/[Gmail]/Sent Mail")
                    ;; (mu4e-get-mail-command . "mbsync bitlancer")
                    (smtpmail-smtp-user . "tmacey@bitlancer.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
@@ -460,6 +463,7 @@
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/podcastinit/Trash")
                    (mu4e-drafts-folder . "/podcastinit/Drafts")
+                   (mu4e-sent-folder . "/podcastinit/Sent")
                    ;; (mu4e-get-mail-command . "mbsync podcastinit")
                    (smtpmail-smtp-user . "tmacey@podcastinit.com")
                    (smtpmail-smtp-server . "smtp.zoho.com")
@@ -494,6 +498,7 @@
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/dataengineering/Trash")
                    (mu4e-drafts-folder . "/dataengineering/Drafts")
+                   (mu4e-sent-folder . "/dataengineering/Sent")
                    ;; (mu4e-get-mail-command . "mbsync podcastinit")
                    (smtpmail-smtp-user . "tmacey@dataengineeringpodcast.com")
                    (smtpmail-smtp-server . "smtp.migadu.com")
