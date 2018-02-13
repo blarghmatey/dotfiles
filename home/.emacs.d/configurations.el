@@ -277,8 +277,11 @@
 (setq mu4e-show-images t)
 (setq mu4e-html2text-command 'mu4e-shr2text)
 (setq shr-use-colors nil)
-(define-key mu4e-view-mode-map "\t" 'shr-next-link)
-(define-key mu4e-view-mode-map (kbd "<backtab>") 'shr-previous-link)
+(define-key mu4e-headers-mode-map (kbd "C-c C-a")
+  (lambda ()
+    (interactive)
+    (let ((mu4e-get-mail-command "mbsync -a"))
+      (mu4e-update-mail-and-index t))))
 (setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-change-filenames-when-moving t)
 (setq mu4e-completing-read-function 'completing-read)
@@ -299,7 +302,7 @@
 (setq message-kill-buffer-on-exit t)
 (setq org-mu4e-convert-to-html t)
 (setq mu4e-view-show-addresses t)
-(setq mu43-scroll-to-next nil)
+(setq mu4e-scroll-to-next nil)
 (setq mu4e-compose-dont-reply-to-self t)
 (setq org-mime-export-options '(:section-numbers nil
                                 :with-author nil
@@ -331,7 +334,7 @@
                    (mu4e-trash-folder . "/blarghmatey/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/blarghmatey/[Gmail]/Drafts")
                    (mu4e-sent-folder . "/blarghmatey/[Gmail]/Sent Mail")
-                   ;; (mu4e-get-mail-command . "mbsync blarghmatey")
+                   (mu4e-get-mail-command . "mbsync blarghmatey")
                    (mu4e-sent-messages-behavior . delete)
                    (smtpmail-smtp-user . "blarghmatey@gmail.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
@@ -364,7 +367,7 @@
                    (mu4e-trash-folder . "/tobiasmacey/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/tobiasmacey/[Gmail]/Drafts")
                    (mu4e-sent-folder . "/tobiasmacey/[Gmail]/Sent Mail")
-                   ;; (mu4e-get-mail-command . "mbsync tobiasmacey")
+                   (mu4e-get-mail-command . "mbsync tobiasmacey")
                    (smtpmail-smtp-user . "tobias.macey@gmail.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
@@ -396,7 +399,7 @@
                    (mu4e-trash-folder . "/boundlessnotions/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/boundlessnotions/[Gmail]/Drafts")
                    (mu4e-sent-folder . "/boundlessnotions/[Gmail]/Sent Mail")
-                   ;; (mu4e-get-mail-command . "mbsync boundlessnotions")
+                   (mu4e-get-mail-command . "mbsync boundlessnotions")
                    (smtpmail-smtp-user . "tmacey@boundlessnotions.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
@@ -430,7 +433,7 @@
                    (mu4e-trash-folder . "/bitlancer/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/bitlancer/[Gmail]/Drafts")
                    (mu4e-sent-folder . "/bitlancer/[Gmail]/Sent Mail")
-                   ;; (mu4e-get-mail-command . "mbsync bitlancer")
+                   (mu4e-get-mail-command . "mbsync bitlancer")
                    (smtpmail-smtp-user . "tmacey@bitlancer.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
@@ -464,7 +467,7 @@
                    (mu4e-trash-folder . "/podcastinit/Trash")
                    (mu4e-drafts-folder . "/podcastinit/Drafts")
                    (mu4e-sent-folder . "/podcastinit/Sent")
-                   ;; (mu4e-get-mail-command . "mbsync podcastinit")
+                   (mu4e-get-mail-command . "mbsync podcastinit")
                    (smtpmail-smtp-user . "tmacey@podcastinit.com")
                    (smtpmail-smtp-server . "smtp.zoho.com")
                    (smtpmail-smtp-service . 587)
@@ -499,7 +502,7 @@
                    (mu4e-trash-folder . "/dataengineering/Trash")
                    (mu4e-drafts-folder . "/dataengineering/Drafts")
                    (mu4e-sent-folder . "/dataengineering/Sent")
-                   ;; (mu4e-get-mail-command . "mbsync podcastinit")
+                   (mu4e-get-mail-command . "mbsync podcastinit")
                    (smtpmail-smtp-user . "tmacey@dataengineeringpodcast.com")
                    (smtpmail-smtp-server . "smtp.migadu.com")
                    (smtpmail-smtp-service . 587)
@@ -508,7 +511,7 @@
                                            (concat
                                             "Regards,\n"
                                             "Tobias Macey\n"
-                                            "Host of the Data Engineering Pdocast\n"
+                                            "Host of the Data Engineering Podcast\n"
                                             "The podcast about modern data management and the people who make it possible.\n"
                                             "https://www.dataengineeringpodcast.com\n"))
                    (mu4e-maildir-shortcuts .
@@ -533,7 +536,7 @@
                    (mu4e-sent-folder . "/mitodl/Sent Items")
                    (mu4e-trash-folder . "/mitodl/Trash")
                    (mu4e-drafts-folder . "/mitodl/Drafts")
-                   ;; (mu4e-get-mail-command . "mbsync mitodl")
+                   (mu4e-get-mail-command . "mbsync mitodl")
                    (smtpmail-smtp-user . "tmacey")
                    (smtpmail-smtp-server . "outgoing.mit.edu")
                    (smtpmail-smtp-service . 587)
