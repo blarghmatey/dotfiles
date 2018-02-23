@@ -277,11 +277,6 @@
 (setq mu4e-show-images t)
 (setq mu4e-html2text-command 'mu4e-shr2text)
 (setq shr-use-colors nil)
-(define-key mu4e-headers-mode-map (kbd "C-c C-a")
-  (lambda ()
-    (interactive)
-    (let ((mu4e-get-mail-command "mbsync -a"))
-      (mu4e-update-mail-and-index t))))
 (setq mu4e-get-mail-command "mbsync -a")
 (setq mu4e-change-filenames-when-moving t)
 (setq mu4e-completing-read-function 'completing-read)
@@ -314,11 +309,19 @@
                                     "tmacey@podcastinit.com"
                                     "blarghmatey@gmail.com"
                                     "tobias.macey@gmail.com"))
-(add-to-list 'mu4e-bookmarks
-             '("date:7d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Week View" ?W))
+(dolist (bookmark
+         '(("date:7d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Week View" ?W)
+           ("date:30d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Month View" ?M)
+           ("date:90d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\" flag:unread flag:list" "Unread Newsletters" ?L)))
+  (add-to-list 'mu4e-bookmarks bookmark))
 (setq mu4e-contexts
       `( ,(make-mu4e-context
            :name "blarghmatey"
+           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+                                    (lambda ()
+                                      (interactive)
+                                      (let ((mu4e-get-mail-command "mbsync blarghmatey"))
+                                        (mu4e-update-mail-and-index t)))))
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/blarghmatey" (mu4e-message-field msg :maildir))))
@@ -334,7 +337,6 @@
                    (mu4e-trash-folder . "/blarghmatey/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/blarghmatey/[Gmail]/Drafts")
                    (mu4e-sent-folder . "/blarghmatey/[Gmail]/Sent Mail")
-                   (mu4e-get-mail-command . "mbsync blarghmatey")
                    (mu4e-sent-messages-behavior . delete)
                    (smtpmail-smtp-user . "blarghmatey@gmail.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
@@ -352,6 +354,11 @@
                    ))
          ,(make-mu4e-context
            :name "tobiasmacey"
+           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+                                    (lambda ()
+                                      (interactive)
+                                      (let ((mu4e-get-mail-command "mbsync tobiasmacey"))
+                                        (mu4e-update-mail-and-index t)))))
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/tobiasmacey" (mu4e-message-field msg :maildir))))
@@ -367,7 +374,6 @@
                    (mu4e-trash-folder . "/tobiasmacey/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/tobiasmacey/[Gmail]/Drafts")
                    (mu4e-sent-folder . "/tobiasmacey/[Gmail]/Sent Mail")
-                   (mu4e-get-mail-command . "mbsync tobiasmacey")
                    (smtpmail-smtp-user . "tobias.macey@gmail.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
@@ -384,6 +390,11 @@
                    ))
          ,(make-mu4e-context
            :name "xboundlessnotions"
+           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+                                    (lambda ()
+                                      (interactive)
+                                      (let ((mu4e-get-mail-command "mbsync boundlessnotions"))
+                                        (mu4e-update-mail-and-index t)))))
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/boundlessnotions" (mu4e-message-field msg :maildir))))
@@ -399,7 +410,6 @@
                    (mu4e-trash-folder . "/boundlessnotions/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/boundlessnotions/[Gmail]/Drafts")
                    (mu4e-sent-folder . "/boundlessnotions/[Gmail]/Sent Mail")
-                   (mu4e-get-mail-command . "mbsync boundlessnotions")
                    (smtpmail-smtp-user . "tmacey@boundlessnotions.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
@@ -418,6 +428,11 @@
                    ))
          ,(make-mu4e-context
            :name "zbitlancer"
+           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+                                    (lambda ()
+                                      (interactive)
+                                      (let ((mu4e-get-mail-command "mbsync bitlancer"))
+                                        (mu4e-update-mail-and-index t)))))
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/bitlancer" (mu4e-message-field msg :maildir))))
@@ -433,7 +448,6 @@
                    (mu4e-trash-folder . "/bitlancer/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/bitlancer/[Gmail]/Drafts")
                    (mu4e-sent-folder . "/bitlancer/[Gmail]/Sent Mail")
-                   (mu4e-get-mail-command . "mbsync bitlancer")
                    (smtpmail-smtp-user . "tmacey@bitlancer.com")
                    (smtpmail-smtp-server . "smtp.gmail.com")
                    (smtpmail-smtp-service . 587)
@@ -452,6 +466,11 @@
                    ))
          ,(make-mu4e-context
            :name "podcastinit"
+           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+                                    (lambda ()
+                                      (interactive)
+                                      (let ((mu4e-get-mail-command "mbsync podcastinit"))
+                                        (mu4e-update-mail-and-index t)))))
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/podcastinit" (mu4e-message-field msg :maildir))))
@@ -467,7 +486,6 @@
                    (mu4e-trash-folder . "/podcastinit/Trash")
                    (mu4e-drafts-folder . "/podcastinit/Drafts")
                    (mu4e-sent-folder . "/podcastinit/Sent")
-                   (mu4e-get-mail-command . "mbsync podcastinit")
                    (smtpmail-smtp-user . "tmacey@podcastinit.com")
                    (smtpmail-smtp-server . "smtp.zoho.com")
                    (smtpmail-smtp-service . 587)
@@ -486,6 +504,11 @@
                    ))
          ,(make-mu4e-context
            :name "dataengineering"
+           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+                                    (lambda ()
+                                      (interactive)
+                                      (let ((mu4e-get-mail-command "mbsync dataengineering"))
+                                        (mu4e-update-mail-and-index t)))))
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/dataengineering" (mu4e-message-field msg :maildir))))
@@ -502,7 +525,6 @@
                    (mu4e-trash-folder . "/dataengineering/Trash")
                    (mu4e-drafts-folder . "/dataengineering/Drafts")
                    (mu4e-sent-folder . "/dataengineering/Sent")
-                   (mu4e-get-mail-command . "mbsync podcastinit")
                    (smtpmail-smtp-user . "tmacey@dataengineeringpodcast.com")
                    (smtpmail-smtp-server . "smtp.migadu.com")
                    (smtpmail-smtp-service . 587)
@@ -521,6 +543,11 @@
                    ))
          ,(make-mu4e-context
            :name "mitodl"
+           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+                                    (lambda ()
+                                      (interactive)
+                                      (let ((mu4e-get-mail-command "mbsync mitodl"))
+                                        (mu4e-update-mail-and-index t)))))
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/mitodl" (mu4e-message-field msg :maildir))))
@@ -536,7 +563,6 @@
                    (mu4e-sent-folder . "/mitodl/Sent Items")
                    (mu4e-trash-folder . "/mitodl/Trash")
                    (mu4e-drafts-folder . "/mitodl/Drafts")
-                   (mu4e-get-mail-command . "mbsync mitodl")
                    (smtpmail-smtp-user . "tmacey")
                    (smtpmail-smtp-server . "outgoing.mit.edu")
                    (smtpmail-smtp-service . 587)
