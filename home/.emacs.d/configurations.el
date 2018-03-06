@@ -38,6 +38,7 @@
 (add-to-list 'auto-mode-alist '("\\.html" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jinja" . jinja2-mode))
 (add-to-list 'auto-mode-alist '("\\.sls" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.trello" . org-mode))
 
 (setq speedbar-indentation-width 2)
 (setq speedbar-show-unknown-files t)
@@ -307,6 +308,7 @@
                                     "tmacey@bitlancer.com"
                                     "tmacey@mit.edu"
                                     "tmacey@podcastinit.com"
+                                    "tmacey@dataengineeringpodcast.com"
                                     "blarghmatey@gmail.com"
                                     "tobias.macey@gmail.com"))
 (dolist (bookmark
@@ -326,13 +328,6 @@
                          (when msg
                            (string-prefix-p "/blarghmatey" (mu4e-message-field msg :maildir))))
            :vars '((user-mail-address . "blarghmatey@gmail.com")
-                   (mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com"
-                                                   "tmacey@renaissancedev.com"
-                                                   "tmacey@bitlancer.com"
-                                                   "tmacey@mit.edu"
-                                                   "tmacey@podcastinit.com"
-                                                   "blarghmatey@gmail.com"
-                                                   "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/blarghmatey/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/blarghmatey/[Gmail]/Drafts")
@@ -363,13 +358,6 @@
                          (when msg
                            (string-prefix-p "/tobiasmacey" (mu4e-message-field msg :maildir))))
            :vars '((user-mail-address . "tobias.macey@gmail.com")
-                   (mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com"
-                                                   "tmacey@renaissancedev.com"
-                                                   "tmacey@bitlancer.com"
-                                                   "tmacey@mit.edu"
-                                                   "tmacey@podcastinit.com"
-                                                   "blarghmatey@gmail.com"
-                                                   "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/tobiasmacey/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/tobiasmacey/[Gmail]/Drafts")
@@ -398,14 +386,7 @@
            :match-func (lambda (msg)
                          (when msg
                            (string-prefix-p "/boundlessnotions" (mu4e-message-field msg :maildir))))
-           :vars '((mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com" "tmacey@renaissancedev.com"))
-                   (mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com"
-                                                   "tmacey@renaissancedev.com"
-                                                   "tmacey@bitlancer.com"
-                                                   "tmacey@mit.edu"
-                                                   "tmacey@podcastinit.com"
-                                                   "blarghmatey@gmail.com"
-                                                   "tobias.macey@gmail.com"))
+           :vars '((user-mail-address . "tmacey@boundlessnotions.com")
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/boundlessnotions/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/boundlessnotions/[Gmail]/Drafts")
@@ -437,13 +418,6 @@
                          (when msg
                            (string-prefix-p "/bitlancer" (mu4e-message-field msg :maildir))))
            :vars '((user-mail-address . "tmacey@bitlancer.com")
-                   (mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com"
-                                                   "tmacey@renaissancedev.com"
-                                                   "tmacey@bitlancer.com"
-                                                   "tmacey@mit.edu"
-                                                   "tmacey@podcastinit.com"
-                                                   "blarghmatey@gmail.com"
-                                                   "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/bitlancer/[Gmail]/Trash")
                    (mu4e-drafts-folder . "/bitlancer/[Gmail]/Drafts")
@@ -475,13 +449,6 @@
                          (when msg
                            (string-prefix-p "/podcastinit" (mu4e-message-field msg :maildir))))
            :vars '((user-mail-address . "tmacey@podcastinit.com")
-                   (mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com"
-                                                   "tmacey@renaissancedev.com"
-                                                   "tmacey@bitlancer.com"
-                                                   "tmacey@mit.edu"
-                                                   "tmacey@podcastinit.com"
-                                                   "blarghmatey@gmail.com"
-                                                   "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/podcastinit/Trash")
                    (mu4e-drafts-folder . "/podcastinit/Drafts")
@@ -513,14 +480,6 @@
                          (when msg
                            (string-prefix-p "/dataengineering" (mu4e-message-field msg :maildir))))
            :vars '((user-mail-address . "tmacey@dataengineeringpodcast.com")
-                   (mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com"
-                                                   "tmacey@renaissancedev.com"
-                                                   "tmacey@bitlancer.com"
-                                                   "tmacey@mit.edu"
-                                                   "tmacey@podcastinit.com"
-                                                   "tmacey@dataengineeringpodcast.com"
-                                                   "blarghmatey@gmail.com"
-                                                   "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
                    (mu4e-trash-folder . "/dataengineering/Trash")
                    (mu4e-drafts-folder . "/dataengineering/Drafts")
@@ -552,13 +511,6 @@
                          (when msg
                            (string-prefix-p "/mitodl" (mu4e-message-field msg :maildir))))
            :vars '((user-mail-address . "tmacey@mit.edu")
-                   (mu4e-user-mail-address-list . ("tmacey@boundlessnotions.com"
-                                                   "tmacey@renaissancedev.com"
-                                                   "tmacey@bitlancer.com"
-                                                   "tmacey@mit.edu"
-                                                   "tmacey@podcastinit.com"
-                                                   "blarghmatey@gmail.com"
-                                                   "tobias.macey@gmail.com"))
                    (user-full-name . "Tobias Macey")
                    (mu4e-sent-folder . "/mitodl/Sent Items")
                    (mu4e-trash-folder . "/mitodl/Trash")

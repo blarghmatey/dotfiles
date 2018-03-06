@@ -120,7 +120,12 @@
 (add-hook 'markdown-mode-hook (lambda () (setq-local whitespace-style
       '(face trailing empty tab-mark))))
 (add-hook 'org-mode-hook (lambda () (setq-local whitespace-style
-      '(face trailing empty tab-mark))))
+                                                '(face trailing empty tab-mark))))
+(add-hook 'org-mode-hook
+          (lambda ()
+            (let ((filename (buffer-file-name (current-buffer))))
+              (when (and filename (string= "trello" (file-name-extension filename)))
+              (org-trello-mode)))))
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
