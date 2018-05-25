@@ -231,9 +231,9 @@ by using nxml's indentation rules."
 
 (defvar insert-time-format "%X"
   "*Format for \\[insert-time] (c.f. 'format-time-string').")
-(defvar insert-date-format "%Y/%m/%d"
+(defvar insert-date-format "%Y-%m-%d"
   "*Format for \\[insert-date] (c.f. 'format-time-string').")
-(defvar insert-date-time-format "%Y/%m/%d %X"
+(defvar insert-date-time-format "%Y-%m-%d %X"
   "*Format for \\[insert-date-time] (c.f. 'format-date-time-string').")
 
 (defun insert-date ()

@@ -256,6 +256,17 @@
 (global-set-key (kbd "C-c o t") (lambda () (interactive) (find-file (concat org-directory "todo/"))))
 (global-set-key (kbd "C-c s e") `org-edit-src-code)
 
+(let (credentials)
+  ;; only required if your auth file is not already in the list of auth-sources
+  (setq credentials (auth-source-user-and-password "boundlessnotions"))
+  (setq org2blog/wp-blog-alist
+        `(("boundlessnotions"
+           :url "http://www.boundlessnotions.com/xmlrpc.php"
+           :username ,(car credentials)
+           :password ,(cadr credentials)
+           :tags-as-categories nil))))
+(setq org2blog/wp-confirm-post t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; EMAIL CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
