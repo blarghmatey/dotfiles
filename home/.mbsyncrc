@@ -73,7 +73,7 @@ Inbox ~/.mail/boundlessnotions/Inbox
 Channel boundlessnotions
 Master :boundlessnotions-remote:
 Slave :boundlessnotions-local:
-Patterns *
+Patterns * "![Gmail]/All Mail"
 Create Both
 Expunge Both
 SyncState *
@@ -130,7 +130,7 @@ Create Both
 Expunge Both
 SyncState *
 
-# Podcastinit
+# Data Engineering
 IMAPAccount dataengineering
 Host imap.migadu.com
 User tmacey@dataengineeringpodcast.com
