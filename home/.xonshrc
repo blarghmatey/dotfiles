@@ -2,7 +2,24 @@
 from datetime import datetime
 from xonsh.prompt.gitstatus import gitstatus_prompt
 from glob import glob
-import re
+import re, json
+import geoip2.database
+import requests
+
+# try:
+#     _MY_IP = requests.get('https://api.ipify.org').text
+# except requests.HTTPError:
+#     print('Failed to retrieve public IP')
+#     _MY_IP = None
+
+# __open_weather_url = 'https://api.openweathermap.org/data/2.5/weather'
+# if _MY_IP:
+#     georeader = geoip2.database.Reader('/usr/share/GeoIP/GeoLite2-City.mmdb')
+#     _MY_LOCATION = georeader.city(_MY_IP)
+#     _MY_WEATHER = requests.get('{}?lat={}&lon={}'.format(
+#         __open_weather_url,
+#         _MY_LOCATION.location.latitude,
+#         _MY_LOCATION.location.longitude)).json
 
 _ORIG_PATH = list($PATH)
 _ORIG_PROMPT = $PROMPT
@@ -44,11 +61,17 @@ for code in __kill_codes:
 def _return_code_output():
     try:
         return_code = __xonsh_history__.rtns[-1]
+        if len(__xonsh_history__.rtns) > 1:
+            previous_return = __xonsh_history__.rtns[-2]
+        else:
+            previous_return = 0
     except IndexError:
         return ''
     if return_code != 0:
         code_description = __return_code_map.get(return_code, '')
         prompt_string = '{{BOLD_RED}}(╯°□°）╯︵ ┻━┻ {} {} '.format(return_code, code_description)
+    elif return_code == 0 and previous_return != 0:
+        prompt_string = '{BOLD_GREEN}┬─┬ノ( ◕◡◕ ノ )'
     else:
         prompt_string = ''
     return prompt_string
@@ -77,14 +100,14 @@ def ssh_host_completer(prefix, line, begidx, endidx, ctx):
 
 completer add ssh ssh_host_completer
 
-def _to_bytes(what):
-    if isinstance(what, bytes):
-        return bytes
-    else:
-        return str.encode(what)
-
-def _write_bytes(what):
-    sys.stdout.buffer.write(what)
-
-aliases['hex_encode'] = lambda a,i=None: _write_bytes(binascii.hexlify(_to_bytes(i.strip() or a[0])) + b'\n')
-aliases['hex_decode'] = lambda a,i=None: _write_bytes(binascii.unhexlify(_to_bytes(i.strip() or a[0])) + b'\n')
+#def _to_bytes(what):
+#    if isinstance(what, bytes):
+#        return bytes
+#    else:
+#        return str.encode(what)
+#
+#def _write_bytes(what):
+#    sys.stdout.buffer.write(what)
+#
+#aliases['hex_encode'] = lambda a,i=None: _write_bytes(binascii.hexlify(_to_bytes(i.strip() or a[0])) + b'\n')
+#aliases['hex_decode'] = lambda a,i=None: _write_bytes(binascii.unhexlify(_to_bytes(i.strip() or a[0])) + b'\n')
