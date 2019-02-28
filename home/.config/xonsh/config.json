@@ -4,8 +4,6 @@
     "coreutils",
     "jedi",
     "mpl",
-    "vox",
-    "vox_tabcomplete",
     "schedule"
   ]
 }

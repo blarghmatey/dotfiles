@@ -23,11 +23,15 @@ import requests
 
 _ORIG_PATH = list($PATH)
 _ORIG_PROMPT = $PROMPT
+$XONSH_HISTORY_SIZE='500000000000 commands'
 $XONSH_SHOW_TRACEBACK=True
 $XONSH_AUTO_PAIR=True
 $XONSH_DATETIME_FORMAT='%Y-%m-%dT%H:%M:%S'
 $CASE_SENSITIVE_COMPLETIONS = False
 $PATH.append('/home/tmacey/.local/bin')
+$PATH.insert(0, '/home/tmacey/.gem/ruby/2.5.0/bin')
+$GEM_PATH='/home/tmacey/.gem/ruby/2.5.0'
+$GEM_HOME='/home/tmacey/.gem/ruby/2.5.0'
 
 if glob('/tmp/ssh-*/agent.*'):
     $SSH_AUTH_SOCK=glob('/tmp/ssh-*/agent.*')[0]
@@ -60,9 +64,9 @@ for code in __kill_codes:
 
 def _return_code_output():
     try:
-        return_code = __xonsh_history__.rtns[-1]
+        return_code = __xonsh__.history.rtns[-1]
         if len(__xonsh_history__.rtns) > 1:
-            previous_return = __xonsh_history__.rtns[-2]
+            previous_return = __xonsh__.history.rtns[-2]
         else:
             previous_return = 0
     except IndexError:

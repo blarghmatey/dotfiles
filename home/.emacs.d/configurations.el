@@ -24,7 +24,7 @@
 
 (setq helm-dash-browser-func 'eww)
 
-(setq ido-enable-flex-matching t)
+;; (setq ido-enable-flex-matching t)
 
 (setq whitespace-line-column 150)
 (setq whitespace-style
@@ -37,7 +37,7 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.html" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jinja" . jinja2-mode))
-(add-to-list 'auto-mode-alist '("\\.sls" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.sls" . salt-mode))
 (add-to-list 'auto-mode-alist '("\\.trello" . org-mode))
 
 (setq speedbar-indentation-width 2)
@@ -196,6 +196,7 @@
 (global-set-key (kbd "C-c C-{") 'insert-pair)
 (global-set-key (kbd "C-c C-[") 'insert-pair)
 
+(global-set-key (kbd "C-c p p") 'projectile-switch-project)
 (global-set-key (kbd "M-P") 'projectile-find-file)
 
 (global-set-key (kbd "M-%") 'query-replace-regexp)
@@ -210,6 +211,7 @@
 (require 'org-alert)
 (require 'org-gcal)
 (require 'ox-latex)
+(require 'org-mu4e)
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
 (setq org-agenda-restore-windows-after-quit t)
@@ -222,6 +224,8 @@
 (setq org-log-redeadline (quote time))
 (setq org-log-reschedule (quote time))
 (setq org-log-into-drawer t)
+(setq org-use-sub-superscripts '{})
+(setq org-export-with-sub-superscripts '{})
 (setq org-todo-keywords
       '((sequence "TODO(t)" "DOING(d!)" "|" "DONE(D!)")))
 (setq org-todo-keyword-faces
@@ -236,11 +240,14 @@
 (setq org-mobile-directory "~/Dropbox/org")
 (setq org-default-notes-file (concat org-directory "notes.org"))
 (setq org-refile-targets `((org-agenda-files . (:maxlevel . 2))))
+(setq org-mu4e-link-query-in-headers-mode nil)
 (setq org-capture-templates
       `(("t" "Todo" entry (file ,(concat org-directory "todo/todo.org"))
          "** TODO %? :%^G\n:PROPERTIES:\n:Created: %U\n:END:")
         ("n" "Note" entry (file org-default-notes-file)
-         "* %?\n:PROPERTIES:\n:Created: %U\n:END:")))
+         "* %?\n:PROPERTIES:\n:Created: %U\n:END:")
+        ("f" "Followup" entry (file+headline ,(concat org-directory "todo/todo.org") "Tasks")
+         "* TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")))
 (ignore-errors (load-file "~/.org-gcal-client-secrets.el.gpg"))
 (setq org-gcal-file-alist `(("blarghmatey@gmail.com" . ,(concat org-directory "calendars/blarghmatey.org"))
                             ("sabrinaleevt@gmail.com" . ,(concat org-directory "calendars/sabrinaleevt.org"))
@@ -252,7 +259,7 @@
 (global-set-key (kbd "C-c L") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c o n") (lambda () (interactive) (find-file org-default-notes-file)))
+(global-set-key (kbd "C-c o n") (lambda () (interactive) (find-file (concat org-directory "notes/"))))
 (global-set-key (kbd "C-c o t") (lambda () (interactive) (find-file (concat org-directory "todo/"))))
 (global-set-key (kbd "C-c s e") `org-edit-src-code)
 
@@ -273,7 +280,6 @@
 
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
-(require 'org-mu4e)
 (require 'smtpmail)
 (require 'mu4e-contrib)
 (setq send-mail-function 'smtpmail-send-it
@@ -316,11 +322,14 @@
                                     "tmacey@podcastinit.com"
                                     "tmacey@dataengineeringpodcast.com"
                                     "blarghmatey@gmail.com"
-                                    "tobias.macey@gmail.com"))
+                                    "tobias.macey@gmail.com"
+                                    "hosts@podcastinit.com"
+                                    "hosts@dataengineeringpodcast.com"))
 (dolist (bookmark
          '(("date:7d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Week View" ?W)
            ("date:30d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Month View" ?M)
-           ("date:90d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\" flag:unread flag:list" "Unread Newsletters" ?L)))
+           ("date:90d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\" flag:unread flag:list" "Unread Newsletters" ?L)
+           ("flag:flagged" "Flagged Emails" ?f)))
   (add-to-list 'mu4e-bookmarks bookmark))
 (setq mu4e-contexts
       `( ,(make-mu4e-context
@@ -530,8 +539,8 @@
                                             "Regards,\n"
                                             "Tobias Macey\n"
                                             "DevOps Engineering Manager\n"
-                                            "MIT Office of Digital Learning\n"
-                                            "https://engineering.odl.mit.edu\n"))
+                                            "MIT Open Learning\n"
+                                            "https://openlearning.mit.edu\n"))
                    (mu4e-maildir-shortcuts .
                     (("/mitodl/Inbox" . ?i)
                      ("/mitodl/Sent Items" . ?s)
@@ -550,8 +559,8 @@
 ;; Don't ask to delete excess versions of files
 (defvar trim-versions-without-asking t)
 
-(require 'ido)
-(ido-mode t)
+;; (require 'ido)
+;; (ido-mode t)
 
 ;; (setq evil-toggle-key "C-`")
 ;; (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
