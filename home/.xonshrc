@@ -65,7 +65,7 @@ for code in __kill_codes:
 def _return_code_output():
     try:
         return_code = __xonsh__.history.rtns[-1]
-        if len(__xonsh_history__.rtns) > 1:
+        if len(__xonsh__.history.rtns) > 1:
             previous_return = __xonsh__.history.rtns[-2]
         else:
             previous_return = 0

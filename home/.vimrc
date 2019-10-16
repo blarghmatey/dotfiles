@@ -39,7 +39,6 @@ NeoBundle 'phleet/vim-mercenary' "Mercurial integration
 NeoBundle 'rking/ag.vim' "Fast file grepping, requires the silver searcher (ag) installed on the system
 NeoBundle 'jiangmiao/auto-pairs' "Auto close quotes, parentheses, braces, etc.
 NeoBundle 'tpope/vim-fugitive' "Git integration
-NeoBundle 'Valloric/YouCompleteMe' "Multi-language code completion, requires executing install.sh after download
 NeoBundle 'xolox/vim-session', {'depends': 'xolox/vim-misc'} "Automatic session management
 NeoBundle 'https://bitbucket.org/ns9tks/vim-fuzzyfinder', {'depends': 'https://bitbucket.org/ns9tks/vim-l9'}
 NeoBundle 'othree/javascript-libraries-syntax.vim' "Syntax highlighting for various javascript libraries
@@ -118,31 +117,7 @@ let g:use_emmet_complete_tag = 1
 let g:airline#extensions#tabline#enabled=1
 let g:tabman_toggle = '<leader>tt'
 let g:tabman_focus = '<leader>tf'
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_add_preview_to_completeopt = 1
 let g:session_autosave_periodic = 5
-let g:ycm_semantic_triggers =  {
-\   'c' : ['->', '.'],
-\   'objc' : ['->', '.'],
-\   'ocaml' : ['.', '#'],
-\   'cpp,objcpp' : ['->', '.', '::'],
-\   'perl' : ['->'],
-\   'php' : ['->', '::'],
-\   'cs,java,javascript,d,vim,python,perl6,scala,vb,elixir,go' : ['.'],
-\   'ruby' : ['.', '::'],
-\   'lua' : ['.', ':'],
-\   'erlang' : [':'],
-\   'css' : [':', ': ', ' '],
-\ }
-
-" Platform specific stuff goes here
-if has("unix")
-  let s:uname = system("uname")
-  if s:uname == "Darwin\n"
-    let g:ycm_path_to_python_interpreter = '/usr/bin/python'
-  endif
-endif
 
 "colorscheme ir_black
 "set background=dark

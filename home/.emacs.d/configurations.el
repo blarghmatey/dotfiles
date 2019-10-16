@@ -211,7 +211,7 @@
 (require 'org-alert)
 (require 'org-gcal)
 (require 'ox-latex)
-(require 'org-mu4e)
+;; (require 'org-mu4e)
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
 (setq org-agenda-restore-windows-after-quit t)
@@ -240,7 +240,7 @@
 (setq org-mobile-directory "~/Dropbox/org")
 (setq org-default-notes-file (concat org-directory "notes.org"))
 (setq org-refile-targets `((org-agenda-files . (:maxlevel . 2))))
-(setq org-mu4e-link-query-in-headers-mode nil)
+;; (setq org-mu4e-link-query-in-headers-mode nil)
 (setq org-capture-templates
       `(("t" "Todo" entry (file ,(concat org-directory "todo/todo.org"))
          "** TODO %? :%^G\n:PROPERTIES:\n:Created: %U\n:END:")
@@ -278,276 +278,277 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; EMAIL CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
-(require 'mu4e)
-(require 'smtpmail)
-(require 'mu4e-contrib)
-(setq send-mail-function 'smtpmail-send-it
-      message-send-mail-function 'smtpmail-send-it)
-(setq mu4e-maildir (expand-file-name "~/.mail"))
-(setq mu4e-use-fancy-chars t)
-(setq mu4e-view-show-images t)
-(setq mu4e-show-images t)
-(setq mu4e-html2text-command 'mu4e-shr2text)
-(setq shr-use-colors nil)
-(setq mu4e-get-mail-command "mbsync -a")
-(setq mu4e-change-filenames-when-moving t)
-(setq mu4e-completing-read-function 'completing-read)
-(add-to-list 'mu4e-view-actions
-             '("ViewInBrowser" . mu4e-action-view-in-browser) t)
-(add-to-list 'mu4e-view-actions
-             '("Eww view" . jcs-view-in-eww) t)
-(add-to-list 'mu4e-headers-fields '(:maildir))
-(define-key mu4e-view-mode-map "\t" 'shr-next-link)
-(define-key mu4e-view-mode-map (kbd "<backtab>") 'shr-previous-link)
-(when (fboundp 'imagemagick-register-types)
-  (imagemagick-register-types))
-(setq mu4e-compose-format-flowed t)
-(setq mu4e-compose-dont-reply-to-self t)
-(setq mu4e-update-interval 1200)
-(setq mu4e-view-prefer-html t)
-(setq mu4e-context-policy nil)
-(setq message-kill-buffer-on-exit t)
-(setq org-mu4e-convert-to-html t)
-(setq mu4e-view-show-addresses t)
-(setq mu4e-scroll-to-next nil)
-(setq mu4e-compose-dont-reply-to-self t)
-(setq org-mime-export-options '(:section-numbers nil
-                                :with-author nil
-                                :with-toc nil))
-(setq mu4e-user-mail-address-list '("tmacey@boundlessnotions.com"
-                                    "tmacey@renaissancedev.com"
-                                    "tmacey@bitlancer.com"
-                                    "tmacey@mit.edu"
-                                    "tmacey@podcastinit.com"
-                                    "tmacey@dataengineeringpodcast.com"
-                                    "blarghmatey@gmail.com"
-                                    "tobias.macey@gmail.com"
-                                    "hosts@podcastinit.com"
-                                    "hosts@dataengineeringpodcast.com"))
-(dolist (bookmark
-         '(("date:7d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Week View" ?W)
-           ("date:30d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Month View" ?M)
-           ("date:90d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\" flag:unread flag:list" "Unread Newsletters" ?L)
-           ("flag:flagged" "Flagged Emails" ?f)))
-  (add-to-list 'mu4e-bookmarks bookmark))
-(setq mu4e-contexts
-      `( ,(make-mu4e-context
-           :name "blarghmatey"
-           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
-                                    (lambda ()
-                                      (interactive)
-                                      (let ((mu4e-get-mail-command "mbsync blarghmatey"))
-                                        (mu4e-update-mail-and-index t)))))
-           :match-func (lambda (msg)
-                         (when msg
-                           (string-prefix-p "/blarghmatey" (mu4e-message-field msg :maildir))))
-           :vars '((user-mail-address . "blarghmatey@gmail.com")
-                   (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/blarghmatey/[Gmail]/Trash")
-                   (mu4e-drafts-folder . "/blarghmatey/[Gmail]/Drafts")
-                   (mu4e-sent-folder . "/blarghmatey/[Gmail]/Sent Mail")
-                   (mu4e-sent-messages-behavior . delete)
-                   (smtpmail-smtp-user . "blarghmatey@gmail.com")
-                   (smtpmail-smtp-server . "smtp.gmail.com")
-                   (smtpmail-smtp-service . 587)
-                   (mu4e-compose-dont-reply-to-self t)
-                   (mu4e-compose-signature .
-                                           (concat
-                                            "Regards,\n"
-                                            "Tobias Macey\n"
-                                            "https://linkedin.com/in/tmacey\n"))
-                   (mu4e-maildir-shortcuts .
-                    (("/blarghmatey/Inbox" . ?i)
-                     ("/blarghmatey/[Gmail]/Sent Mail" . ?s)
-                     ("/blarghmatey/[Gmail]/Drafts" . ?d)))
-                   ))
-         ,(make-mu4e-context
-           :name "tobiasmacey"
-           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
-                                    (lambda ()
-                                      (interactive)
-                                      (let ((mu4e-get-mail-command "mbsync tobiasmacey"))
-                                        (mu4e-update-mail-and-index t)))))
-           :match-func (lambda (msg)
-                         (when msg
-                           (string-prefix-p "/tobiasmacey" (mu4e-message-field msg :maildir))))
-           :vars '((user-mail-address . "tobias.macey@gmail.com")
-                   (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/tobiasmacey/[Gmail]/Trash")
-                   (mu4e-drafts-folder . "/tobiasmacey/[Gmail]/Drafts")
-                   (mu4e-sent-folder . "/tobiasmacey/[Gmail]/Sent Mail")
-                   (smtpmail-smtp-user . "tobias.macey@gmail.com")
-                   (smtpmail-smtp-server . "smtp.gmail.com")
-                   (smtpmail-smtp-service . 587)
-                   (mu4e-compose-dont-reply-to-self . t)
-                   (mu4e-compose-signature .
-                                           (concat
-                                            "Regards,\n"
-                                            "Tobias Macey\n"
-                                            "https://linkedin.com/in/tmacey\n"))
-                   (mu4e-maildir-shortcuts .
-                    (("/tobiasmacey/Inbox" . ?i)
-                     ("/tobiasmacey/[Gmail]/Sent Mail" . ?s)
-                     ("/tobiasmacey/[Gmail]/Drafts" . ?d)))
-                   ))
-         ,(make-mu4e-context
-           :name "xboundlessnotions"
-           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
-                                    (lambda ()
-                                      (interactive)
-                                      (let ((mu4e-get-mail-command "mbsync boundlessnotions"))
-                                        (mu4e-update-mail-and-index t)))))
-           :match-func (lambda (msg)
-                         (when msg
-                           (string-prefix-p "/boundlessnotions" (mu4e-message-field msg :maildir))))
-           :vars '((user-mail-address . "tmacey@boundlessnotions.com")
-                   (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/boundlessnotions/[Gmail]/Trash")
-                   (mu4e-drafts-folder . "/boundlessnotions/[Gmail]/Drafts")
-                   (mu4e-sent-folder . "/boundlessnotions/[Gmail]/Sent Mail")
-                   (smtpmail-smtp-user . "tmacey@boundlessnotions.com")
-                   (smtpmail-smtp-server . "smtp.gmail.com")
-                   (smtpmail-smtp-service . 587)
-                   (mu4e-compose-dont-reply-to-self . t)
-                   (mu4e-compose-signature .
-                                           (concat
-                                            "Regards,\n"
-                                            "Tobias Macey\n"
-                                            "Owner and Chief Engineer\n"
-                                            "Boundless Notions, LLC.\n"
-                                            "https://www.boundlessnotions.com\n"))
-                   (mu4e-maildir-shortcuts .
-                    (("/boundlessnotions/Inbox" . ?i)
-                     ("/boundlessnotions/[Gmail]/Sent Mail" . ?s)
-                     ("/boundlessnotions/[Gmail]/Drafts" . ?d)))
-                   ))
-         ,(make-mu4e-context
-           :name "zbitlancer"
-           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
-                                    (lambda ()
-                                      (interactive)
-                                      (let ((mu4e-get-mail-command "mbsync bitlancer"))
-                                        (mu4e-update-mail-and-index t)))))
-           :match-func (lambda (msg)
-                         (when msg
-                           (string-prefix-p "/bitlancer" (mu4e-message-field msg :maildir))))
-           :vars '((user-mail-address . "tmacey@bitlancer.com")
-                   (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/bitlancer/[Gmail]/Trash")
-                   (mu4e-drafts-folder . "/bitlancer/[Gmail]/Drafts")
-                   (mu4e-sent-folder . "/bitlancer/[Gmail]/Sent Mail")
-                   (smtpmail-smtp-user . "tmacey@bitlancer.com")
-                   (smtpmail-smtp-server . "smtp.gmail.com")
-                   (smtpmail-smtp-service . 587)
-                   (mu4e-compose-dont-reply-to-self . t)
-                   (mu4e-compose-signature .
-                                           (concat
-                                            "Regards,\n"
-                                            "Tobias Macey\n"
-                                            "Senior Cloud Architect\n"
-                                            "Bitlancer LLC.\n"
-                                            "https://www.bitlancer.com\n"))
-                   (mu4e-maildir-shortcuts .
-                    (("/bitlancer/Inbox" . ?i)
-                     ("/bitlancer/[Gmail]/Sent Mail" . ?s)
-                     ("/bitlancer/[Gmail]/Drafts" . ?d)))
-                   ))
-         ,(make-mu4e-context
-           :name "podcastinit"
-           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
-                                    (lambda ()
-                                      (interactive)
-                                      (let ((mu4e-get-mail-command "mbsync podcastinit"))
-                                        (mu4e-update-mail-and-index t)))))
-           :match-func (lambda (msg)
-                         (when msg
-                           (string-prefix-p "/podcastinit" (mu4e-message-field msg :maildir))))
-           :vars '((user-mail-address . "tmacey@podcastinit.com")
-                   (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/podcastinit/Trash")
-                   (mu4e-drafts-folder . "/podcastinit/Drafts")
-                   (mu4e-sent-folder . "/podcastinit/Sent")
-                   (smtpmail-smtp-user . "tmacey@podcastinit.com")
-                   (smtpmail-smtp-server . "smtp.zoho.com")
-                   (smtpmail-smtp-service . 587)
-                   (mu4e-compose-dont-reply-to-self . t)
-                   (mu4e-compose-signature .
-                                           (concat
-                                            "Regards,\n"
-                                            "Tobias Macey\n"
-                                            "Host of Podcast.__init__\n"
-                                            "The podcast about Python and the people who make it great!\n"
-                                            "https://www.podcastinit.com\n"))
-                   (mu4e-maildir-shortcuts .
-                    (("/podcastinit/Inbox" . ?i)
-                     ("/podcastinit/Sent" . ?s)
-                     ("/podcastinit/Drafts" . ?d)))
-                   ))
-         ,(make-mu4e-context
-           :name "dataengineering"
-           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
-                                    (lambda ()
-                                      (interactive)
-                                      (let ((mu4e-get-mail-command "mbsync dataengineering"))
-                                        (mu4e-update-mail-and-index t)))))
-           :match-func (lambda (msg)
-                         (when msg
-                           (string-prefix-p "/dataengineering" (mu4e-message-field msg :maildir))))
-           :vars '((user-mail-address . "tmacey@dataengineeringpodcast.com")
-                   (user-full-name . "Tobias Macey")
-                   (mu4e-trash-folder . "/dataengineering/Trash")
-                   (mu4e-drafts-folder . "/dataengineering/Drafts")
-                   (mu4e-sent-folder . "/dataengineering/Sent")
-                   (smtpmail-smtp-user . "tmacey@dataengineeringpodcast.com")
-                   (smtpmail-smtp-server . "smtp.migadu.com")
-                   (smtpmail-smtp-service . 587)
-                   (mu4e-compose-dont-reply-to-self . t)
-                   (mu4e-compose-signature .
-                                           (concat
-                                            "Regards,\n"
-                                            "Tobias Macey\n"
-                                            "Host of the Data Engineering Podcast\n"
-                                            "The podcast about modern data management and the people who make it possible.\n"
-                                            "https://www.dataengineeringpodcast.com\n"))
-                   (mu4e-maildir-shortcuts .
-                    (("/dataengineering/Inbox" . ?i)
-                     ("/dataengineering/Sent" . ?s)
-                     ("/dataengineering/Drafts" . ?d)))
-                   ))
-         ,(make-mu4e-context
-           :name "mitodl"
-           :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
-                                    (lambda ()
-                                      (interactive)
-                                      (let ((mu4e-get-mail-command "mbsync mitodl"))
-                                        (mu4e-update-mail-and-index t)))))
-           :match-func (lambda (msg)
-                         (when msg
-                           (string-prefix-p "/mitodl" (mu4e-message-field msg :maildir))))
-           :vars '((user-mail-address . "tmacey@mit.edu")
-                   (user-full-name . "Tobias Macey")
-                   (mu4e-sent-folder . "/mitodl/Sent Items")
-                   (mu4e-trash-folder . "/mitodl/Trash")
-                   (mu4e-drafts-folder . "/mitodl/Drafts")
-                   (smtpmail-smtp-user . "tmacey")
-                   (smtpmail-smtp-server . "outgoing.mit.edu")
-                   (smtpmail-smtp-service . 587)
-                   (mu4e-compose-dont-reply-to-self . t)
-                   (mu4e-compose-signature .
-                                           (concat
-                                            "Regards,\n"
-                                            "Tobias Macey\n"
-                                            "DevOps Engineering Manager\n"
-                                            "MIT Open Learning\n"
-                                            "https://openlearning.mit.edu\n"))
-                   (mu4e-maildir-shortcuts .
-                    (("/mitodl/Inbox" . ?i)
-                     ("/mitodl/Sent Items" . ?s)
-                     ("/mitodl/Drafts" . ?d)
-                     ("/mitodl/Inbox/Django Errors" . ?e)))
-                   ))
-         ))
+;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+;; (require 'mu4e)
+;; (require 'smtpmail)
+;; (require 'mu4e-contrib)
+;; (setq send-mail-function 'smtpmail-send-it
+;;       message-send-mail-function 'smtpmail-send-it)
+;; (setq mu4e-maildir (expand-file-name "~/.mail"))
+;; (setq mu4e-use-fancy-chars t)
+;; (setq mu4e-view-show-images t)
+;; (setq mu4e-show-images t)
+;; (setq mu4e-html2text-command 'mu4e-shr2text)
+;; (setq shr-use-colors nil)
+;; (setq mu4e-get-mail-command "mbsync -a")
+;; (setq mu4e-change-filenames-when-moving t)
+;; (setq mu4e-completing-read-function 'completing-read)
+;; (add-to-list 'mu4e-view-actions
+;;              '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+;; (add-to-list 'mu4e-view-actions
+;;              '("Eww view" . jcs-view-in-eww) t)
+;; (add-to-list 'mu4e-headers-fields '(:maildir))
+;; (define-key mu4e-view-mode-map "\t" 'shr-next-link)
+;; (define-key mu4e-view-mode-map (kbd "<backtab>") 'shr-previous-link)
+;; (when (fboundp 'imagemagick-register-types)
+;;   (imagemagick-register-types))
+;; (setq mu4e-compose-format-flowed t)
+;; (setq mu4e-compose-dont-reply-to-self t)
+;; (setq mu4e-update-interval 1200)
+;; (setq mu4e-view-prefer-html t)
+;; (setq mu4e-context-policy nil)
+;; (setq message-kill-buffer-on-exit t)
+;; (setq org-mu4e-convert-to-html t)
+;; (setq mu4e-view-show-addresses t)
+;; (setq mu4e-scroll-to-next nil)
+;; (setq mu4e-compose-dont-reply-to-self t)
+;; (setq mu4e-view-use-gnus t)
+;; (setq org-mime-export-options '(:section-numbers nil
+;;                                 :with-author nil
+;;                                 :with-toc nil))
+;; (setq mu4e-user-mail-address-list '("tmacey@boundlessnotions.com"
+;;                                     "tmacey@renaissancedev.com"
+;;                                     "tmacey@bitlancer.com"
+;;                                     "tmacey@mit.edu"
+;;                                     "tmacey@podcastinit.com"
+;;                                     "tmacey@dataengineeringpodcast.com"
+;;                                     "blarghmatey@gmail.com"
+;;                                     "tobias.macey@gmail.com"
+;;                                     "hosts@podcastinit.com"
+;;                                     "hosts@dataengineeringpodcast.com"))
+;; (dolist (bookmark
+;;          '(("date:7d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Week View" ?W)
+;;            ("date:30d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\"" "Month View" ?M)
+;;            ("date:90d..now AND NOT maildir:\"/tobiasmacey/Python Ideas\" AND NOT maildir:\"/mitodl/Inbox/Django Errors\" flag:unread flag:list" "Unread Newsletters" ?L)
+;;            ("flag:flagged" "Flagged Emails" ?f)))
+;;   (add-to-list 'mu4e-bookmarks bookmark))
+;; (setq mu4e-contexts
+;;       `( ,(make-mu4e-context
+;;            :name "blarghmatey"
+;;            :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+;;                                     (lambda ()
+;;                                       (interactive)
+;;                                       (let ((mu4e-get-mail-command "mbsync blarghmatey"))
+;;                                         (mu4e-update-mail-and-index t)))))
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/blarghmatey" (mu4e-message-field msg :maildir))))
+;;            :vars '((user-mail-address . "blarghmatey@gmail.com")
+;;                    (user-full-name . "Tobias Macey")
+;;                    (mu4e-trash-folder . "/blarghmatey/[Gmail]/Trash")
+;;                    (mu4e-drafts-folder . "/blarghmatey/[Gmail]/Drafts")
+;;                    (mu4e-sent-folder . "/blarghmatey/[Gmail]/Sent Mail")
+;;                    (mu4e-sent-messages-behavior . delete)
+;;                    (smtpmail-smtp-user . "blarghmatey@gmail.com")
+;;                    (smtpmail-smtp-server . "smtp.gmail.com")
+;;                    (smtpmail-smtp-service . 587)
+;;                    (mu4e-compose-dont-reply-to-self t)
+;;                    (mu4e-compose-signature .
+;;                                            (concat
+;;                                             "Regards,\n"
+;;                                             "Tobias Macey\n"
+;;                                             "https://linkedin.com/in/tmacey\n"))
+;;                    (mu4e-maildir-shortcuts .
+;;                     (("/blarghmatey/Inbox" . ?i)
+;;                      ("/blarghmatey/[Gmail]/Sent Mail" . ?s)
+;;                      ("/blarghmatey/[Gmail]/Drafts" . ?d)))
+;;                    ))
+;;          ,(make-mu4e-context
+;;            :name "tobiasmacey"
+;;            :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+;;                                     (lambda ()
+;;                                       (interactive)
+;;                                       (let ((mu4e-get-mail-command "mbsync tobiasmacey"))
+;;                                         (mu4e-update-mail-and-index t)))))
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/tobiasmacey" (mu4e-message-field msg :maildir))))
+;;            :vars '((user-mail-address . "tobias.macey@gmail.com")
+;;                    (user-full-name . "Tobias Macey")
+;;                    (mu4e-trash-folder . "/tobiasmacey/[Gmail]/Trash")
+;;                    (mu4e-drafts-folder . "/tobiasmacey/[Gmail]/Drafts")
+;;                    (mu4e-sent-folder . "/tobiasmacey/[Gmail]/Sent Mail")
+;;                    (smtpmail-smtp-user . "tobias.macey@gmail.com")
+;;                    (smtpmail-smtp-server . "smtp.gmail.com")
+;;                    (smtpmail-smtp-service . 587)
+;;                    (mu4e-compose-dont-reply-to-self . t)
+;;                    (mu4e-compose-signature .
+;;                                            (concat
+;;                                             "Regards,\n"
+;;                                             "Tobias Macey\n"
+;;                                             "https://linkedin.com/in/tmacey\n"))
+;;                    (mu4e-maildir-shortcuts .
+;;                     (("/tobiasmacey/Inbox" . ?i)
+;;                      ("/tobiasmacey/[Gmail]/Sent Mail" . ?s)
+;;                      ("/tobiasmacey/[Gmail]/Drafts" . ?d)))
+;;                    ))
+;;          ,(make-mu4e-context
+;;            :name "xboundlessnotions"
+;;            :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+;;                                     (lambda ()
+;;                                       (interactive)
+;;                                       (let ((mu4e-get-mail-command "mbsync boundlessnotions"))
+;;                                         (mu4e-update-mail-and-index t)))))
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/boundlessnotions" (mu4e-message-field msg :maildir))))
+;;            :vars '((user-mail-address . "tmacey@boundlessnotions.com")
+;;                    (user-full-name . "Tobias Macey")
+;;                    (mu4e-trash-folder . "/boundlessnotions/[Gmail]/Trash")
+;;                    (mu4e-drafts-folder . "/boundlessnotions/[Gmail]/Drafts")
+;;                    (mu4e-sent-folder . "/boundlessnotions/[Gmail]/Sent Mail")
+;;                    (smtpmail-smtp-user . "tmacey@boundlessnotions.com")
+;;                    (smtpmail-smtp-server . "smtp.gmail.com")
+;;                    (smtpmail-smtp-service . 587)
+;;                    (mu4e-compose-dont-reply-to-self . t)
+;;                    (mu4e-compose-signature .
+;;                                            (concat
+;;                                             "Regards,\n"
+;;                                             "Tobias Macey\n"
+;;                                             "Owner and Chief Engineer\n"
+;;                                             "Boundless Notions, LLC.\n"
+;;                                             "https://www.boundlessnotions.com\n"))
+;;                    (mu4e-maildir-shortcuts .
+;;                     (("/boundlessnotions/Inbox" . ?i)
+;;                      ("/boundlessnotions/[Gmail]/Sent Mail" . ?s)
+;;                      ("/boundlessnotions/[Gmail]/Drafts" . ?d)))
+;;                    ))
+;;          ,(make-mu4e-context
+;;            :name "zbitlancer"
+;;            :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+;;                                     (lambda ()
+;;                                       (interactive)
+;;                                       (let ((mu4e-get-mail-command "mbsync bitlancer"))
+;;                                         (mu4e-update-mail-and-index t)))))
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/bitlancer" (mu4e-message-field msg :maildir))))
+;;            :vars '((user-mail-address . "tmacey@bitlancer.com")
+;;                    (user-full-name . "Tobias Macey")
+;;                    (mu4e-trash-folder . "/bitlancer/[Gmail]/Trash")
+;;                    (mu4e-drafts-folder . "/bitlancer/[Gmail]/Drafts")
+;;                    (mu4e-sent-folder . "/bitlancer/[Gmail]/Sent Mail")
+;;                    (smtpmail-smtp-user . "tmacey@bitlancer.com")
+;;                    (smtpmail-smtp-server . "smtp.gmail.com")
+;;                    (smtpmail-smtp-service . 587)
+;;                    (mu4e-compose-dont-reply-to-self . t)
+;;                    (mu4e-compose-signature .
+;;                                            (concat
+;;                                             "Regards,\n"
+;;                                             "Tobias Macey\n"
+;;                                             "Senior Cloud Architect\n"
+;;                                             "Bitlancer LLC.\n"
+;;                                             "https://www.bitlancer.com\n"))
+;;                    (mu4e-maildir-shortcuts .
+;;                     (("/bitlancer/Inbox" . ?i)
+;;                      ("/bitlancer/[Gmail]/Sent Mail" . ?s)
+;;                      ("/bitlancer/[Gmail]/Drafts" . ?d)))
+;;                    ))
+;;          ,(make-mu4e-context
+;;            :name "podcastinit"
+;;            :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+;;                                     (lambda ()
+;;                                       (interactive)
+;;                                       (let ((mu4e-get-mail-command "mbsync podcastinit"))
+;;                                         (mu4e-update-mail-and-index t)))))
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/podcastinit" (mu4e-message-field msg :maildir))))
+;;            :vars '((user-mail-address . "tmacey@podcastinit.com")
+;;                    (user-full-name . "Tobias Macey")
+;;                    (mu4e-trash-folder . "/podcastinit/Trash")
+;;                    (mu4e-drafts-folder . "/podcastinit/Drafts")
+;;                    (mu4e-sent-folder . "/podcastinit/Sent")
+;;                    (smtpmail-smtp-user . "tmacey@podcastinit.com")
+;;                    (smtpmail-smtp-server . "smtp.zoho.com")
+;;                    (smtpmail-smtp-service . 587)
+;;                    (mu4e-compose-dont-reply-to-self . t)
+;;                    (mu4e-compose-signature .
+;;                                            (concat
+;;                                             "Regards,\n"
+;;                                             "Tobias Macey\n"
+;;                                             "Host of Podcast.__init__\n"
+;;                                             "The podcast about Python and the people who make it great!\n"
+;;                                             "https://www.podcastinit.com\n"))
+;;                    (mu4e-maildir-shortcuts .
+;;                     (("/podcastinit/Inbox" . ?i)
+;;                      ("/podcastinit/Sent" . ?s)
+;;                      ("/podcastinit/Drafts" . ?d)))
+;;                    ))
+;;          ,(make-mu4e-context
+;;            :name "dataengineering"
+;;            :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+;;                                     (lambda ()
+;;                                       (interactive)
+;;                                       (let ((mu4e-get-mail-command "mbsync dataengineering"))
+;;                                         (mu4e-update-mail-and-index t)))))
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/dataengineering" (mu4e-message-field msg :maildir))))
+;;            :vars '((user-mail-address . "tmacey@dataengineeringpodcast.com")
+;;                    (user-full-name . "Tobias Macey")
+;;                    (mu4e-trash-folder . "/dataengineering/Trash")
+;;                    (mu4e-drafts-folder . "/dataengineering/Drafts")
+;;                    (mu4e-sent-folder . "/dataengineering/Sent")
+;;                    (smtpmail-smtp-user . "tmacey@dataengineeringpodcast.com")
+;;                    (smtpmail-smtp-server . "smtp.migadu.com")
+;;                    (smtpmail-smtp-service . 587)
+;;                    (mu4e-compose-dont-reply-to-self . t)
+;;                    (mu4e-compose-signature .
+;;                                            (concat
+;;                                             "Regards,\n"
+;;                                             "Tobias Macey\n"
+;;                                             "Host of the Data Engineering Podcast\n"
+;;                                             "The podcast about modern data management and the people who make it possible.\n"
+;;                                             "https://www.dataengineeringpodcast.com\n"))
+;;                    (mu4e-maildir-shortcuts .
+;;                     (("/dataengineering/Inbox" . ?i)
+;;                      ("/dataengineering/Sent" . ?s)
+;;                      ("/dataengineering/Drafts" . ?d)))
+;;                    ))
+;;          ,(make-mu4e-context
+;;            :name "mitodl"
+;;            :enter-func (lambda () (define-key mu4e-headers-mode-map (kbd "C-c C-a")
+;;                                     (lambda ()
+;;                                       (interactive)
+;;                                       (let ((mu4e-get-mail-command "mbsync mitodl"))
+;;                                         (mu4e-update-mail-and-index t)))))
+;;            :match-func (lambda (msg)
+;;                          (when msg
+;;                            (string-prefix-p "/mitodl" (mu4e-message-field msg :maildir))))
+;;            :vars '((user-mail-address . "tmacey@mit.edu")
+;;                    (user-full-name . "Tobias Macey")
+;;                    (mu4e-sent-folder . "/mitodl/Sent Items")
+;;                    (mu4e-trash-folder . "/mitodl/Trash")
+;;                    (mu4e-drafts-folder . "/mitodl/Drafts")
+;;                    (smtpmail-smtp-user . "tmacey")
+;;                    (smtpmail-smtp-server . "outgoing.mit.edu")
+;;                    (smtpmail-smtp-service . 587)
+;;                    (mu4e-compose-dont-reply-to-self . t)
+;;                    (mu4e-compose-signature .
+;;                                            (concat
+;;                                             "Regards,\n"
+;;                                             "Tobias Macey\n"
+;;                                             "DevOps Engineering Manager\n"
+;;                                             "MIT Open Learning\n"
+;;                                             "https://openlearning.mit.edu\n"))
+;;                    (mu4e-maildir-shortcuts .
+;;                     (("/mitodl/Inbox" . ?i)
+;;                      ("/mitodl/Sent Items" . ?s)
+;;                      ("/mitodl/Drafts" . ?d)
+;;                      ("/mitodl/Inbox/Django Errors" . ?e)))
+;;                    ))
+;;          ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Show matching parens

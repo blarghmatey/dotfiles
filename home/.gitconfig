@@ -49,7 +49,7 @@
   camend = commit --amend --reuse-message HEAD -S
   commit = commit -S
   cundo  = reset --soft "HEAD^"
-  cp     = cherry-pick
+  cp     = cherry-pick -x
 
   # diff
   d    = diff          # Diff working dir to index
