@@ -3,8 +3,8 @@ from datetime import datetime
 from xonsh.prompt.gitstatus import gitstatus_prompt
 from glob import glob
 import re, json
-import geoip2.database
-import requests
+#import geoip2.database
+#import requests
 
 # try:
 #     _MY_IP = requests.get('https://api.ipify.org').text
@@ -115,3 +115,10 @@ completer add ssh ssh_host_completer
 #
 #aliases['hex_encode'] = lambda a,i=None: _write_bytes(binascii.hexlify(_to_bytes(i.strip() or a[0])) + b'\n')
 #aliases['hex_decode'] = lambda a,i=None: _write_bytes(binascii.unhexlify(_to_bytes(i.strip() or a[0])) + b'\n')
+
+aliases.update({
+    'jp': 'joplin',
+    'jpt': 'joplin mktodo'
+})
+
+xontrib load vox

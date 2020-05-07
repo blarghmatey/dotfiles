@@ -1,7 +1,8 @@
 [core]
-  pager = less -FX
+  pager = delta
   whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
   excludesfile = ~/.gitignore_global
+  editor = emacs
 
 [alias]
   # branch
@@ -105,6 +106,9 @@
   ui = true
   pager = true
   showbranch = auto
+
+[interactive]
+  diffFilter = delta --color-only
 
 [color "interactive"]
     error = red bold

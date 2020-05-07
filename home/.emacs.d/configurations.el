@@ -18,11 +18,15 @@
 (setq helm-completion-in-region-fuzzy-match t)
 (setq helm-M-x-fuzzy-match t)
 (setq helm-buffers-fuzzy-matching t)
+(setq helm-completion-style 'emacs)
+(setq completion-styles '(helm-flex))
 (global-set-key (kbd "C-x b") 'helm-buffers-list)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 (global-set-key (kbd "M-x") 'helm-M-x)
 
 (setq helm-dash-browser-func 'eww)
+
+(setq ring-bell-function 'ignore)
 
 ;; (setq ido-enable-flex-matching t)
 
@@ -30,13 +34,14 @@
 (setq whitespace-style
       '(face trailing empty lines-tail tab-mark))
 
-(setq fci-rule-column 80)
+(setq fci-rule-column 120)
 
 (setq-default fill-column 120)
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.html" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jinja" . jinja2-mode))
+(add-to-list 'auto-mode-alist '("\\.j2" . jinja2-mode))
 (add-to-list 'auto-mode-alist '("\\.sls" . salt-mode))
 (add-to-list 'auto-mode-alist '("\\.trello" . org-mode))
 
@@ -64,9 +69,6 @@
     '(javascript-jshint)))
 (flycheck-add-mode 'javascript-eslint 'js2-mode)
 
-(setq tern-command (cons (executable-find "tern") '()))
-;; (setq tern-ac-dot-complete t)
-
 (setq frame-title-format "emacs -- %f -- %m")
 
 (global-linum-mode 1) ; Show line numbers
@@ -88,10 +90,6 @@
 (setq indent-line-function 'indent-for-tab-command)
 
 (setq magit-last-seen-setup-instructions "1.4.0")
-(use-package magithub
-  :after magit
-  :ensure t
-  :config (magithub-feature-autoinject t))
 
 (setq create-lockfiles nil)
 (setq
@@ -109,9 +107,10 @@
 ;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
 ;; (setq wg-session-load-on-start 1)
 
-(setq company-idle-delay 1)
+(setq company-idle-delay 2)
 (setq company-auto-complete nil)
-(setq company-minimum-prefix-length 0)
+(setq company-minimum-prefix-length 1
+      company-auto-complete-chars (quote (32 95 40 46)))
 
 ;; (set-face-attribute 'default nil :font "Source Code Pro-12")
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
@@ -157,6 +156,8 @@
 (global-set-key (kbd "C-c D")  'delete-file-and-buffer)
 
 (global-set-key (kbd "C-:") 'goto-line)
+
+(global-set-key (kbd "C-.") 'company-complete)
 
 (global-set-key (kbd "C-M-z") 'indent-defun)
 ; (global-set-key (kbd "C-c o") 'open-with)
@@ -206,10 +207,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ORGMODE CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (require 'org-trello)
+(require 'org-trello)
 ;; (setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
-(require 'org-alert)
-(require 'org-gcal)
+;; (require 'org-gcal)
 (require 'ox-latex)
 ;; (require 'org-mu4e)
 (add-to-list 'org-latex-packages-alist '("" "listings"))
@@ -261,6 +261,7 @@
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c o n") (lambda () (interactive) (find-file (concat org-directory "notes/"))))
 (global-set-key (kbd "C-c o t") (lambda () (interactive) (find-file (concat org-directory "todo/"))))
+(global-set-key (kbd "C-c o T") (lambda () (interactive) (find-file (concat org-directory "trello/"))))
 (global-set-key (kbd "C-c s e") `org-edit-src-code)
 
 (let (credentials)

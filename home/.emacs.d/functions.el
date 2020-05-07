@@ -115,10 +115,7 @@ version control if file is under version control."
   "Enable several minor modes that are generally applicable."
   (interactive)
   (rainbow-mode 1)
-  (eldoc-mode 1)
   (turn-on-ctags-auto-update-mode)
-  (company-mode 1)
-  (flycheck-mode 1)
   (hexcolor-add-to-font-lock)
   )
 
@@ -267,7 +264,6 @@ is considered to be a project root."
                 (not (file-exists-p (concat root-dir ".dir-locals.el")))
                 (not (file-exists-p (concat root-dir ".env")))
                 (not (file-exists-p (concat root-dir ".envrc")))
-                (not (file-exists-p (concat root-dir ".dir-locals.el")))
                 (not (file-exists-p (concat root-dir "requirements.txt"))))
       (setq root-dir
             (if (equal root-dir "/")
@@ -369,7 +365,7 @@ is considered to be a project root."
       (message (format "Adding virtualenv: %s" jedi-config:with-virtualenv))
       (add-args jedi:server-args "--virtual-env" jedi-config:with-virtualenv))))
 
-(require 'virtualenvwrapper)
+(require 'pyvenv)
 (defun setup-venv ()
   "Activates the virtualenv of the current buffer."
   (interactive)
@@ -377,7 +373,7 @@ is considered to be a project root."
     (let ((members (member-ignore-case project-title (venv-get-candidates-dir "/home/tmacey/.virtualenvs"))))
       (if members
           (ignore-errors
-            (venv-workon project-title))))))
+            (pyvenv-workon project-title))))))
 
 (defun python-2to3 ()
   "Convert current buffer from python 2 to python 3.
