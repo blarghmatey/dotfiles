@@ -30,31 +30,14 @@
 (pallet-mode t)
 
 (setq load-path (append load-path '("~/.emacs.d/plugins")))
-(load-file "~/.emacs.d/functions.el")
-(load-file "~/.emacs.d/configurations.el")
 
-(add-hook 'kill-emacs-hook 'elscreen-store)
-
-(helm-mode)
-(projectile-mode)
 (global-whitespace-mode)
 (global-auto-revert-mode t)
 (display-time-mode 1)
-(require 'git-gutter-fringe+)
-(global-git-gutter+-mode)
-(elscreen-start)
-(run-with-timer 300 (* 5 60) 'elscreen-store)
-;; CSS color values colored by themselves
-
 ;; http://news.ycombinator.com/item?id=873541
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'program-mode-hook 'default-minor-modes)
-(add-hook 'web-mode 'default-minor-modes)
 ;; (add-hook 'python-mode-hook 'flycheck-python-setup)
-(add-hook 'python-mode-hook 'fci-mode)
-(add-hook 'python-mode-hook 'python-docstring-mode)
-(add-hook 'python-mode-hook 'sphinx-doc-mode)
-(add-hook 'yaml-mode-hook 'default-minor-modes)
 (add-hook 'yaml-mode-hook (lambda () (setq-local electric-indent-mode -1)))
 (add-hook 'markdown-mode-hook (lambda () (setq-local whitespace-style
       '(face trailing empty tab-mark))))
@@ -68,22 +51,136 @@
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
-             "blockquote" "border-left: 2px solid gray; padding-left: 4px;"))) 
+             "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
 
-(add-hook 'after-init-hook 'global-company-mode)
-(add-hook 'after-init-hook 'global-flycheck-mode)
-
-(use-package which-key
+(use-package ag
   :ensure t
-  :init
-  (which-key-setup-minibuffer)
-  (setq which-key-popup-type 'minibuffer)
-  :commands which-key-mode)
+  :defer t)
+
+(use-package company
+  :ensure t
+  :hook (after-init . global-company-mode)
+  :bind ("C-." . company-complete)
+  :config (setq company-idle-delay 2
+                company-show-numbers t
+                company-auto-complete nil
+                company-minimum-prefix-length 1
+                company-auto-complete-chars (quote (32 95 40 46))))
+
+(use-package docker
+  :ensure t
+  :bind ("C-c d" . docker))
+
+(use-package dockerfile-mode
+  :ensure t)
 
 (use-package elpy
   :ensure t
   :defer t
-  :init (advice-add 'python-mode :before 'elpy-enable))
+  :after python
+  :config (elpy-enable))
+
+(use-package elscreen
+  :ensure t
+  :hook
+  (kill-emacs . elscreen-store)
+  (after-init . elscreen-start)
+  :init
+  (defvar emacs-configuration-directory
+    "~/.emacs.d/"
+    "The directory where the emacs configuration files are stored.")
+
+  (defvar elscreen-tab-configuration-store-filename
+    (concat emacs-configuration-directory ".elscreen")
+    "The file where the elscreen tab configuration is stored.")
+
+  (defun elscreen-store ()
+    "Store the elscreen tab configuration."
+    (interactive)
+    (if (desktop-save (concat emacs-configuration-directory "elscreen-desktop") t)
+        (with-temp-file elscreen-tab-configuration-store-filename
+            (insert (prin1-to-string (elscreen-get-screen-to-name-alist))))))
+
+  (defun elscreen-restore ()
+    "Restore the elscreen tab configuration."
+    (interactive)
+    (if (desktop-read (concat emacs-configuration-directory "elscreen-desktop"))
+        (let ((screens (reverse
+                        (read
+                         (with-temp-buffer
+                           (insert-file-contents elscreen-tab-configuration-store-filename)
+                           (buffer-string))))))
+          (while screens
+            (setq screen (car (car screens)))
+            (setq buffers (split-string (cdr (car screens)) ":"))
+            (if (eq screen 0)
+                (switch-to-buffer (car buffers))
+              (elscreen-find-and-goto-by-buffer (car buffers) t t))
+            (while (cdr buffers)
+              (switch-to-buffer-other-window (car (cdr buffers)))
+              (setq buffers (cdr buffers)))
+            (setq screens (cdr screens))))))
+  :config
+  (run-with-timer 300 (* 5 60) 'elscreen-store))
+
+(use-package fill-column-indicator
+  :ensure t
+  :hook (python-mode . fci-mode)
+  :config (setq fci-rule-column 120
+                fci-rule-color "#37474f"))
+
+(use-package flycheck
+  :ensure t
+  :hook (after-init . global-flycheck-mode)
+  :init
+  (use-package flycheck-mypy :ensure t)
+  (use-package flycheck-pyflakes :ensure t)
+  :config (setq flycheck-flake8-maximum-complexity 15
+                flycheck-flake8rc "setup.cfg"))
+
+(use-package forge
+  :ensure t
+  :after magit)
+
+(use-package git-gutter-fringe+
+  :ensure t
+  :hook (after-init . global-git-gutter+-mode))
+
+(use-package git-link
+  :ensure t)
+
+(use-package helm
+  :ensure t
+  :config
+  (setq helm-mode-fuzzy-match t
+        helm-completion-in-region-fuzzy-match t
+        helm-M-x-fuzzy-match t
+        helm-buffers-fuzzy-matching t
+        helm-completion-style 'emacs
+        completion-styles '(helm-flex))
+  (helm-autoresize-mode 1)
+  :bind (("M-x" . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ("C-x b" . helm-buffers-list)))
+
+(use-package helm-lsp
+  :ensure t
+  :commands helm-lsp-workspace-symbol)
+
+(use-package helm-projectile
+  :ensure t
+  :after (:all projectile helm)
+  :config
+  (helm-projectile-on))
+
+(use-package jinja2-mode
+  :ensure t
+  :mode (("\\.j2" . jinja2-mode)
+         ("\\.jinja" . jinja2-mode)))
+
+(use-package linum-relative
+  :ensure t
+  :bind ("C-c t l" . linum-relative-toggle))
 
 (use-package lsp-mode
   :ensure t
@@ -101,23 +198,85 @@
                       lsp-semantic-highlighting :immediate)
   :commands (lsp))
 
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-
-(use-package helm-lsp
-  :ensure t
-  :commands helm-lsp-workspace-symbol)
-
 (use-package lsp-python-ms
   :demand t
   :ensure t
   :hook (python-mode . lsp))
 
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status)
+  :config (setq magit-last-seen-setup-instructions "1.4.0"))
+
+(use-package markdown-changelog
+  :ensure t)
+
+(use-package nginx-mode
+  :ensure t)
+
+(use-package org-journal
+  :ensure t)
+
+(use-package org-trello
+  :ensure t
+  :mode ("\\.trello" . org-mode))
+
+(use-package php-mode
+  :ensure t)
+
+(use-package poetry
+  :ensure t)
+
+(use-package projectile
+  :ensure t
+  :bind-keymap ("C-c p" . projectile-command-map)
+  :bind (("M-P" . projectile-find-file)
+         :map projectile-command-map
+         ("p" . projectile-switch-project))
+  :init (setq projectile-completion-system 'helm)
+  :hook (after-init . projectile-mode))
+
+(use-package py-isort
+  :ensure t)
+
+(use-package python-docstring
+  :ensure t
+  :hook (python-mode . python-docstring-mode))
+
 (use-package pyvenv
   :ensure t
   :config
   (pyvenv-mode 1))
+
+(use-package salt-mode
+  :ensure t
+  :mode "\\.sls")
+
+(use-package sphinx-doc
+  :ensure t
+  :hook (python-mode . sphinx-doc-mode))
+
+(use-package undohist
+  :ensure t
+  :hook (after-init . undohist-initialize))
+
+(use-package web-mode
+  :ensure t
+  :mode ("\\.html" . web-mode))
+
+(use-package which-key
+  :ensure t
+  :init
+  (which-key-setup-minibuffer)
+  (setq which-key-popup-type 'minibuffer)
+  :commands which-key-mode)
+
+(load-file "~/.emacs.d/functions.el")
+(load-file "~/.emacs.d/configurations.el")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -147,7 +306,6 @@
     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-sane-defaults)))
  '(elpy-rpc-backend "jedi")
  '(elpy-test-runner (quote elpy-test-pytest-runner))
- '(fci-rule-color "#37474f")
  '(hl-sexp-background-color "#1c1f26")
  '(magit-commit-arguments (quote ("-S")))
  '(magit-log-section-arguments (quote ("-n256" "--decorate")))
@@ -155,8 +313,7 @@
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(package-selected-packages
    (quote
-    (which-key pyvenv-mode pyenv-mode pyenv-mode-auto python-black mu4e-jump-to-list poly-ansible confluence groovy-mode org-msg emacsql-mysql vlf helm-tramp org-timeline ansible-vault rbenv company-nginx mu4e-conversation rustic pocket-reader flycheck-plantuml plantuml-mode lxc-tramp org-chef org2blog pipenv org-wild-notifier flycheck-mypy flycheck-pyflakes flycheck-yamllint flymake-json flymake-php flymake-python-pyflakes flymake-ruby flymake-rust flymake-shell monky ob-hy esup ctags-update use-package mu4e-maildirs-extension mu4e-query-fragments company-terraform org-mind-map mu4e-alert exotica-theme badger-theme dracula-theme systemd kanban org-alert org-beautify-theme org-brain org-journal org dad-joke org-pomodoro org-trello origami org-gcal docker docker-tramp dockerfile-mode enh-ruby-mode robe github-issues anaconda-mode indium kubernetes yaml-tomato graphviz-dot-mode major-mode-icons salt-mode bbdb bbdb-android nm notmuch eruby-mode json ruby-mode rjsx-mode django-mode kdeconnect company-flow discourse eslint-fix helm-hunks scratch-persist markdownfmt undo-tree undohist highlight-operators pandoc smbc pony-mode aws-ec2 flymd lorem-ipsum linum-relative pandoc-mode exec-path-from-shell excorporate tramp-theme dash-functional find-file-in-project highlight highlight-indentation js2-refactor json-reformat json-snatcher julia-mode m-buffer magit-popup makey multiple-cursors names nose pcache perspective popwin pos-tip python-environment pythonic rake package-build epl f dash s magit revive ruby-compilation shut-up web-completion-data websocket yasnippet ycm terraform-mode hcl-mode ansible-doc company-ansible markdown-preview-eww elang private-diary slack mmm-mako json-mode elm-mode flycheck-dialyzer flycheck-elm flycheck-flow helm-fuzzier json-rpc racer alchemist edts elixir-mode erlang hy-mode synonymous js2-highlight-vars org-mobile-sync feature-mode twittering-mode magit-gh-pulls zeal-at-point yaml-mode xlicense xcscope windata wgrep-ag web-mode wakatime-mode vagrant tree-mode tj-mode swiper-helm stekene-theme sr-speedbar sql-indent spinner sphinx-doc spacemacs-theme soothe-theme smex smeargle smartparens smart-mode-line seq scss-mode sass-mode rvm rust-mode rinari rainbow-mode rainbow-delimiters python-docstring pytest pymacs py-yapf py-isort py-import-check py-autopep8 puppetfile-mode puppet-mode projectile-rails prodigy polymode pip-requirements php-mode persp-projectile pep8 pallet org-jira nose-mode nodejs-repl nim-mode nginx-mode neotree multi-web-mode multi-term multi mmm-mode mkdown material-theme magit-filenotify lush-theme logstash-conf lice ldap-mode late-night-theme kivy-mode jsx-mode js3-mode jinja2-mode jedi-direx ivy iedit idomenu history heroku helm-pydoc helm-projectile helm-proc helm-git helm-flycheck helm-dash helm-company helm-cmd-t helm-aws helm-ag git-link git-gutter-fringe+ git gh-md fuzzy format-sql fold-this flycheck-rust flycheck-color-mode-line flx-isearch floobits fill-column-indicator eproject elscreen-persist elpy el-get dpaste docean distinguished-theme discover-my-major discover-js2-refactor dash-at-point dart-mode dark-souls dakrone-theme cython-mode ctags csv-mode css-eldoc company-ycm company-web company-quickhelp company-jedi company-inf-ruby company-anaconda commander command-t column-marker color-theme-twilight color-theme-solarized color-theme-sanityinc-solarized color-theme-monokai color-theme-approximate coffee-mode cloc chruby bundler browse-at-remote auto-complete-rst auto-complete-exuberant-ctags assemblage-theme ansible anaphora ahg ag ac-js2 ac-inf-ruby ac-capf)))
- '(projectile-completion-system (quote helm))
+    (xterm-color xonsh-mode xml-rpc which-key wgrep-ag web-mode use-package undohist tblui systemd sphinx-doc salt-mode rust-mode reformatter python-docstring pytest pyenv-mode-auto py-isort poetry plantuml-mode php-mode persist pandoc pallet ox-qmd ox-pandoc org-trello org-journal nginx-mode metaweblog markdown-changelog lush-theme lsp-ui lsp-python-ms linum-relative kubernetes js2-refactor jinja2-mode jedi inf-ruby hydra htmlize helm-pydoc helm-projectile helm-make helm-lsp helm-flycheck helm-company helm-ag-r helm-ag haml-mode github-search git-link git-gutter-fringe+ git forge flycheck-pyflakes flycheck-mypy flx fill-column-indicator erlang elscreen elpy dockerfile-mode docker discover direx dash-docs company-web company-terraform company-quickhelp company-nginx company-go auto-highlight-symbol anaconda-mode all-the-icons alert ag)))
  '(scroll-bar-mode nil)
  '(scroll-conservatively 10000)
  '(scroll-step 1)

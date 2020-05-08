@@ -12,20 +12,6 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin"))
 (setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin")))
 
-(require 'helm)
-(helm-autoresize-mode 1)
-(setq helm-mode-fuzzy-match t)
-(setq helm-completion-in-region-fuzzy-match t)
-(setq helm-M-x-fuzzy-match t)
-(setq helm-buffers-fuzzy-matching t)
-(setq helm-completion-style 'emacs)
-(setq completion-styles '(helm-flex))
-(global-set-key (kbd "C-x b") 'helm-buffers-list)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "M-x") 'helm-M-x)
-
-(setq helm-dash-browser-func 'eww)
-
 (setq ring-bell-function 'ignore)
 
 ;; (setq ido-enable-flex-matching t)
@@ -34,62 +20,34 @@
 (setq whitespace-style
       '(face trailing empty lines-tail tab-mark))
 
-(setq fci-rule-column 120)
-
 (setq-default fill-column 120)
 
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(add-to-list 'auto-mode-alist '("\\.html" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jinja" . jinja2-mode))
-(add-to-list 'auto-mode-alist '("\\.j2" . jinja2-mode))
-(add-to-list 'auto-mode-alist '("\\.sls" . salt-mode))
-(add-to-list 'auto-mode-alist '("\\.trello" . org-mode))
-
-(setq speedbar-indentation-width 2)
-(setq speedbar-show-unknown-files t)
-(setq speedbar-smart-directory-expand-flag nil)
-(setq speedbar-use-images nil)
-(setq sr-speedbar-right-side nil)
-(setq sr-speednbar-skip-other-window-p t)
-
-;; (setq ac-auto-show-menu t)
-;; (setq ac-expand-on-auto-complete t)
-;; (setq ac-show-menu-immediately-on-auto-complete t)
-;; (setq ac-fuzzy-enable t)
-
-;; (setq jedi:complete-on-dot t)
-;; (setq jedi:setup-keys t)
-(require 'undohist)
-(undohist-initialize)
-
-(require 'flycheck)
-(setq flycheck-flake8-maximum-complexity 15)
-(setq-default flycheck-disabled-checkers
-  (append flycheck-disabled-checkers
-    '(javascript-jshint)))
-(flycheck-add-mode 'javascript-eslint 'js2-mode)
+;; (setq speedbar-indentation-width 2
+;;       speedbar-show-unknown-files t
+;;       speedbar-smart-directory-expand-flag nil
+;;       speedbar-use-images nil
+;;       sr-speedbar-right-side nil
+;;       sr-speednbar-skip-other-window-p t)
 
 (setq frame-title-format "emacs -- %f -- %m")
 
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
 
-(setq scroll-step 1)
-(setq scroll-conservatively 10000)
-(setq auto-window-vscroll nil)
-(setq split-width-threshold 70)
-(setq split-height-threshold 100)
-(setq apropos-sort-by-scores t)
+(setq scroll-step 1
+      scroll-conservatively 10000
+      auto-window-vscroll nil
+      split-width-threshold 70
+      split-height-threshold 100
+      apropos-sort-by-scores t)
 
-(setq-default tab-width 4)
-(setq default-tab-width 4)
-(setq-default indent-tabs-mode nil)
-(setq indent-tabs-mode nil)
-(setq-default tab-always-indent 'complete)
-(setq-default major-mode 'text-mode)
-(setq indent-line-function 'indent-for-tab-command)
-
-(setq magit-last-seen-setup-instructions "1.4.0")
+(setq-default indent-tabs-mode nil
+              major-mode 'text-mode
+              tab-always-indent 'complete
+              tab-width 4)
+(setq default-tab-width 4
+      indent-line-function 'indent-for-tab-command
+      indent-tabs-mode nil)
 
 (setq create-lockfiles nil)
 (setq
@@ -103,19 +61,8 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-;; (require 'workgroups2)
-;; (setq wg-session-file "~/.emacs.d/.emacs_workgroups")
-;; (setq wg-session-load-on-start 1)
-
-(setq company-idle-delay 2)
-(setq company-auto-complete nil)
-(setq company-minimum-prefix-length 1
-      company-auto-complete-chars (quote (32 95 40 46)))
-
-;; (set-face-attribute 'default nil :font "Source Code Pro-12")
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
 (setq default-frame-alist '((font . "Hack-10") (load-theme 'lush)))
-;; (load-theme 'material)
 ;; (defvar newline-and-indent t
 ;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
 
@@ -125,12 +72,7 @@
 
 ; To automatically enter closing pair when opening pair is entered
 (electric-pair-mode +1)
-
 (electric-indent-mode 1)
-
-;; Ruby
-;; Don't indent parameters inside parens more than normal
-(defvar ruby-deep-indent-paren nil)
 
 ;; Font size
 (define-key global-map (kbd "C-+") 'text-scale-increase)
@@ -150,14 +92,11 @@
 (global-set-key (kbd "C-x p") 'other-window-backward)
 
 (global-set-key (kbd "C-c C-t") 'visit-ansi-term)
-(global-set-key (kbd "C-c P") 'run-python)
 (global-set-key (kbd "C-c g") 'google)
 
 (global-set-key (kbd "C-c D")  'delete-file-and-buffer)
 
 (global-set-key (kbd "C-:") 'goto-line)
-
-(global-set-key (kbd "C-.") 'company-complete)
 
 (global-set-key (kbd "C-M-z") 'indent-defun)
 ; (global-set-key (kbd "C-c o") 'open-with)
@@ -167,8 +106,6 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-(global-set-key (kbd "M-X") 'smex)
-
 (global-set-key (kbd "C-o") 'open-next-line)
 (global-set-key (kbd "M-o") 'open-previous-line)
 
@@ -176,10 +113,6 @@
 (global-set-key (kbd "M-s f") 'speedbar-get-focus)
 
 (global-set-key (kbd "RET") 'newline-and-indent)
-
-(global-set-key (kbd "C-c C-.") 'anaconda-mode-goto)
-(global-set-key (kbd "C-c C-,") 'anaconda-nav-pop-marker)
-(global-set-key (kbd "C-c /") 'anaconda-mode-usages)
 
 (global-set-key (kbd "C-c l") `windmove-right)
 (global-set-key (kbd "C-c k") `windmove-up)
@@ -197,8 +130,8 @@
 (global-set-key (kbd "C-c C-{") 'insert-pair)
 (global-set-key (kbd "C-c C-[") 'insert-pair)
 
-(global-set-key (kbd "C-c p p") 'projectile-switch-project)
-(global-set-key (kbd "M-P") 'projectile-find-file)
+;; (global-set-key (kbd "C-c p p") 'projectile-switch-project)
+;; (global-set-key (kbd "M-P") 'projectile-find-file)
 
 (global-set-key (kbd "M-%") 'query-replace-regexp)
 
@@ -561,16 +494,6 @@
 ;; Don't ask to delete excess versions of files
 (defvar trim-versions-without-asking t)
 
-;; (require 'ido)
-;; (ido-mode t)
-
-;; (setq evil-toggle-key "C-`")
-;; (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-;; (define-key evil-normal-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-;; (define-key evil-motion-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
-;; (define-key evil-motion-state-map (kbd "<remap> <evil-previous-line>") 'evil-previous-visual-line)
-;; (setq evil-default-cursor "white")
-
 ;;
 ;; Unscroll support
 ;;
@@ -591,14 +514,6 @@
   (blink-cursor-mode 0))
 (set-cursor-color "#ffffff")
 
-(defvar emacs-configuration-directory
-    "~/.emacs.d/"
-    "The directory where the emacs configuration files are stored.")
-(defvar elscreen-tab-configuration-store-filename
-    (concat emacs-configuration-directory ".elscreen")
-    "The file where the elscreen tab configuration is stored.")
-
-
 (defvar hexcolor-keywords
   '(("#[abcdef[:digit:]]+"
      (0 (put-text-property
@@ -612,13 +527,13 @@
 
 (setq mmm-submode-decoration-level 1)
 
-(mmm-add-classes '((saltstack-mode
-                  :submode jinja2-mode
-                  :face mmm-declaration-submode-face
-                  :front "{[{%].+?"
-                  :front-offset -3
-                  :back "[}%]}"
-                  :back-offset 2)))
+;; (mmm-add-classes '((saltstack-mode
+;;                   :submode jinja2-mode
+;;                   :face mmm-declaration-submode-face
+;;                   :front "{[{%].+?"
+;;                   :front-offset -3
+;;                   :back "[}%]}"
+;;                   :back-offset 2)))
 
 
 ;; (mmm-add-group 'saltstack-mode
@@ -637,16 +552,16 @@
 ;;                   :back ")"
 ;;                   :back-offset 1)))
 
-(mmm-add-mode-ext-class 'yaml-mode "\\.sls\\'" 'saltstack-mode)
+;; (mmm-add-mode-ext-class 'yaml-mode "\\.sls\\'" 'saltstack-mode)
 (setq mmm-global-mode nil)
 ;;; end MMM-Mode
 
-;; Jedi Mode
-(defvar jedi-config:with-virtualenv nil
-"Set to non-nil to point to a particular virtualenv.")
-;; Variables to help find the project root
-(defvar jedi-config:vcs-root-sentinel ".git")
-(defvar jedi-config:python-module-sentinel "__init__.py")
+;; ;; Jedi Mode
+;; (defvar jedi-config:with-virtualenv nil
+;; "Set to non-nil to point to a particular virtualenv.")
+;; ;; Variables to help find the project root
+;; (defvar jedi-config:vcs-root-sentinel ".git")
+;; (defvar jedi-config:python-module-sentinel "__init__.py")
 
 (provide 'configurations)
 ;;; configurations.el ends here
