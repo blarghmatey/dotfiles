@@ -12,12 +12,14 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin"))
 (setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin")))
 
+(require 'delight)
+(delight '((global-whitespace-mode nil "whitespace")
+           (subword-mode nil "subword")
+           (flyspell-mode nil "flyspell")))
+
 (setq ring-bell-function 'ignore)
-
-;; (setq ido-enable-flex-matching t)
-
-(setq whitespace-line-column 150)
-(setq whitespace-style
+(setq whitespace-line-column 150
+      whitespace-style
       '(face trailing empty lines-tail tab-mark))
 
 (setq-default fill-column 120)
@@ -33,6 +35,7 @@
 
 (global-linum-mode 1) ; Show line numbers
 (column-number-mode 1) ; Show cursor column position
+(show-paren-mode) ; Show matching parens
 
 (setq scroll-step 1
       scroll-conservatively 10000
@@ -50,24 +53,19 @@
       indent-tabs-mode nil)
 
 (setq create-lockfiles nil)
-(setq
-   backup-by-copying t      ; don't clobber symlinks
-   backup-directory-alist
-    '(("." . "~/.saves"))    ; don't litter my fs tree
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t)       ; use versioned backups
+(setq backup-by-copying t      ; don't clobber symlinks
+      backup-directory-alist
+      '(("." . "~/.saves"))    ; don't litter my fs tree
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)       ; use versioned backups
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
 (setq default-frame-alist '((font . "Hack-10") (load-theme 'lush)))
-;; (defvar newline-and-indent t
-;;   "Modify the behavior of the open-*-line functions to cause them to autoindent.")
 
-(setq ctags-update-prompt-create-tags nil)
-;; (scroll-bar-mode -1)
 (tool-bar-mode -1)
 
 ; To automatically enter closing pair when opening pair is entered
@@ -84,8 +82,6 @@
 (global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-6")))
 
 ;; Use C-c t as a prefix for toggling things
-(global-set-key (kbd "C-c t l") 'linum-relative-toggle)
-
 (global-set-key (kbd "C-c i d") 'insert-date)
 
 (global-set-key (kbd "C-c e") 'eval-and-replace)
@@ -109,9 +105,6 @@
 (global-set-key (kbd "C-o") 'open-next-line)
 (global-set-key (kbd "M-o") 'open-previous-line)
 
-(global-set-key (kbd "M-s t") 'sr-speedbar-toggle)
-(global-set-key (kbd "M-s f") 'speedbar-get-focus)
-
 (global-set-key (kbd "RET") 'newline-and-indent)
 
 (global-set-key (kbd "C-c l") `windmove-right)
@@ -123,12 +116,6 @@
 (global-set-key (kbd "C-<") 'indent-rigidly-left-to-tab-stop)
 
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
-
-(global-set-key (kbd "C-c C-\"") 'insert-pair)
-(global-set-key (kbd "C-c C-'") 'insert-pair)
-(global-set-key (kbd "C-c C-(") 'insert-pair)
-(global-set-key (kbd "C-c C-{") 'insert-pair)
-(global-set-key (kbd "C-c C-[") 'insert-pair)
 
 ;; (global-set-key (kbd "C-c p p") 'projectile-switch-project)
 ;; (global-set-key (kbd "M-P") 'projectile-find-file)
@@ -148,46 +135,30 @@
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
 (setq org-agenda-restore-windows-after-quit t)
-(setq alert-default-style 'libnotify)
-(setq org-alert-enable t)
-(setq org-directory "~/Dropbox/org/")
-(setq org-mobile-directory "~/Dropbox/org-mobile/")
-(setq org-mobile-inbox-for-pull "~/Dropbox/org-mobile/inbox.org")
-(setq org-log-done t)
-(setq org-log-redeadline (quote time))
-(setq org-log-reschedule (quote time))
-(setq org-log-into-drawer t)
-(setq org-use-sub-superscripts '{})
-(setq org-export-with-sub-superscripts '{})
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "DOING(d!)" "|" "DONE(D!)")))
-(setq org-todo-keyword-faces
-      '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold))))
-(setq org-agenda-files
-   (quote
-    ("~/Dropbox/org/todo/" "~/Dropbox/org/calendars/" "~/Dropbox/org/journal")))
-(setq org-journal-date-format "%Y-%m-%d")
-(setq org-journal-dir "~/Dropbox/org/journal/")
-(setq org-journal-file-format "%Y-%m-%d.org")
-(setq org-journal-search-results-order-by :desc)
-(setq org-mobile-directory "~/Dropbox/org")
-(setq org-default-notes-file (concat org-directory "notes.org"))
-(setq org-refile-targets `((org-agenda-files . (:maxlevel . 2))))
-;; (setq org-mu4e-link-query-in-headers-mode nil)
-(setq org-capture-templates
+(setq org-directory "~/Dropbox/org/"
+      org-log-done t
+      org-log-redeadline (quote time)
+      org-log-reschedule (quote time)
+      org-log-into-drawer t
+      org-use-sub-superscripts '{}
+      org-export-with-sub-superscripts '{}
+      org-todo-keywords
+      '((sequence "TODO(t)" "DOING(d!)" "|" "DONE(D!)"))
+      org-todo-keyword-faces
+      '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold)))
+      org-agenda-files
+      (quote
+       ("~/Dropbox/org/todo/" "~/Dropbox/org/calendars/" "~/Dropbox/org/journal"))
+      org-default-notes-file (concat org-directory "notes.org")
+      org-refile-targets `((org-agenda-files . (:maxlevel . 2)))
+      ;; (setq org-mu4e-link-query-in-headers-mode nil)
+      org-capture-templates
       `(("t" "Todo" entry (file ,(concat org-directory "todo/todo.org"))
          "** TODO %? :%^G\n:PROPERTIES:\n:Created: %U\n:END:")
         ("n" "Note" entry (file org-default-notes-file)
          "* %?\n:PROPERTIES:\n:Created: %U\n:END:")
         ("f" "Followup" entry (file+headline ,(concat org-directory "todo/todo.org") "Tasks")
          "* TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")))
-(ignore-errors (load-file "~/.org-gcal-client-secrets.el.gpg"))
-(setq org-gcal-file-alist `(("blarghmatey@gmail.com" . ,(concat org-directory "calendars/blarghmatey.org"))
-                            ("sabrinaleevt@gmail.com" . ,(concat org-directory "calendars/sabrinaleevt.org"))
-                            ("tobias.macey@gmail.com" . ,(concat org-directory "calendars/tobiasmacey.org"))
-                            ("cks7rp25je0uau65oiq6nh4trs@group.calendar.google.com" . ,(concat org-directory "calendars/mit-engineering.org"))
-                            ("tmacey@bitlancer.com" . ,(concat org-directory "calendars/bitlancer.org"))
-                            ("tmacey@boundlessnotions.com" . ,(concat org-directory "calendars/boundlessnotions.org"))))
 
 (global-set-key (kbd "C-c L") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -196,17 +167,6 @@
 (global-set-key (kbd "C-c o t") (lambda () (interactive) (find-file (concat org-directory "todo/"))))
 (global-set-key (kbd "C-c o T") (lambda () (interactive) (find-file (concat org-directory "trello/"))))
 (global-set-key (kbd "C-c s e") `org-edit-src-code)
-
-(let (credentials)
-  ;; only required if your auth file is not already in the list of auth-sources
-  (setq credentials (auth-source-user-and-password "boundlessnotions"))
-  (setq org2blog/wp-blog-alist
-        `(("boundlessnotions"
-           :url "http://www.boundlessnotions.com/xmlrpc.php"
-           :username ,(car credentials)
-           :password ,(cadr credentials)
-           :tags-as-categories nil))))
-(setq org2blog/wp-confirm-post t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; EMAIL CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -485,8 +445,6 @@
 ;;          ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Show matching parens
-(show-paren-mode)
 
 ;; Allow direct edting of permission flags in wdired
 (defvar wdired-allow-to-change-permissions t)
@@ -521,47 +479,6 @@
          (match-end 0)
          'face (list :background
                      (match-string-no-properties 0)))))))
-;;;
-;;; MMM-Mode definitions
-;;;
-
-(setq mmm-submode-decoration-level 1)
-
-;; (mmm-add-classes '((saltstack-mode
-;;                   :submode jinja2-mode
-;;                   :face mmm-declaration-submode-face
-;;                   :front "{[{%].+?"
-;;                   :front-offset -3
-;;                   :back "[}%]}"
-;;                   :back-offset 2)))
-
-
-;; (mmm-add-group 'saltstack-mode
-;;                '((saltstack-mode-jinja
-;;                   :submode jinja2-mode
-;;                   :face mmm-declaration-submode-face
-;;                   :front "{[{%].+?"
-;;                   :front-offset -2
-;;                   :back "[}%]}"
-;;                   :back-offset 2)
-;;                (saltstack-mode-python
-;;                   :submode python-mode
-;;                   :face mmm-declaration-submode-face
-;;                   :front "salt[[].+?"
-;;                   :front-offset -5
-;;                   :back ")"
-;;                   :back-offset 1)))
-
-;; (mmm-add-mode-ext-class 'yaml-mode "\\.sls\\'" 'saltstack-mode)
-(setq mmm-global-mode nil)
-;;; end MMM-Mode
-
-;; ;; Jedi Mode
-;; (defvar jedi-config:with-virtualenv nil
-;; "Set to non-nil to point to a particular virtualenv.")
-;; ;; Variables to help find the project root
-;; (defvar jedi-config:vcs-root-sentinel ".git")
-;; (defvar jedi-config:python-module-sentinel "__init__.py")
 
 (provide 'configurations)
 ;;; configurations.el ends here
