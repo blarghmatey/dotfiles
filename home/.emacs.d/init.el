@@ -26,8 +26,6 @@
         ("melpa" . "https://melpa.org/packages/")))
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
-(require 'pallet)
-(pallet-mode t)
 
 (setq load-path (append load-path '("~/.emacs.d/plugins")))
 
@@ -40,14 +38,14 @@
 ;; (add-hook 'python-mode-hook 'flycheck-python-setup)
 (add-hook 'yaml-mode-hook (lambda () (setq-local electric-indent-mode -1)))
 (add-hook 'markdown-mode-hook (lambda () (setq-local whitespace-style
-      '(face trailing empty tab-mark))))
+                                                     '(face trailing empty tab-mark))))
 (add-hook 'org-mode-hook (lambda () (setq-local whitespace-style
                                                 '(face trailing empty tab-mark))))
 (add-hook 'org-mode-hook
           (lambda ()
             (let ((filename (buffer-file-name (current-buffer))))
               (when (and filename (string= "trello" (file-name-extension filename)))
-              (org-trello-mode)))))
+                (org-trello-mode)))))
 (add-hook 'org-mime-html-hook
           (lambda ()
             (org-mime-change-element-style
@@ -80,7 +78,6 @@
 
 (use-package elpy
   :ensure t
-  :defer t
   :delight
   (elpy-mode)
   (hl-line-mode)
@@ -89,50 +86,20 @@
   (hs-minor-mode)
   (eldoc-mode)
   :after python
-  :config (elpy-enable))
-
-(use-package elscreen
-  :ensure t
-  :hook
-  (kill-emacs . elscreen-store)
-  (after-init . elscreen-start)
-  :init
-  (defvar emacs-configuration-directory
-    "~/.emacs.d/"
-    "The directory where the emacs configuration files are stored.")
-
-  (defvar elscreen-tab-configuration-store-filename
-    (concat emacs-configuration-directory ".elscreen")
-    "The file where the elscreen tab configuration is stored.")
-
-  (defun elscreen-store ()
-    "Store the elscreen tab configuration."
-    (interactive)
-    (if (desktop-save (concat emacs-configuration-directory "elscreen-desktop") t)
-        (with-temp-file elscreen-tab-configuration-store-filename
-            (insert (prin1-to-string (elscreen-get-screen-to-name-alist))))))
-
-  (defun elscreen-restore ()
-    "Restore the elscreen tab configuration."
-    (interactive)
-    (if (desktop-read (concat emacs-configuration-directory "elscreen-desktop"))
-        (let ((screens (reverse
-                        (read
-                         (with-temp-buffer
-                           (insert-file-contents elscreen-tab-configuration-store-filename)
-                           (buffer-string))))))
-          (while screens
-            (setq screen (car (car screens)))
-            (setq buffers (split-string (cdr (car screens)) ":"))
-            (if (eq screen 0)
-                (switch-to-buffer (car buffers))
-              (elscreen-find-and-goto-by-buffer (car buffers) t t))
-            (while (cdr buffers)
-              (switch-to-buffer-other-window (car (cdr buffers)))
-              (setq buffers (cdr buffers)))
-            (setq screens (cdr screens))))))
+  ;; :hook (elpy-mode . (subword-mode hl-line-mode flycheck-mode))
   :config
-  (run-with-timer 300 (* 5 60) 'elscreen-store))
+  (setq elpy-modules '(elpy-module-company
+                       elpy-module-django
+                       elpy-module-autodoc
+                       elpy-module-eldoc
+                       elpy-module-folding
+                       elpy-module-pyvenv
+                       elpy-module-highlight-indentation
+                       elpy-module-yasnippet
+                       elpy-module-sane-defaults)
+        elpy-rpc-backend "jedi"
+        elpy-test-runner 'elpy-test-pytest-runner)
+  (elpy-enable))
 
 (use-package fill-column-indicator
   :ensure t
@@ -162,6 +129,9 @@
   :delight git-gutter+-mode)
 
 (use-package git-link
+  :ensure t)
+
+(use-package github-review
   :ensure t)
 
 (use-package helm
@@ -204,6 +174,9 @@
   :mode (("\\.j2" . jinja2-mode)
          ("\\.jinja" . jinja2-mode)))
 
+(use-package lice
+  :ensure t)
+
 (use-package linum-relative
   :ensure t
   :bind ("C-c t l" . linum-relative-toggle))
@@ -232,29 +205,47 @@
   :demand t
   :ensure t
   :hook (python-mode . lsp)
-  :init
+  :preface
   (defun lsp-python-ms-locate-python ()
-  "Look for virtual environments local to the workspace"
-  (let* ((venv (locate-dominating-file default-directory "venv/"))
-         (venv (locate-dominating-file default-directory ".venv/"))
-         (sys-python (executable-find lsp-python-ms-python-executable-cmd))
-         (venv-python (f-expand "venv/bin/python" venv))
-         (venv-python (f-expand ".venv/bin/python" venv)))
-    (cond
-     ((and venv (f-executable? venv-python)) venv-python)
-     (sys-python)))))
+    "Look for virtual environments local to the workspace"
+    (let* ((venv (locate-dominating-file default-directory "venv/"))
+           (venv (locate-dominating-file default-directory ".venv/"))
+           (sys-python (executable-find lsp-python-ms-python-executable-cmd))
+           (venv-python (f-expand "venv/bin/python" venv))
+           (venv-python (f-expand ".venv/bin/python" venv)))
+      (cond
+       ((and venv (f-executable? venv-python)) venv-python)
+       (sys-python)))))
 
 (use-package lsp-ui
   :ensure t
-  :commands lsp-ui-mode)
+  :bind
+  ("C-; G i" . lsp-ui-imenu)
+  ("C-; G f" . lsp-ui-doc-focus-frame)
+  ("C-; G u" . lsp-ui-doc-unfocus-frame)
+  :commands lsp-ui-mode
+  :config (setq lsp-ui-sideline-show-hover t
+                lsp-ui-sideline-show-code-actions t
+                lsp-ui-sideline-show-diagnostics t
+                lsp-ui-doc-include-signature t
+                lsp-ui-doc-header t))
 
 (use-package magit
   :ensure t
   :bind ("C-x g" . magit-status)
-  :config (setq magit-last-seen-setup-instructions "1.4.0"))
+  :config (setq magit-last-seen-setup-instructions "1.4.0"
+                magit-commit-arguments '("-S")
+                magit-log-section-arguments '("-n256" "--decorate")))
+
+(use-package magit-delta
+  :ensure t)
 
 (use-package markdown-changelog
   :ensure t)
+
+(use-package mmm-mode
+  :ensure t
+  :delight)
 
 (use-package nginx-mode
   :ensure t)
@@ -269,6 +260,18 @@
 (use-package org-trello
   :ensure t
   :mode ("\\.trello" . org-mode))
+
+(use-package perspective
+  :ensure t
+  :bind-keymap ("C-z" . perspective-map)
+  :bind (:map perspective-map
+              ("c" . persp-switch)
+              ("k" . persp-kill)
+              ("d" . persp-remove-buffer))
+  :init (setq persp-state-default-file "~/.emacs.d/perspective_state.el")
+  :config
+  (persp-mode)
+  (run-with-timer 300 (* 5 60) 'persp-state-save "~/.emacs.d/perspective_state.el"))
 
 (use-package php-mode
   :ensure t)
@@ -301,14 +304,7 @@
   (pyvenv-mode 1))
 
 (use-package salt-mode
-  :ensure t
-  :init
-  (use-package mmm-mode
-    :ensure t
-    :delight
-    :hook (salt-mode . mmm-mode)
-    :config (setq mmm-submode-decoration-level 1))
-  :mode "\\.sls")
+  :ensure t)
 
 (use-package sphinx-doc
   :ensure f
@@ -335,9 +331,21 @@
   :ensure t
   :delight which-key-mode
   :init
-  (which-key-setup-minibuffer)
-  (setq which-key-popup-type 'minibuffer)
+  (which-key-setup-side-window-bottom)
+  (setq which-key-popup-type 'side-window
+        which-key-side-window-location 'bottom)
   :commands which-key-mode)
+
+(use-package xonsh-mode
+  :ensure t)
+
+(use-package yasnippet
+  :ensure t
+  :delight yas
+  :init (yas-reload-all)
+  :hook (prog-mode . yas-minor-mode))
+
+(use-package yasnippet-snippets :ensure t)
 
 (load-file "~/.emacs.d/functions.el")
 (load-file "~/.emacs.d/configurations.el")
@@ -363,18 +371,9 @@
      (erc-track-minor-mode nil)
      (savehist-mode nil)
      (eproject-mode eproject-maybe-turn-on)))
- '(elpy-mode-hook '(subword-mode hl-line-mode))
- '(elpy-modules
-   '(elpy-module-company elpy-module-eldoc elpy-module-folding elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-autodoc elpy-module-sane-defaults))
- '(elpy-rpc-backend "jedi")
- '(elpy-test-runner 'elpy-test-pytest-runner)
  '(hl-sexp-background-color "#1c1f26")
- '(magit-commit-arguments '("-S"))
- '(magit-log-section-arguments '("-n256" "--decorate"))
- '(mmm-global-mode nil nil (mmm-mode))
- '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(package-selected-packages
-   '(wgrep-ag delight which-key web-mode use-package undo-tree salt-mode python-docstring py-isort poetry php-mode pallet org-trello org-journal nginx-mode markdown-changelog lush-theme lsp-ui lsp-python-ms linum-relative jinja2-mode helm-projectile helm-lsp helm-flx helm-ag git-link git-gutter-fringe+ forge flycheck-mypy fill-column-indicator elscreen elpy dockerfile-mode docker ag 0blayout))
+   '(perspective lice magit-delta github-review xonsh-mode yasnippet-snippets wgrep-ag delight which-key web-mode use-package undo-tree salt-mode python-docstring py-isort poetry php-mode pallet org-trello org-journal nginx-mode markdown-changelog lush-theme lsp-ui lsp-python-ms linum-relative jinja2-mode helm-projectile helm-lsp helm-flx helm-ag git-link git-gutter-fringe+ forge flycheck-mypy fill-column-indicator elscreen elpy dockerfile-mode docker ag 0blayout))
  '(scroll-bar-mode nil)
  '(scroll-conservatively 10000)
  '(scroll-step 1)
