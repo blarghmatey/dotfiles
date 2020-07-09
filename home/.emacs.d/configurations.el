@@ -12,6 +12,8 @@
 (setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin"))
 (setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin")))
 
+(setq auth-sources '("~/.authinfo.gpg" "~/.authinfo"  "~/.netrc"))
+
 (require 'delight)
 (delight '((global-whitespace-mode nil "whitespace")
            (subword-mode nil "subword")
@@ -37,6 +39,7 @@
 (column-number-mode 1) ; Show cursor column position
 (show-paren-mode) ; Show matching parens
 
+(set-scroll-bar-mode nil)
 (setq scroll-step 1
       scroll-conservatively 10000
       auto-window-vscroll nil

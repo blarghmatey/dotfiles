@@ -29,9 +29,12 @@ $XONSH_AUTO_PAIR=True
 $XONSH_DATETIME_FORMAT='%Y-%m-%dT%H:%M:%S'
 $CASE_SENSITIVE_COMPLETIONS = False
 $PATH.append('/home/tmacey/.local/bin')
-$PATH.insert(0, '/home/tmacey/.gem/ruby/2.5.0/bin')
-$GEM_PATH='/home/tmacey/.gem/ruby/2.5.0'
-$GEM_HOME='/home/tmacey/.gem/ruby/2.5.0'
+$PATH.append('/home/tmacey/.cargo/bin')
+
+GEM_DIR = $(ruby -e 'puts Gem.user_dir').strip('\n')
+$PATH.insert(0, f'{GEM_DIR}/bin')
+$GEM_PATH=GEM_DIR
+$GEM_HOME=GEM_DIR
 
 if glob('/tmp/ssh-*/agent.*'):
     $SSH_AUTH_SOCK=glob('/tmp/ssh-*/agent.*')[0]
