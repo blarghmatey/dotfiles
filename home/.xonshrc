@@ -60,7 +60,7 @@ __return_code_map = {
     128: 'Invalid argument to "exit"',
     255: "Exit status out of range"
 }
-__kill_codes = re.findall('\d{1,2} \w+', $(kill -L))
+__kill_codes = re.findall(r'\d{1,2} \w+', $(kill -L))
 for code in __kill_codes:
     code_val, code_name = code.split(' ')
     __return_code_map[127 + int(code_val)] = "Process terminated by SIG{}".format(code_name)
@@ -89,9 +89,9 @@ $PROMPT_FIELDS['gitstatus'] = gitstatus_prompt
 $PROMPT_FIELDS['exit_status'] = _return_code_output
 $PROMPT_FIELDS['prompt_end'] = '\u21C9'
 $PROMPT = ('\n\u256D-{env_name:{} }{BOLD_YELLOW}{user}{WHITE}@{BOLD_RED}{hostname}{BOLD_BLUE} '
-           '{cwd} {branch_color}{gitstatus}{NO_COLOR} '
-           '\n\u2570-{BOLD_BLACK}{BACKGROUND_WHITE} {current_time} {NO_COLOR} '
-           '{BOLD_BLUE}{exit_status}{prompt_end}{NO_COLOR} ')
+           '{cwd} {branch_color}{gitstatus}{RESET} '
+           '\n\u2570-{BOLD_BLACK}{BACKGROUND_WHITE} {current_time} {RESET} '
+           '{BOLD_BLUE}{exit_status}{prompt_end}{RESET} ')
 
 def ssh_host_completer(prefix, line, begidx, endidx, ctx):
     if not line.startswith('ssh ') or re.search(' ?-{1,2}\w*?$', line):
@@ -118,10 +118,6 @@ completer add ssh ssh_host_completer
 #
 #aliases['hex_encode'] = lambda a,i=None: _write_bytes(binascii.hexlify(_to_bytes(i.strip() or a[0])) + b'\n')
 #aliases['hex_decode'] = lambda a,i=None: _write_bytes(binascii.unhexlify(_to_bytes(i.strip() or a[0])) + b'\n')
-
-aliases.update({
-    'jp': 'joplin',
-    'jpt': 'joplin mktodo'
-})
+aliases['cat'] = 'bat'
 
 xontrib load vox

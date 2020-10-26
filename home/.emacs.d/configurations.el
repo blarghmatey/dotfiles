@@ -67,7 +67,7 @@
       `((".*" ,temporary-file-directory t)))
 
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
-(setq default-frame-alist '((font . "Hack-10") (load-theme 'lush)))
+(setq default-frame-alist '((font . "Hack-12") (load-theme 'lush)))
 
 (tool-bar-mode -1)
 
@@ -78,11 +78,11 @@
 ;; Font size
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-_") 'text-scale-decrease)
-(global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-14")))
-(global-set-key (kbd "C-c f N") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-8")))
-(global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-10")))
-(global-set-key (kbd "C-c f n") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-7")))
-(global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-6")))
+(global-set-key (kbd "C-c f p") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-16")))
+(global-set-key (kbd "C-c f n") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-12")))
+(global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-14")))
+(global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-10")))
+(global-set-key (kbd "C-c f u") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-8")))
 
 ;; Use C-c t as a prefix for toggling things
 (global-set-key (kbd "C-c i d") 'insert-date)

@@ -51,6 +51,13 @@
             (org-mime-change-element-style
              "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
 
+(use-package ace-window
+  :ensure t
+  :delight
+  :bind ("C-x o" . ace-window)
+  :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+                aw-scope 'frame))
+
 (use-package ag
   :ensure t
   :defer t)
@@ -86,6 +93,7 @@
 
 (use-package editorconfig
   :ensure t
+  :delight
   :hook (prog-mode . editorconfig-mode))
 
 (use-package editorconfig-generate
@@ -129,13 +137,18 @@
   :hook (after-init . global-flycheck-mode)
   :init
   (use-package flycheck-mypy :ensure t)
-  :config (setq flycheck-flake8-maximum-complexity 15
+  :config (setq flycheck-disabled-checkers '(python-pycompile python-pylint)
+                flycheck-flake8-maximum-complexity 15
                 flycheck-flake8rc "setup.cfg"
                 flycheck-python-mypy-config "setup.cfg"))
 
+(use-package flycheck-projectile
+  :ensure t)
+
 (use-package forge
   :ensure t
-  :after magit)
+  :after magit
+  :config (setq forge-topic-list-limit 0))
 
 (use-package git-gutter-fringe+
   :ensure t
@@ -148,6 +161,10 @@
 
 (use-package github-review
   :ensure t)
+
+(use-package hcl-mode
+  :ensure t
+  :mode ("\.nomad" . hcl-mode))
 
 (use-package helm
   :ensure t
@@ -209,51 +226,61 @@
   :delight
   :hook
   (js-mode . lsp)
-  (yaml-mode . lsp)
+  (json-mode . lsp)
+  (shell-mode . lsp)
+  (html-mode . lsp)
+  (web-mode . lsp)
+  (python-mode . lsp)
+  (dockerfile-mode . lsp)
   :bind ("M-." . xref-find-definitions)
-  :init (setq-default lsp-auto-configure t
-                      lsp-enable-imenu t
-                      lsp-keymap-prefix "C-;"
+  :init (setq-default gc-cons-threshold 3200000
+                      lsp-auto-configure t
+                      lsp-before-save-edits nil
                       lsp-diagnostic-package :none
                       lsp-enable-completion-at-point t
-                      lsp-enable-semantic-highlighting t
-                      lsp-enable-imenu t
-                      lsp-imenu-show-container-name t
-                      lsp-enable-indentation t
                       lsp-enable-folding t
+                      lsp-enable-file-watchers t
+                      lsp-enable-imenu t
+                      lsp-enable-imenu t
+                      lsp-enable-indentation t
+                      lsp-enable-semantic-highlighting t
+                      lsp-enable-text-document-color t
+                      lsp-file-watch-threshold 100000
+                      lsp-imenu-show-container-name t
+                      lsp-keymap-prefix "C-;"
+                      lsp-modeline-code-actions-mode t
                       lsp-prefer-capf t
-                      read-process-output-max (* 1024 1024)
-                      gc-cons-threshold 3200000
-                      lsp-semantic-highlighting :immediate)
+                      lsp-semantic-highlighting :immediate
+                      read-process-output-max (* 1024 1024))
   :commands (lsp))
 
-(use-package lsp-python-ms
-  :demand t
+(use-package lsp-pyright
   :ensure t
-  :hook (python-mode . lsp)
-  :preface
-  (defun lsp-python-ms-locate-python ()
-    "Look for virtual environments local to the workspace"
-    (let* ((venv (locate-dominating-file default-directory "venv/"))
-           (venv (locate-dominating-file default-directory ".venv/"))
-           (sys-python (executable-find lsp-python-ms-python-executable-cmd))
-           (venv-python (f-expand "venv/bin/python" venv))
-           (venv-python (f-expand ".venv/bin/python" venv)))
-      (cond
-       ((and venv (f-executable? venv-python)) venv-python)
-       (sys-python)))))
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-pyright)
+                         (lsp)))
+  :config (setq lsp-pyright-diagnostic-mode "workspace"
+                lsp-pyright-use-library-code-for-types t
+                lsp-pyright-auto-import-completions t
+                lsp-pyright-disable-organize-imports t))
 
 (use-package lsp-ui
   :ensure t
   :bind
   ("C-; G i" . lsp-ui-imenu)
+  ("C-; G d" . lsp-ui-doc-show)
+  ("C-; G h" . lsp-ui-doc-hide)
   ("C-; G f" . lsp-ui-doc-focus-frame)
   ("C-; G u" . lsp-ui-doc-unfocus-frame)
   :commands lsp-ui-mode
-  :config (setq lsp-ui-sideline-show-hover t
+  :config (setq lsp-ui-doc-position 'top
+                lsp-ui-doc-alignment 'frame
+                lsp-ui-doc-max-height 40
+                lsp-ui-sideline-mode "line"
+                lsp-ui-sideline-show-hover t
                 lsp-ui-sideline-show-code-actions t
                 lsp-ui-sideline-show-diagnostics t
-                lsp-ui-doc-include-signature t
+                lsp-ui-doc-include-signature nil
                 lsp-ui-doc-header t))
 
 (use-package magit
@@ -312,12 +339,14 @@
   :bind-keymap ("C-c p" . projectile-command-map)
   :bind (("M-P" . projectile-find-file)
          :map projectile-command-map
-         ("p" . projectile-switch-project))
+         ("p" . projectile-switch-project)
+         ("C-c" . flycheck-projectile-list-errors))
   :init (setq projectile-completion-system 'helm)
   :hook (after-init . projectile-mode))
 
 (use-package py-isort
-  :ensure t)
+  :ensure t
+  :config (setq py-isort-options '("-w=120" "--balanced" "-m=3")))
 
 (use-package python-docstring
   :ensure t
@@ -341,7 +370,11 @@
   :ensure t
   :delight undo-tree-mode
   :hook (after-init . global-undo-tree-mode)
-  :config (setq undo-tree-auto-save-history t))
+  :config (setq undo-tree-auto-save-history t
+                undo-tree-enable-undo-in-region t
+                undo-tree-visualizer-diff t
+                undo-tree-visualizer-timestamps t
+                undo-tree-history-directory-alist '((".*" . "/home/tmacey/.emacs.d/undo-tree/"))))
 
 (use-package lush-theme
   :ensure t)
@@ -355,6 +388,7 @@
 
 (use-package which-key
   :ensure t
+  :demand t
   :delight which-key-mode
   :init
   (which-key-setup-side-window-bottom)
@@ -386,14 +420,12 @@
  '(ansi-color-names-vector
    (vector "#ffffff" "#f36c60" "#8bc34a" "#fff59d" "#4dd0e1" "#b39ddb" "#81d4fa" "#263238"))
  '(custom-safe-themes
-   (quote
-    ("0f2f1feff73a80556c8c228396d76c1a0342eb4eefd00f881b91e26a14c5b62a" default)))
+   '("364e592858d85f3dff9d51af5c72737ca8ef2b76fc60d9d5f0a9995ea927635a" "0f2f1feff73a80556c8c228396d76c1a0342eb4eefd00f881b91e26a14c5b62a" default))
  '(debug-on-error nil)
- '(helm-completion-style (quote emacs))
+ '(helm-completion-style 'emacs)
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(package-selected-packages
-   (quote
-    (company-quickhelp helm-company editorconfig-generate editorconfig js2-mode dhall-mode yasnippet-snippets xonsh-mode which-key wgrep-ag web-mode use-package undo-tree salt-mode python-docstring py-isort poetry php-mode perspective pallet org-trello org-journal nginx-mode markdown-changelog magit-delta lush-theme lsp-ui lsp-python-ms linum-relative lice jinja2-mode helm-projectile helm-lsp helm-flx helm-ag github-review git-link git-gutter-fringe+ forge flycheck-mypy fill-column-indicator elpy dockerfile-mode docker delight ag)))
+   '(hcl-mode lsp-jedi ace-window flycheck-projectile lsp-pyright hybrid-reverse-theme company-quickhelp helm-company editorconfig-generate editorconfig js2-mode dhall-mode yasnippet-snippets xonsh-mode which-key wgrep-ag web-mode use-package undo-tree salt-mode python-docstring py-isort poetry php-mode perspective pallet org-trello org-journal nginx-mode markdown-changelog magit-delta lush-theme lsp-ui linum-relative lice jinja2-mode helm-projectile helm-lsp helm-flx helm-ag github-review git-link git-gutter-fringe+ forge flycheck-mypy fill-column-indicator elpy dockerfile-mode docker delight ag))
  '(url-handler-mode t))
 
 (set-cursor-color "white")
