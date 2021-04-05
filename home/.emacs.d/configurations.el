@@ -14,6 +14,8 @@
 
 (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo"  "~/.netrc"))
 
+(add-to-list 'auto-mode-alist '("BUILD" . python-mode))
+
 (require 'delight)
 (delight '((global-whitespace-mode nil "whitespace")
            (subword-mode nil "subword")
@@ -24,7 +26,29 @@
       whitespace-style
       '(face trailing empty lines-tail tab-mark))
 
-(setq-default fill-column 120)
+;; Better support for using emacsclient
+(setq kill-emacs-query-functions
+      (cons (lambda () (yes-or-no-p "Really kill Emacs? "))
+            kill-emacs-query-functions))
+
+(add-hook 'server-switch-hook
+          (lambda ()
+            (when (current-local-map)
+              (use-local-map (copy-keymap (current-local-map))))
+            (when server-buffer-clients
+              (local-set-key (kbd "C-x k") 'server-edit))))
+;; end emacsclient
+
+(lsp-register-client
+ (make-lsp-client :new-connection (lsp-stdio-connection '("sourcery" "lsp"))
+                  :initialization-options '((token . "user_4C2rLVblb6DVCi1QQV_uL4stau_1tjski5VIxux4UAfAePWowD18NSJYw6s")
+                                            (extension_version . "emacs-lsp")
+                                            (editor_version . "emacs"))
+                  :activation-fn (lsp-activate-on "python")
+                  :server-id 'sourcery
+                  :add-on? t))
+
+(setq-default fill-column 88)
 
 ;; (setq speedbar-indentation-width 2
 ;;       speedbar-show-unknown-files t
@@ -39,6 +63,8 @@
 (column-number-mode 1) ; Show cursor column position
 (show-paren-mode) ; Show matching parens
 
+(setq warning-minimum-level :error)
+
 (set-scroll-bar-mode nil)
 (setq scroll-step 1
       scroll-conservatively 10000
@@ -46,6 +72,8 @@
       split-width-threshold 70
       split-height-threshold 100
       apropos-sort-by-scores t)
+(customize-set-variable 'scroll-bar-mode nil)
+(customize-set-variable 'horizontal-scroll-bar-mode nil)
 
 (setq-default indent-tabs-mode nil
               major-mode 'text-mode
@@ -137,31 +165,6 @@
 ;; (require 'org-mu4e)
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
-(setq org-agenda-restore-windows-after-quit t)
-(setq org-directory "~/Dropbox/org/"
-      org-log-done t
-      org-log-redeadline (quote time)
-      org-log-reschedule (quote time)
-      org-log-into-drawer t
-      org-use-sub-superscripts '{}
-      org-export-with-sub-superscripts '{}
-      org-todo-keywords
-      '((sequence "TODO(t)" "DOING(d!)" "|" "DONE(D!)"))
-      org-todo-keyword-faces
-      '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold)))
-      org-agenda-files
-      (quote
-       ("~/Dropbox/org/todo/" "~/Dropbox/org/calendars/" "~/Dropbox/org/journal"))
-      org-default-notes-file (concat org-directory "notes.org")
-      org-refile-targets `((org-agenda-files . (:maxlevel . 2)))
-      ;; (setq org-mu4e-link-query-in-headers-mode nil)
-      org-capture-templates
-      `(("t" "Todo" entry (file ,(concat org-directory "todo/todo.org"))
-         "** TODO %? :%^G\n:PROPERTIES:\n:Created: %U\n:END:")
-        ("n" "Note" entry (file org-default-notes-file)
-         "* %?\n:PROPERTIES:\n:Created: %U\n:END:")
-        ("f" "Followup" entry (file+headline ,(concat org-directory "todo/todo.org") "Tasks")
-         "* TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")))
 
 (global-set-key (kbd "C-c L") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)

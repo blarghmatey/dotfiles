@@ -192,39 +192,39 @@ by using nxml's indentation rules."
   (interactive "P")
   (other-window (- (prefix-numeric-value n))))
 
-(defun unscroll-maybe-remember ()
-  (if (not (get last-command 'unscrollable))
-      (progn
-        (set-marker unscroll-point (point))
-        (set-marker unscroll-window-start (window-start))
-        (setq unscroll-hscroll (window-hscroll)))))
+;; (defun unscroll-maybe-remember ()
+;;   (if (not (get last-command 'unscrollable))
+;;       (progn
+;;         (set-marker unscroll-point (point))
+;;         (set-marker unscroll-window-start (window-start))
+;;         (setq unscroll-hscroll (window-hscroll)))))
 
-(defadvice scroll-up (before remember-for-unscroll
-                 activate compile)
-  "Remember where we started from, for 'unscroll'."
-  (unscroll-maybe-remember))
+;; (defadvice scroll-up (before remember-for-unscroll
+;;                  activate compile)
+;;   "Remember where we started from, for 'unscroll'."
+;;   (unscroll-maybe-remember))
 
-(defadvice scroll-down (before remember-for-unscroll
-                 activate compile)
-  "Remember where we started from, for 'unscroll'."
-  (unscroll-maybe-remember))
+;; (defadvice scroll-down (before remember-for-unscroll
+;;                  activate compile)
+;;   "Remember where we started from, for 'unscroll'."
+;;   (unscroll-maybe-remember))
 
-(defadvice scroll-left (before remember-for-unscroll
-                 activate compile)
-  "Remember where we started from, for 'unscroll'."
-  (unscroll-maybe-remember))
+;; (defadvice scroll-left (before remember-for-unscroll
+;;                  activate compile)
+;;   "Remember where we started from, for 'unscroll'."
+;;   (unscroll-maybe-remember))
 
-(defadvice scroll-right (before remember-for-unscroll
-                 activate compile)
-  "Remember where we started from, for 'unscroll'."
-  (unscroll-maybe-remember))
+;; (defadvice scroll-right (before remember-for-unscroll
+;;                  activate compile)
+;;   "Remember where we started from, for 'unscroll'."
+;;   (unscroll-maybe-remember))
 
-(defun unscroll ()
-  "Jump to location specified by 'unscroll-to'."
-  (interactive)
-  (goto-char unscroll-point)
-  (set-window-start nil unscroll-window-start)
-  (set-window-hscroll nil unscroll-hscroll))
+;; (defun unscroll ()
+;;   "Jump to location specified by 'unscroll-to'."
+;;   (interactive)
+;;   (goto-char unscroll-point)
+;;   (set-window-start nil unscroll-window-start)
+;;   (set-window-hscroll nil unscroll-hscroll))
 
 (defvar insert-time-format "%X"
   "*Format for \\[insert-time] (c.f. 'format-time-string').")
@@ -494,4 +494,64 @@ Comments stay with the code below."
                         (goto-char (marker-position start))
                         (insert-before-markers real)
                         (delete-region (point) (marker-position end)))))))))
+
+(flycheck-define-checker python-flakehell
+  "A wrapper for the Flake8 linter for Python
+that adds better configuration and plugin management options.
+
+See URL `https://flakehell.readthedocs.io/'."
+  :command ("flakehell"
+            "lint"
+            "--format=default"
+            (option "--max-complexity" flycheck-flake8-maximum-complexity nil
+                    flycheck-option-int)
+            (option "--max-line-length" flycheck-flake8-maximum-line-length nil
+                    flycheck-option-int)
+            (eval (when buffer-file-name
+                    (concat "--stdin-display-name=" buffer-file-name)))
+            "-")
+  :standard-input t
+  :modes python-mode
+  :working-directory flycheck-flake8--find-project-root
+  :error-patterns
+  ((warning line-start
+            (file-name) ":" line ":" (optional column ":") " "
+            (id (one-or-more (any alpha)) (one-or-more digit)) " "
+            (message (one-or-more not-newline))
+            line-end))
+  :error-filter (lambda (errors)
+                  (let ((errors (flycheck-sanitize-errors errors)))
+                    (seq-map #'flycheck-flake8-fix-error-level errors)))
+  :enabled (lambda ()
+             (executable-find "flakehell"))
+  :next-checkers ((warning . python-mypy)))
+
+(add-to-list 'flycheck-checkers 'python-flakehell t)
+
+(defun end-of-chunk ()
+  "forward line or to ends of mid-expression."
+  (interactive)
+  (goto-char (point-at-eol))
+  (let ((limit (point-at-bol))
+        temp
+        expr-beg)
+    (while (and (setq temp (nth 1 (syntax-ppss)))
+                (<= limit temp))
+      (goto-char temp)
+      (setq expr-beg (point)))
+    (when expr-beg
+        (goto-char expr-beg)
+      (forward-sexp))))
+
+(defun sort-lines-as-exprs (reverse beg end)
+  "sort lines, or whole expression if line ends mid-expression."
+  (interactive "P\nr")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (sort-subr reverse
+                 'forward-line
+                 'end-of-chunk))))
+
 ;;; functions.el ends here

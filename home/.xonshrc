@@ -1,10 +1,10 @@
-# -*- mode: python -*-
+ # -*- mode: python -*-
 from datetime import datetime
 from xonsh.prompt.gitstatus import gitstatus_prompt
 from glob import glob
 import re, json
-#import geoip2.database
-#import requests
+import geoip2.database
+import requests
 
 # try:
 #     _MY_IP = requests.get('https://api.ipify.org').text
@@ -30,6 +30,9 @@ $XONSH_DATETIME_FORMAT='%Y-%m-%dT%H:%M:%S'
 $CASE_SENSITIVE_COMPLETIONS = False
 $PATH.append('/home/tmacey/.local/bin')
 $PATH.append('/home/tmacey/.cargo/bin')
+$ALTERNATE_EDITOR=""
+$EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
+$VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
 
 GEM_DIR = $(ruby -e 'puts Gem.user_dir').strip('\n')
 $PATH.insert(0, f'{GEM_DIR}/bin')
@@ -63,7 +66,7 @@ __return_code_map = {
 __kill_codes = re.findall(r'\d{1,2} \w+', $(kill -L))
 for code in __kill_codes:
     code_val, code_name = code.split(' ')
-    __return_code_map[127 + int(code_val)] = "Process terminated by SIG{}".format(code_name)
+    __return_code_map[128 + int(code_val)] = "Process terminated by SIG{}".format(code_name)
 
 def _return_code_output():
     try:
@@ -78,7 +81,7 @@ def _return_code_output():
         code_description = __return_code_map.get(return_code, '')
         prompt_string = '{{BOLD_RED}}(╯°□°）╯︵ ┻━┻ {} {} '.format(return_code, code_description)
     elif return_code == 0 and previous_return != 0:
-        prompt_string = '{BOLD_GREEN}┬─┬ノ( ◕◡◕ ノ )'
+        prompt_string = '{BOLD_GREEN}┬─┬ノ( ◕◡◕ ノ)'
     else:
         prompt_string = ''
     return prompt_string
@@ -94,7 +97,7 @@ $PROMPT = ('\n\u256D-{env_name:{} }{BOLD_YELLOW}{user}{WHITE}@{BOLD_RED}{hostnam
            '{BOLD_BLUE}{exit_status}{prompt_end}{RESET} ')
 
 def ssh_host_completer(prefix, line, begidx, endidx, ctx):
-    if not line.startswith('ssh ') or re.search(' ?-{1,2}\w*?$', line):
+    if not line.startswith('ssh ') or re.search(r' ?-{1,2}\w*?$', line):
         return None
     hostlist = []
     host_prefix = prefix.split('@')[-1]
@@ -107,17 +110,18 @@ def ssh_host_completer(prefix, line, begidx, endidx, ctx):
 
 completer add ssh ssh_host_completer
 
-#def _to_bytes(what):
-#    if isinstance(what, bytes):
-#        return bytes
-#    else:
-#        return str.encode(what)
-#
-#def _write_bytes(what):
-#    sys.stdout.buffer.write(what)
-#
-#aliases['hex_encode'] = lambda a,i=None: _write_bytes(binascii.hexlify(_to_bytes(i.strip() or a[0])) + b'\n')
-#aliases['hex_decode'] = lambda a,i=None: _write_bytes(binascii.unhexlify(_to_bytes(i.strip() or a[0])) + b'\n')
+def _to_bytes(what):
+   if isinstance(what, bytes):
+       return bytes
+   else:
+       return str.encode(what)
+
+def _write_bytes(what):
+   sys.stdout.buffer.write(what)
+
+aliases['hex_encode'] = lambda a,i=None: _write_bytes(binascii.hexlify(_to_bytes(i.strip() or a[0])) + b'\n')
+aliases['hex_decode'] = lambda a,i=None: _write_bytes(binascii.unhexlify(_to_bytes(i.strip() or a[0])) + b'\n')
 aliases['cat'] = 'bat'
+aliases['emacsterm'] = "emacsclient -t -nw"
 
 xontrib load vox

@@ -81,6 +81,9 @@
 (use-package company-quickhelp
   :ensure t)
 
+(use-package csv-mode
+  :ensure t)
+
 (use-package delight
   :ensure t)
 
@@ -91,12 +94,23 @@
 (use-package dockerfile-mode
   :ensure t)
 
+(use-package docstr
+  :ensure t)
+
+(use-package dumb-jump
+  :ensure t
+  :init (dumb-jump-mode))
+
 (use-package editorconfig
   :ensure t
   :delight
   :hook (prog-mode . editorconfig-mode))
 
 (use-package editorconfig-generate
+  :ensure t)
+
+;; Emacs IPython/Jupyter Notebooks
+(use-package ein
   :ensure t)
 
 (use-package elpy
@@ -121,14 +135,16 @@
                        elpy-module-yasnippet
                        elpy-module-sane-defaults)
         elpy-rpc-backend "jedi"
-        elpy-test-runner 'elpy-test-pytest-runner)
+        elpy-test-runner 'elpy-test-pytest-runner
+        elpy-formatter "Black")
   (elpy-enable))
 
 (use-package fill-column-indicator
   :ensure t
   :delight fci-mode
   :hook (python-mode . fci-mode)
-  :config (setq fci-rule-column 120
+  :config (setq fill-column 88
+                fci-rule-column 88
                 fci-rule-color "#37474f"))
 
 (use-package flycheck
@@ -138,8 +154,8 @@
   :init
   (use-package flycheck-mypy :ensure t)
   :config (setq flycheck-disabled-checkers '(python-pycompile python-pylint)
-                flycheck-flake8-maximum-complexity 15
                 flycheck-flake8rc "setup.cfg"
+                flycheck-python-pyright-executable "~/.emacs.d/.cache/lsp/npm/pyright/bin/pyright"
                 flycheck-python-mypy-config "setup.cfg"))
 
 (use-package flycheck-projectile
@@ -149,6 +165,9 @@
   :ensure t
   :after magit
   :config (setq forge-topic-list-limit 0))
+
+(use-package frontside-javascript
+  :ensure t)
 
 (use-package git-gutter-fringe+
   :ensure t
@@ -162,9 +181,11 @@
 (use-package github-review
   :ensure t)
 
+(use-package go-mode
+  :ensure t)
+
 (use-package hcl-mode
-  :ensure t
-  :mode ("\.nomad" . hcl-mode))
+  :ensure t)
 
 (use-package helm
   :ensure t
@@ -204,15 +225,13 @@
   (helm-projectile-on)
   (setq projectile-mode-line-prefix ""))
 
+(use-package indent-control
+  :ensure t)
+
 (use-package jinja2-mode
   :ensure t
   :mode (("\\.j2" . jinja2-mode)
          ("\\.jinja" . jinja2-mode)))
-
-(use-package js2-mode
-  :ensure t
-  :delight js2-minor-mode
-  :hook (js-mode . js2-minor-mode))
 
 (use-package lice
   :ensure t)
@@ -225,13 +244,15 @@
   :ensure t
   :delight
   :hook
-  (js-mode . lsp)
-  (json-mode . lsp)
-  (shell-mode . lsp)
-  (html-mode . lsp)
-  (web-mode . lsp)
-  (python-mode . lsp)
-  (dockerfile-mode . lsp)
+  (js-mode . lsp-deferred)
+  (json-mode . lsp-deferred)
+  (shell-mode . lsp-deferred)
+  (html-mode . lsp-deferred)
+  (web-mode . lsp-deferred)
+  (python-mode . lsp-deferred)
+  (dockerfile-mode . lsp-deferred)
+  (go-mode . lsp-deferred)
+  (php-mode . lsp-deferred)
   :bind ("M-." . xref-find-definitions)
   :init (setq-default gc-cons-threshold 3200000
                       lsp-auto-configure t
@@ -245,7 +266,7 @@
                       lsp-enable-indentation t
                       lsp-enable-semantic-highlighting t
                       lsp-enable-text-document-color t
-                      lsp-file-watch-threshold 100000
+                      lsp-file-watch-threshold 150000
                       lsp-imenu-show-container-name t
                       lsp-keymap-prefix "C-;"
                       lsp-modeline-code-actions-mode t
@@ -259,7 +280,7 @@
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp)))
-  :config (setq lsp-pyright-diagnostic-mode "workspace"
+  :config (setq lsp-pyright-diagnostic-mode "openFilesOnly"
                 lsp-pyright-use-library-code-for-types t
                 lsp-pyright-auto-import-completions t
                 lsp-pyright-disable-organize-imports t))
@@ -273,14 +294,16 @@
   ("C-; G f" . lsp-ui-doc-focus-frame)
   ("C-; G u" . lsp-ui-doc-unfocus-frame)
   :commands lsp-ui-mode
-  :config (setq lsp-ui-doc-position 'top
+  :config (setq lsp-ui-doc-position 'at-point
                 lsp-ui-doc-alignment 'frame
                 lsp-ui-doc-max-height 40
-                lsp-ui-sideline-mode "line"
+                lsp-ui-doc-show-with-cursor nil
+                lsp-ui-sideline-update-mode "line"
                 lsp-ui-sideline-show-hover t
                 lsp-ui-sideline-show-code-actions t
                 lsp-ui-sideline-show-diagnostics t
-                lsp-ui-doc-include-signature nil
+                lsp-ui-sideline-diagnostic-max-line-length 40
+                lsp-ui-doc-include-signature t
                 lsp-ui-doc-header t))
 
 (use-package magit
@@ -303,6 +326,38 @@
 (use-package nginx-mode
   :ensure t)
 
+(use-package org
+  :ensure t
+  :bind (("C-c L" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c s e" . org-edit-src-code))
+  :config
+  (setq org-directory "~/Dropbox/org/"
+        org-log-done t
+        org-log-redeadline (quote time)
+        org-log-reschedule (quote time)
+        org-log-into-drawer t
+        org-agenda-restore-windows-after-quit t
+        org-use-sub-superscripts '{}
+        org-export-with-sub-superscripts '{}
+        org-todo-keywords
+        '((sequence "TODO(t)" "DOING(d!)" "|" "DONE(D!)" "CANCELLED(C!)"))
+        org-todo-keyword-faces
+        '(("TODO" . org-warning) ("DOING" . "yellow") ("DONE" . (:foreground "green" :weight bold)))
+        org-agenda-files
+        (quote
+         ("~/Dropbox/org/todo/" "~/Dropbox/org/calendars/" "~/Dropbox/org/journal"))
+        org-default-notes-file (concat org-directory "notes.org")
+        org-refile-targets `((org-agenda-files . (:maxlevel . 2)))
+        org-capture-templates
+        `(("t" "Todo" entry (file ,(concat org-directory "todo/todo.org"))
+           "** TODO %? :%^G\n:PROPERTIES:\n:Created: %U\n:END:")
+          ("n" "Note" entry (file org-default-notes-file)
+           "* %?\n:PROPERTIES:\n:Created: %U\n:END:")
+          ("f" "Followup" entry (file+headline ,(concat org-directory "todo/todo.org") "Tasks")
+           "* TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n"))))
+
 (use-package org-journal
   :ensure t
   :config (setq org-journal-date-format "%Y-%m-%d"
@@ -313,6 +368,9 @@
 (use-package org-trello
   :ensure t
   :mode ("\\.trello" . org-mode))
+
+(use-package ox-hugo
+  :ensure t)
 
 (use-package perspective
   :ensure t
@@ -366,6 +424,9 @@
   :delight sphinx-doc-mode
   :hook (python-mode . sphinx-doc-mode))
 
+(use-package typescript-mode
+  :ensure t)
+
 (use-package undo-tree
   :ensure t
   :delight undo-tree-mode
@@ -374,7 +435,7 @@
                 undo-tree-enable-undo-in-region t
                 undo-tree-visualizer-diff t
                 undo-tree-visualizer-timestamps t
-                undo-tree-history-directory-alist '((".*" . "/home/tmacey/.emacs.d/undo-tree/"))))
+                undo-tree-history-directory-alist '(("." . "/home/tmacey/.emacs.d/undo-tree/"))))
 
 (use-package lush-theme
   :ensure t)
@@ -394,6 +455,7 @@
   (which-key-setup-side-window-bottom)
   (setq which-key-popup-type 'side-window
         which-key-side-window-location 'bottom)
+  :config (which-key-mode)
   :commands which-key-mode)
 
 (use-package xonsh-mode
@@ -423,9 +485,23 @@
    '("364e592858d85f3dff9d51af5c72737ca8ef2b76fc60d9d5f0a9995ea927635a" "0f2f1feff73a80556c8c228396d76c1a0342eb4eefd00f881b91e26a14c5b62a" default))
  '(debug-on-error nil)
  '(helm-completion-style 'emacs)
+ '(horizontal-scroll-bar-mode nil)
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(package-selected-packages
-   '(hcl-mode lsp-jedi ace-window flycheck-projectile lsp-pyright hybrid-reverse-theme company-quickhelp helm-company editorconfig-generate editorconfig js2-mode dhall-mode yasnippet-snippets xonsh-mode which-key wgrep-ag web-mode use-package undo-tree salt-mode python-docstring py-isort poetry php-mode perspective pallet org-trello org-journal nginx-mode markdown-changelog magit-delta lush-theme lsp-ui linum-relative lice jinja2-mode helm-projectile helm-lsp helm-flx helm-ag github-review git-link git-gutter-fringe+ forge flycheck-mypy fill-column-indicator elpy dockerfile-mode docker delight ag))
+   '(ox-hugo frontside-javascript indent-control ein undo-tree go-mode typescript-mode hcl-mode ace-window flycheck-projectile lsp-pyright hybrid-reverse-theme company-quickhelp helm-company editorconfig-generate editorconfig dhall-mode yasnippet-snippets xonsh-mode which-key wgrep-ag web-mode use-package salt-mode python-docstring py-isort poetry php-mode perspective pallet org-trello org-journal nginx-mode markdown-changelog magit-delta lush-theme lsp-ui linum-relative lice jinja2-mode helm-projectile helm-lsp helm-flx helm-ag github-review git-link git-gutter-fringe+ forge flycheck-mypy fill-column-indicator elpy dockerfile-mode docker delight ag))
+ '(safe-local-variable-values
+   '((flycheck-checker . "python-flakehell")
+     (flycheck-checker quote python-flakehell)
+     (flycheck-disable-checkers quote
+                                (python-flake8 python-pylint python-pycompile))
+     (flycheck-disable-checker quote
+                               (python-flake8 python-pylint python-pycompile))
+     (lambda nil
+       (flycheck-select-checker 'python-flakehell))
+     (flycheck-select-checker . python-flakehell)
+     (flycheck-disabled-checkers quote
+                                 (python-pycompile python-pylint python-flake8))))
+ '(scroll-bar-mode nil)
  '(url-handler-mode t))
 
 (set-cursor-color "white")
