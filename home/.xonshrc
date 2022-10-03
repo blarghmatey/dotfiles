@@ -1,6 +1,7 @@
  # -*- mode: python -*-
+$XONSH_SHOW_TRACEBACK=True
 from datetime import datetime
-from xonsh.prompt.gitstatus import gitstatus_prompt
+from xonsh.prompt import gitstatus
 from glob import glob
 import re, json
 import geoip2.database
@@ -33,6 +34,7 @@ $PATH.append('/home/tmacey/.cargo/bin')
 $ALTERNATE_EDITOR=""
 $EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
 $VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
+$THREAD_SUBPROCS=False
 
 GEM_DIR = $(ruby -e 'puts Gem.user_dir').strip('\n')
 $PATH.insert(0, f'{GEM_DIR}/bin')
@@ -88,7 +90,7 @@ def _return_code_output():
 
 
 $PROMPT_FIELDS['current_time'] = _current_time
-$PROMPT_FIELDS['gitstatus'] = gitstatus_prompt
+$PROMPT_FIELDS['gitstatus'] = gitstatus.gitstatus
 $PROMPT_FIELDS['exit_status'] = _return_code_output
 $PROMPT_FIELDS['prompt_end'] = '\u21C9'
 $PROMPT = ('\n\u256D-{env_name:{} }{BOLD_YELLOW}{user}{WHITE}@{BOLD_RED}{hostname}{BOLD_BLUE} '
@@ -119,9 +121,20 @@ def _to_bytes(what):
 def _write_bytes(what):
    sys.stdout.buffer.write(what)
 
+def compute_pulumi_saas_cost():
+     resources = json.loads($(pulumi -C /home/tmacey/code/mit/ops/infra/ol_infrastructure/src/ol_infrastructure/applications/edxapp/ stack ls -a -j))
+     count = 0
+     for x in resources:
+         count += x.get("resourceCount", 0)
+     print((count * 24 * 30 - 150000) * 0.00025)
+
+
 aliases['hex_encode'] = lambda a,i=None: _write_bytes(binascii.hexlify(_to_bytes(i.strip() or a[0])) + b'\n')
 aliases['hex_decode'] = lambda a,i=None: _write_bytes(binascii.unhexlify(_to_bytes(i.strip() or a[0])) + b'\n')
 aliases['cat'] = 'bat'
-aliases['emacsterm'] = "emacsclient -t -nw"
+aliases['et'] = "emacsclient -t -nw"
+aliases['pyright-install'] = "/usr/bin/npm -g --prefix /home/tmacey/.emacs.d/.cache/lsp/npm/pyright install pyright"
 
 xontrib load vox
+#xontrib load pyenv
+xontrib load avox_poetry

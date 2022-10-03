@@ -112,6 +112,71 @@
 (global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-10")))
 (global-set-key (kbd "C-c f u") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-8")))
 
+;; Automatically handle theme changes with system light/dark mode
+;; from https://emacs.stackexchange.com/a/71164
+;; (when (and IS-LINUX ;; this is doom specific
+;;            (featurep! :ui dbus)) ;; so is this
+;;   ;; I should use a better name than `a`
+;;   (defun theme--handle-dbus-event (a setting values)
+;;     "Handler for FreeDesktop theme changes."
+;;     (when (string= setting "ColorScheme")
+;;       (let ((scheme (car values)))
+;;         (cond
+;;          ((string-match-p "Dark" scheme)
+;;           (+theme-dark)) ;; my custom function that sets a dark theme
+;;          ((string-match-p "Light" scheme)
+;;           (+theme-light)) ;; 1000 internet points to whoever guesses what this does
+;;          (t (message "I don't know how to handle scheme: %s" scheme))))))
+
+;;   (require 'dbus)
+
+;;   ;; since this is all FreeDesktop stuff, this *might* work on GNOME without changes
+;;   (dbus-register-signal :session
+;;                         "org.freedesktop.portal"
+;;                         "/org/freedesktop/portal/desktop"
+;;                         "org.freedesktop.impl.portal.Settings"
+;;                         "SettingChanged"
+;;                         #'theme--handle-dbus-event))
+
+;; Alternative implementation from
+;; https://www.reddit.com/r/emacs/comments/o49v2w/automatically_switch_emacs_theme_when_changing/
+;; (use-package dbus)
+;; (use-package modus-themes
+;;   :after (dbus)
+;;   :config
+;;   (defun set-modus-theme-from-gtk ()
+;;     "Set modus theme by checking whether GTK theme is dark."
+;;     (let ((gtk-theme (downcase
+;;                       (call-process-string "gsettings"
+;;                                            "get"
+;;                                            "org.gnome.desktop.interface"
+;;                                            "gtk-theme"))))
+;;       (if (or (string-match-p "dark"  gtk-theme)
+;;               (string-match-p "black" gtk-theme))
+;;           (modus-themes-load-vivendi)
+;;         (modus-themes-load-operandi))))
+
+;;   (defun gtk-theme-changed (path _ _)
+;;     "DBus handler to detect when the GTK theme has changed."
+;;     (when (string-equal path "/org/gnome/desktop/interface/gtk-theme")
+;;       (set-modus-theme-from-gtk)))
+
+;;   (dbus-register-signal
+;;    :session
+;;    "ca.desrt.dconf"
+;;    "/ca/desrt/dconf/Writer/user"
+;;    "ca.desrt.dconf.Writer"
+;;    "Notify"
+;;    #'gtk-theme-changed)
+
+;;   (set-modus-theme-from-gtk))
+
+(defun call-process-string (program &rest args)
+  "Call process`PROGRAM' with `ARGS' and return the output as string."
+  (with-temp-buffer
+    (apply #'call-process program nil t nil args)
+    (buffer-string)))
+
 ;; Use C-c t as a prefix for toggling things
 (global-set-key (kbd "C-c i d") 'insert-date)
 
@@ -165,14 +230,6 @@
 ;; (require 'org-mu4e)
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
-
-(global-set-key (kbd "C-c L") 'org-store-link)
-(global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c o n") (lambda () (interactive) (find-file (concat org-directory "notes/"))))
-(global-set-key (kbd "C-c o t") (lambda () (interactive) (find-file (concat org-directory "todo/"))))
-(global-set-key (kbd "C-c o T") (lambda () (interactive) (find-file (concat org-directory "trello/"))))
-(global-set-key (kbd "C-c s e") `org-edit-src-code)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; EMAIL CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
