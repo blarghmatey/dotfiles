@@ -495,38 +495,6 @@ Comments stay with the code below."
                         (insert-before-markers real)
                         (delete-region (point) (marker-position end)))))))))
 
-(flycheck-define-checker python-flakehell
-  "A wrapper for the Flake8 linter for Python
-that adds better configuration and plugin management options.
-
-See URL `https://flakehell.readthedocs.io/'."
-  :command ("flakehell"
-            "lint"
-            "--format=default"
-            (option "--max-complexity" flycheck-flake8-maximum-complexity nil
-                    flycheck-option-int)
-            (option "--max-line-length" flycheck-flake8-maximum-line-length nil
-                    flycheck-option-int)
-            (eval (when buffer-file-name
-                    (concat "--stdin-display-name=" buffer-file-name)))
-            "-")
-  :standard-input t
-  :modes python-mode
-  :working-directory flycheck-flake8--find-project-root
-  :error-patterns
-  ((warning line-start
-            (file-name) ":" line ":" (optional column ":") " "
-            (id (one-or-more (any alpha)) (one-or-more digit)) " "
-            (message (one-or-more not-newline))
-            line-end))
-  :error-filter (lambda (errors)
-                  (let ((errors (flycheck-sanitize-errors errors)))
-                    (seq-map #'flycheck-flake8-fix-error-level errors)))
-  :enabled (lambda ()
-             (executable-find "flakehell"))
-  :next-checkers ((warning . python-mypy)))
-
-(add-to-list 'flycheck-checkers 'python-flakehell t)
 
 (defun end-of-chunk ()
   "forward line or to ends of mid-expression."
@@ -554,4 +522,7 @@ See URL `https://flakehell.readthedocs.io/'."
                  'forward-line
                  'end-of-chunk))))
 
+(defun clear-flycheck-auto-disabled-checkers ()
+  "Clears any automatically disabled flycheck checkers."
+  (setq flycheck--automatically-disabled-checkers ()))
 ;;; functions.el ends here

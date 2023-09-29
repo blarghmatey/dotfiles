@@ -24,8 +24,13 @@
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")))
-(require 'cask)
-(cask-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
+;; (require 'cask)
+;; (cask-initialize)
 
 (setq load-path (append load-path '("~/.emacs.d/plugins")))
 
@@ -63,6 +68,9 @@
 (use-package ag
   :ensure t
   :defer t)
+
+(use-package all-the-icons
+  :ensure t)
 
 (use-package company
   :ensure t
@@ -297,7 +305,9 @@
         lsp-semantic-highlighting :immediate
         read-process-output-max (* 1024 1024))
   (with-eval-after-load 'lsp-mode
-    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?venv\\'"))
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?venv\\'")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?undo-tree\\'")
+    )
   :config (advice-add 'lsp :before
                       (lambda (&rest _args)
                         (eval
@@ -467,8 +477,9 @@
 
 (use-package poetry
   :ensure t
-  :config
-  (poetry-tracking-mode))
+  :hook
+  (python-mode . poetry-tracking-mode)
+  :config (setq poetry-tracking-strategy 'projectile))
 
 (use-package projectile
   :ensure t
@@ -509,6 +520,31 @@
   :ensure t
   :delight sphinx-mode
   :hook (python-mode . sphinx-mode))
+
+(use-package sqlite3
+ :ensure t)
+
+(use-package tabnine
+  :commands (tabnine-start-process)
+  :hook (prog-mode . tabnine-mode)
+  :ensure t
+  :diminish "⌬"
+  :custom
+  (tabnine-wait 3)
+  (tabnine-minimum-prefix-length 0)
+  :hook (kill-emacs . tabnine-kill-process)
+  :config
+  (add-to-list 'completion-at-point-functions #'tabnine-completion-at-point)
+  (tabnine-start-process)
+  :bind
+  (:map  tabnine-completion-map
+         ("C-<tab>" . tabnine-accept-completion)
+         ("C-TAB" . tabnine-accept-completion)
+         ("C-M-f" . tabnine-accept-completion-by-word)
+         ("C-M-<return>" . tabnine-accept-completion-by-line)
+         ("C-g" . tabnine-clear-overlay)
+         ("M-[" . tabnine-previous-completion)
+         ("M-]" . tabnine-next-completion)))
 
 (use-package treemacs
   :ensure t
@@ -631,6 +667,9 @@
 (use-package lush-theme
   :ensure t)
 
+(use-package vcl-mode
+  :ensure t)
+
 (use-package web-mode
   :ensure t
   :mode ("\\.html" . web-mode))
@@ -679,19 +718,7 @@
  '(horizontal-scroll-bar-mode nil)
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(package-selected-packages
-   '(json-mode sphinx-mode sphinx-doc python-insert-docstring ef-themes obsidian modus-themes lsp-java treemacs-perspective treemacs-magit treemacs-icons-dired treemacs-projectile treemacs vcl-mode k8s-mode kubernetes ox-hugo frontside-javascript indent-control ein undo-tree go-mode typescript-mode hcl-mode ace-window flycheck-projectile lsp-pyright hybrid-reverse-theme company-quickhelp helm-company editorconfig-generate editorconfig dhall-mode yasnippet-snippets xonsh-mode which-key wgrep-ag web-mode use-package salt-mode python-docstring py-isort poetry php-mode perspective pallet org-trello org-journal nginx-mode markdown-changelog magit-delta lush-theme lsp-ui linum-relative lice jinja2-mode helm-projectile helm-lsp helm-flx helm-ag github-review git-link git-gutter-fringe+ forge flycheck-mypy fill-column-indicator elpy dockerfile-mode docker delight ag))
- '(safe-local-variable-values
-   '((flycheck-checker . "python-flakehell")
-     (flycheck-checker quote python-flakehell)
-     (flycheck-disable-checkers quote
-                                (python-flake8 python-pylint python-pycompile))
-     (flycheck-disable-checker quote
-                               (python-flake8 python-pylint python-pycompile))
-     (lambda nil
-       (flycheck-select-checker 'python-flakehell))
-     (flycheck-select-checker . python-flakehell)
-     (flycheck-disabled-checkers quote
-                                 (python-pycompile python-pylint python-flake8))))
+   '(vcl-mode tabnine sqlite3 all-the-icons xonsh-mode which-key wgrep-ag lush-theme undo-tree treemacs-perspective treemacs-magit treemacs-icons-dired treemacs-projectile sphinx-mode sphinx-doc salt-mode python-docstring python-insert-docstring py-isort poetry php-mode perspective ox-hugo org-trello org-journal obsidian nginx-mode mmm-mode markdown-changelog use-package magit-delta lsp-ui lsp-pyright lsp-java linum-relative lice kubernetes k8s-mode json-mode jinja2-mode indent-control helm-projectile helm-lsp helm-company helm-ag hcl-mode go-mode github-review git-link git-gutter-fringe+ frontside-javascript forge flycheck-projectile flycheck-mypy fill-column-indicator elpy ein ef-themes editorconfig-generate editorconfig dumb-jump dockerfile-mode docker delight csv-mode company-quickhelp cask ag))
  '(scroll-bar-mode nil)
  '(url-handler-mode t))
 

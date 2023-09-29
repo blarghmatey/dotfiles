@@ -144,7 +144,7 @@
   default = simple
 
 [merge]
-  tool = kdiff3
+  tool = meld
 
 [diff]
   tool = icdiff
@@ -161,3 +161,17 @@
 
 [push]
     default = matching
+[github]
+    user = blarghmatey
+[pull]
+	rebase = true
+[gitlab]
+	user = blarghmatey
+[init]
+	defaultBranch = main
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential

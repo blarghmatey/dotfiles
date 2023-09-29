@@ -41,6 +41,8 @@ $PATH.insert(0, f'{GEM_DIR}/bin')
 $GEM_PATH=GEM_DIR
 $GEM_HOME=GEM_DIR
 
+$PATH.append(f"{$(go env GOPATH).strip()}/bin")
+
 if glob('/tmp/ssh-*/agent.*'):
     $SSH_AUTH_SOCK=glob('/tmp/ssh-*/agent.*')[0]
 else:
@@ -122,7 +124,7 @@ def _write_bytes(what):
    sys.stdout.buffer.write(what)
 
 def compute_pulumi_saas_cost():
-     resources = json.loads($(pulumi -C /home/tmacey/code/mit/ops/infra/ol_infrastructure/src/ol_infrastructure/applications/edxapp/ stack ls -a -j))
+     resources = json.loads($(pulumi -C /home/tmacey/code/mit/ops/infra/ol-infrastructure/src/ol_infrastructure/applications/edxapp/ stack ls -a -j))
      count = 0
      for x in resources:
          count += x.get("resourceCount", 0)
