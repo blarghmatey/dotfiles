@@ -31,6 +31,7 @@ $XONSH_DATETIME_FORMAT='%Y-%m-%dT%H:%M:%S'
 $CASE_SENSITIVE_COMPLETIONS = False
 $PATH.append('/home/tmacey/.local/bin')
 $PATH.append('/home/tmacey/.cargo/bin')
+$PATH.append('/home/tmacey/.npm_packages/bin')
 $ALTERNATE_EDITOR=""
 $EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
 $VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode

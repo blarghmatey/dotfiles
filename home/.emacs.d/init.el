@@ -107,6 +107,9 @@
 (use-package dumb-jump
   :ensure t)
 
+(use-package earthfile-mode
+  :ensure t)
+
 (use-package editorconfig
   :ensure t
   :delight
@@ -161,9 +164,8 @@
   :init
   (use-package flycheck-mypy :ensure t)
   :config (setq flycheck-disabled-checkers '(python-pycompile python-pylint)
-                flycheck-flake8rc "setup.cfg"
                 flycheck-python-pyright-executable "~/.emacs.d/.cache/lsp/npm/pyright/bin/pyright"
-                flycheck-python-mypy-config "setup.cfg"))
+                flycheck-python-mypy-config "pyproject.toml"))
 
 (use-package flycheck-projectile
   :ensure t)
@@ -207,6 +209,7 @@
        helm-M-x-fuzzy-match t
        helm-buffers-fuzzy-matching t
        helm-completion-style 'emacs
+       helm-move-to-line-cycle-in-source nil
        completion-styles `(basic partial-completion emacs22 initials))
  (helm-autoresize-mode 1)
  :bind (("M-x" . helm-M-x)
@@ -496,7 +499,8 @@
   :config (setq py-isort-options '("-w=120" "--balanced" "-m=3")))
 
 (use-package python-insert-docstring
-  :ensure t)
+  :ensure t
+  :init (setq python-docstring-field-no-arg-re "^\\s-*\\([@:]\\)\\(raise\\|raises\\|return\\|returns\\|rtype\\|returntype\\|type\\|sort\\|see\\|seealso\\|note\\|attention\\|bug\\|warning\\|warn\\|version\\|todo\\|deprecated\\|since\\|status\\|change\\|changed\\|permission\\|requires\\|require\\|requirement\\|precondition\\|precond\\|postcondition\\|postcod\\|invariant\\|author\\|organization\\|org\\|copyright\\|(c)\\|license\\|contact\\|summary\\|params\\|param\\|yield\\|yields\\)\\(:\\)"))
 
 (use-package python-docstring
   :ensure t
@@ -530,11 +534,12 @@
   :ensure t
   :diminish "⌬"
   :custom
-  (tabnine-wait 3)
+  (tabnine-wait 10)
   (tabnine-minimum-prefix-length 0)
   :hook (kill-emacs . tabnine-kill-process)
   :config
   (add-to-list 'completion-at-point-functions #'tabnine-completion-at-point)
+  (setq tabnine-idle-delay 1)
   (tabnine-start-process)
   :bind
   (:map  tabnine-completion-map
@@ -718,7 +723,7 @@
  '(horizontal-scroll-bar-mode nil)
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
  '(package-selected-packages
-   '(vcl-mode tabnine sqlite3 all-the-icons xonsh-mode which-key wgrep-ag lush-theme undo-tree treemacs-perspective treemacs-magit treemacs-icons-dired treemacs-projectile sphinx-mode sphinx-doc salt-mode python-docstring python-insert-docstring py-isort poetry php-mode perspective ox-hugo org-trello org-journal obsidian nginx-mode mmm-mode markdown-changelog use-package magit-delta lsp-ui lsp-pyright lsp-java linum-relative lice kubernetes k8s-mode json-mode jinja2-mode indent-control helm-projectile helm-lsp helm-company helm-ag hcl-mode go-mode github-review git-link git-gutter-fringe+ frontside-javascript forge flycheck-projectile flycheck-mypy fill-column-indicator elpy ein ef-themes editorconfig-generate editorconfig dumb-jump dockerfile-mode docker delight csv-mode company-quickhelp cask ag))
+   '(earthfile-mode vcl-mode tabnine sqlite3 all-the-icons xonsh-mode which-key wgrep-ag lush-theme undo-tree treemacs-perspective treemacs-magit treemacs-icons-dired treemacs-projectile sphinx-mode sphinx-doc salt-mode python-docstring python-insert-docstring py-isort poetry php-mode perspective ox-hugo org-trello org-journal obsidian nginx-mode mmm-mode markdown-changelog use-package magit-delta lsp-ui lsp-pyright lsp-java linum-relative lice kubernetes k8s-mode json-mode jinja2-mode indent-control helm-projectile helm-lsp helm-company helm-ag hcl-mode go-mode github-review git-link git-gutter-fringe+ frontside-javascript forge flycheck-projectile flycheck-mypy fill-column-indicator elpy ein ef-themes editorconfig-generate editorconfig dumb-jump dockerfile-mode docker delight csv-mode company-quickhelp cask ag))
  '(scroll-bar-mode nil)
  '(url-handler-mode t))
 
