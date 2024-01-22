@@ -20,20 +20,40 @@
   (setq gnutls-verify-error t)
   (setq gnutls-trustfiles (list trustfile)))
 
-(require 'package)
-(setq package-archives
-      '(("gnu" . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")))
+(setq package-enable-at-startup nil)
+(setq straight-check-for-modifications nil)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+        'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(require 'use-package)
+(straight-use-package 'use-package)
+
+(setq straight-use-package-by-default t)
+;; (require 'package)
+;; (setq package-archives
+;;       '(("gnu" . "https://elpa.gnu.org/packages/")
+;;         ("melpa" . "https://melpa.org/packages/")))
+
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
+;; (require 'use-package)
 ;; (require 'cask)
 ;; (cask-initialize)
 
-(setq load-path (append load-path '("~/.emacs.d/plugins")))
+;; (setq load-path (append load-path '("~/.emacs.d/plugins")))
 
+(require 'epg)
+(setq epg-pinentry-mode 'loopback)
 (global-whitespace-mode)
 (global-auto-revert-mode t)
 (display-time-mode 1)
@@ -59,21 +79,21 @@
 (winner-mode)
 
 (use-package ace-window
-  :ensure t
+  :straight t
   :delight
   :bind ("C-x o" . ace-window)
   :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
                 aw-scope 'frame))
 
 (use-package ag
-  :ensure t
+  :straight t
   :defer t)
 
 (use-package all-the-icons
-  :ensure t)
+  :straight t)
 
 (use-package company
-  :ensure t
+  :straight t
   :delight
   :hook (after-init . global-company-mode)
   :bind ("C-." . company-complete)
@@ -89,44 +109,44 @@
                 company-tooltip-maximum-width 80))
 
 (use-package company-quickhelp
-  :ensure t)
+  :straight t)
 
 (use-package csv-mode
-  :ensure t)
+  :straight t)
 
 (use-package delight
-  :ensure t)
+  :straight t)
 
 (use-package docker
-  :ensure t
+  :straight t
   :bind ("C-c d" . docker))
 
 (use-package dockerfile-mode
-  :ensure t)
+  :straight t)
 
 (use-package dumb-jump
-  :ensure t)
+  :straight t)
 
 (use-package earthfile-mode
-  :ensure t)
+  :straight t)
 
 (use-package editorconfig
-  :ensure t
+  :straight t
   :delight
   :hook (prog-mode . editorconfig-mode))
 
 (use-package editorconfig-generate
-  :ensure t)
+  :straight t)
 
 (use-package ef-themes
-  :ensure t)
+  :straight t)
 
 ;; Emacs IPython/Jupyter Notebooks
 (use-package ein
-  :ensure t)
+  :straight t)
 
 (use-package elpy
-  :ensure t
+  :straight t
   :delight
   (elpy-mode)
   (hl-line-mode)
@@ -150,7 +170,7 @@
   (elpy-enable))
 
 (use-package fill-column-indicator
-  :ensure t
+  :straight t
   :delight fci-mode
   :hook (python-mode . fci-mode)
   :config (setq fill-column 88
@@ -158,46 +178,46 @@
                 fci-rule-color "#37474f"))
 
 (use-package flycheck
-  :ensure t
+  :straight t
   :delight flycheck-mode
   :hook (after-init . global-flycheck-mode)
   :init
-  (use-package flycheck-mypy :ensure t)
+  (use-package flycheck-mypy :straight t)
   :config (setq flycheck-disabled-checkers '(python-pycompile python-pylint)
                 flycheck-python-pyright-executable "~/.emacs.d/.cache/lsp/npm/pyright/bin/pyright"
                 flycheck-python-mypy-config "pyproject.toml"))
 
 (use-package flycheck-projectile
-  :ensure t)
+  :straight t)
 
 (use-package forge
-  :ensure t
+  :straight t
   :after magit
   :config (setq forge-topic-list-limit 0))
 
-(use-package frontside-javascript
-  :ensure t)
+;; (use-package frontside-javascript
+;;   :straight t)
 
 (use-package git-gutter-fringe+
-  :ensure t
+  :straight t
   :demand t
   :hook (after-init . global-git-gutter+-mode)
   :delight git-gutter+-mode)
 
 (use-package git-link
-  :ensure t)
+  :straight t)
 
 (use-package github-review
-  :ensure t)
+  :straight t)
 
 (use-package go-mode
-  :ensure t)
+  :straight t)
 
 (use-package hcl-mode
-  :ensure t)
+  :straight t)
 
 (use-package helm
- :ensure t
+ :straight t
  :delight helm-mode
  :init
  (helm-mode)
@@ -217,36 +237,36 @@
         ("C-x b" . helm-buffers-list)))
 
 (use-package helm-ag
- :ensure t
+ :straight t
  :after (:all helm ag))
 
 (use-package helm-company
- :ensure t)
+ :straight t)
 
 (use-package helm-lsp
- :ensure t
+ :straight t
  :commands helm-lsp-workspace-symbol)
 
 (use-package helm-projectile
- :ensure t
+ :straight t
  :after (:all projectile helm)
  :config
  (helm-projectile-on)
  (setq projectile-mode-line-prefix ""))
 
 (use-package indent-control
-  :ensure t)
+  :straight t)
 
 (use-package jinja2-mode
-  :ensure t
+  :straight t
   :mode (("\\.j2" . jinja2-mode)
          ("\\.jinja" . jinja2-mode)))
 
 (use-package json-mode
-  :ensure t)
+  :straight t)
 
 (use-package k8s-mode
- :ensure t
+ :straight t
  :config
  (setq k8s-search-documentation-browser-function 'browse-url-firefox
        k8s-site-docs-version "v1.22"
@@ -254,7 +274,7 @@
  :hook (k8s-mode . yas-minor-mode))
 
 (use-package kubernetes
-  :ensure t
+  :straight t
   :commands (kubernetes-overview)
   :bind ("C-x K" . kubernetes-overview)
   :config
@@ -262,14 +282,27 @@
         kubernetes-redraw-frequency 3600))
 
 (use-package lice
-  :ensure t)
+  :straight t)
 
 (use-package linum-relative
-  :ensure t
+  :straight t
   :bind ("C-c t l" . linum-relative-toggle))
 
+;; (use-package lsp-bridge
+;;   :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
+;;             :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
+;;             :build (:not compile))
+;;   :delight
+;;   :init
+;;   (global-lsp-bridge-mode)
+;;   :config (setq
+;;            lsp-bridge-python-multi-lsp-server "pyright_ruff"
+;;            lsp-bridge-default-mode-hooks '(js-mode json-mode shell-mode html-mode web-mode python-mode dockerfile-mode go-mode)
+;;            acm-enable-tabnine t
+;;            acm-enable-copilot t))
+
 (use-package lsp-mode
-  :ensure t
+  :straight t
   :delight
   :hook
   (js-mode . lsp-deferred)
@@ -320,7 +353,7 @@
   :commands (lsp lsp-deferred))
 
 (use-package lsp-pyright
-  :ensure t
+  :straight t
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp)))
@@ -331,13 +364,13 @@
                 lsp-pyright-typechecking-mode "off"))
 
 (use-package lsp-java
-  :ensure t
+  :straight t
   :config
   (add-hook 'java-mode-hook 'lsp)
   (setq lsp-java-completion-enabled t))
 
 (use-package lsp-ui
-  :ensure t
+  :straight t
   :bind (
          :map lsp-command-map
               ("G i" . lsp-ui-imenu)
@@ -360,24 +393,24 @@
                 lsp-ui-doc-header t))
 
 (use-package magit
-  :ensure t
+  :straight t
   :bind ("C-x g" . magit-status)
   :config (setq magit-last-seen-setup-instructions "1.4.0"
                 magit-commit-arguments '("-S")
                 magit-log-section-arguments '("-n256" "--decorate")))
 
 (use-package magit-delta
-  :ensure t)
+  :straight t)
 
 (use-package markdown-changelog
-  :ensure t)
+  :straight t)
 
 (use-package mmm-mode
-  :ensure t
+  :straight t
   :delight)
 
 ;; (use-package modus-themes
-;;   :ensure
+;;   :straight
 ;;   :init
 ;;   ;; Add all your customizations prior to loading the themes
 ;;   (setq modus-themes-bold-constructs t
@@ -396,10 +429,10 @@
 ;;   :bind ("<f5>" . modus-themes-toggle))
 
 (use-package nginx-mode
-  :ensure t)
+  :straight t)
 
 (use-package obsidian
-  :ensure t
+  :straight t
   :demand t
   :config
   (obsidian-specify-path "~/Dropbox/Obsidian-Notes/")
@@ -414,7 +447,7 @@
               ("C-c C-l" . obsidian-insert-wikilink)))
 
 (use-package org
-  :ensure t
+  :straight t
   :bind (("C-c L" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
@@ -449,21 +482,21 @@
            "* TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n"))))
 
 (use-package org-journal
-  :ensure t
+  :straight t
   :config (setq org-journal-date-format "%Y-%m-%d"
                 org-journal-dir "~/Dropbox/org/journal/"
                 org-journal-file-format "%Y-%m-%d.org"
                 org-journal-search-results-order-by :desc))
 
-(use-package org-trello
-  :ensure t
-  :mode ("\\.trello" . org-mode))
+;; (use-package org-trello
+;;   :straight t
+;;   :mode ("\\.trello" . org-mode))
 
 (use-package ox-hugo
-  :ensure t)
+  :straight t)
 
 (use-package perspective
-  :ensure t
+  :straight t
   :bind-keymap ("C-z" . perspective-map)
   :custom (persp-mode-prefix-key (kbd "C-z"))
   :bind (:map perspective-map
@@ -476,16 +509,16 @@
   (run-with-timer 300 (* 5 60) 'persp-state-save "~/.emacs.d/perspective_state.el"))
 
 (use-package php-mode
-  :ensure t)
+  :straight t)
 
 (use-package poetry
-  :ensure t
+  :straight t
   :hook
   (python-mode . poetry-tracking-mode)
   :config (setq poetry-tracking-strategy 'projectile))
 
 (use-package projectile
-  :ensure t
+  :straight t
   :bind-keymap ("C-c p" . projectile-command-map)
   :bind (("M-P" . projectile-find-file)
          :map projectile-command-map
@@ -495,43 +528,41 @@
   :hook (after-init . projectile-mode))
 
 (use-package py-isort
-  :ensure t
+  :straight t
   :config (setq py-isort-options '("-w=120" "--balanced" "-m=3")))
 
 (use-package python-insert-docstring
-  :ensure t
+  :straight t
   :init (setq python-docstring-field-no-arg-re "^\\s-*\\([@:]\\)\\(raise\\|raises\\|return\\|returns\\|rtype\\|returntype\\|type\\|sort\\|see\\|seealso\\|note\\|attention\\|bug\\|warning\\|warn\\|version\\|todo\\|deprecated\\|since\\|status\\|change\\|changed\\|permission\\|requires\\|require\\|requirement\\|precondition\\|precond\\|postcondition\\|postcod\\|invariant\\|author\\|organization\\|org\\|copyright\\|(c)\\|license\\|contact\\|summary\\|params\\|param\\|yield\\|yields\\)\\(:\\)"))
 
 (use-package python-docstring
-  :ensure t
+  :straight t
   :delight
   :hook (python-mode . python-docstring-mode))
 
 (use-package pyvenv
-  :ensure t
+  :straight t
   :config
   (pyvenv-mode 1))
 
 (use-package salt-mode
-  :ensure t)
+  :straight t)
 
 (use-package sphinx-doc
-  :ensure t
+  :straight t
   :delight sphinx-doc-mode
   :hook (python-mode . sphinx-doc-mode))
 
 (use-package sphinx-mode
-  :ensure t
+  :straight t
   :delight sphinx-mode
   :hook (python-mode . sphinx-mode))
 
-(use-package sqlite3
- :ensure t)
 
 (use-package tabnine
   :commands (tabnine-start-process)
   :hook (prog-mode . tabnine-mode)
-  :ensure t
+  :straight t
   :diminish "⌬"
   :custom
   (tabnine-wait 10)
@@ -552,7 +583,7 @@
          ("M-]" . tabnine-next-completion)))
 
 (use-package treemacs
-  :ensure t
+  :straight t
   :defer t
   :init
   (with-eval-after-load 'winum
@@ -641,26 +672,26 @@
 
 (use-package treemacs-projectile
   :after (treemacs projectile)
-  :ensure t)
+  :straight t)
 
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once)
-  :ensure t)
+  :straight t)
 
 (use-package treemacs-magit
   :after (treemacs magit)
-  :ensure t)
+  :straight t)
 
 (use-package treemacs-perspective ;;treemacs-perspective if you use perspective.el vs. persp-mode
   :after (treemacs perspective) ;;or perspective vs. persp-mode
-  :ensure t
+  :straight t
   :config (treemacs-set-scope-type 'Perspectives))
 
 (use-package typescript-mode
-  :ensure t)
+  :straight t)
 
 (use-package undo-tree
-  :ensure t
+  :straight t
   :delight undo-tree-mode
   :hook (after-init . global-undo-tree-mode)
   :config (setq undo-tree-auto-save-history t
@@ -670,20 +701,20 @@
                 undo-tree-history-directory-alist '(("." . "/home/tmacey/.emacs.d/undo-tree/"))))
 
 (use-package lush-theme
-  :ensure t)
+  :straight t)
 
 (use-package vcl-mode
-  :ensure t)
+  :straight t)
 
 (use-package web-mode
-  :ensure t
+  :straight t
   :mode ("\\.html" . web-mode))
 
 (use-package wgrep-ag
-  :ensure t)
+  :straight t)
 
 (use-package which-key
-  :ensure t
+  :straight t
   :demand t
   :delight which-key-mode
   :init
@@ -694,15 +725,15 @@
   :commands which-key-mode)
 
 (use-package xonsh-mode
-  :ensure t)
+  :straight t)
 
 (use-package yasnippet
-  :ensure t
+  :straight t
   :delight yas
   :init (yas-reload-all)
   :hook (prog-mode . yas-minor-mode))
 
-(use-package yasnippet-snippets :ensure t)
+(use-package yasnippet-snippets :straight t)
 
 (load-file "~/.emacs.d/functions.el")
 (load-file "~/.emacs.d/configurations.el")
@@ -722,8 +753,6 @@
  '(helm-completion-style 'emacs)
  '(horizontal-scroll-bar-mode nil)
  '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
- '(package-selected-packages
-   '(earthfile-mode vcl-mode tabnine sqlite3 all-the-icons xonsh-mode which-key wgrep-ag lush-theme undo-tree treemacs-perspective treemacs-magit treemacs-icons-dired treemacs-projectile sphinx-mode sphinx-doc salt-mode python-docstring python-insert-docstring py-isort poetry php-mode perspective ox-hugo org-trello org-journal obsidian nginx-mode mmm-mode markdown-changelog use-package magit-delta lsp-ui lsp-pyright lsp-java linum-relative lice kubernetes k8s-mode json-mode jinja2-mode indent-control helm-projectile helm-lsp helm-company helm-ag hcl-mode go-mode github-review git-link git-gutter-fringe+ frontside-javascript forge flycheck-projectile flycheck-mypy fill-column-indicator elpy ein ef-themes editorconfig-generate editorconfig dumb-jump dockerfile-mode docker delight csv-mode company-quickhelp cask ag))
  '(scroll-bar-mode nil)
  '(url-handler-mode t))
 

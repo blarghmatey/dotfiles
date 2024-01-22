@@ -7,6 +7,7 @@ import re, json
 import geoip2.database
 import requests
 
+
 # try:
 #     _MY_IP = requests.get('https://api.ipify.org').text
 # except requests.HTTPError:
@@ -25,10 +26,10 @@ import requests
 _ORIG_PATH = list($PATH)
 _ORIG_PROMPT = $PROMPT
 $XONSH_HISTORY_SIZE='500000000000 commands'
-$XONSH_SHOW_TRACEBACK=True
 $XONSH_AUTO_PAIR=True
 $XONSH_DATETIME_FORMAT='%Y-%m-%dT%H:%M:%S'
 $CASE_SENSITIVE_COMPLETIONS = False
+$SHELL_TYPE = 'prompt_toolkit'
 $PATH.append('/home/tmacey/.local/bin')
 $PATH.append('/home/tmacey/.cargo/bin')
 $PATH.append('/home/tmacey/.npm_packages/bin')
@@ -141,3 +142,4 @@ aliases['pyright-install'] = "/usr/bin/npm -g --prefix /home/tmacey/.emacs.d/.ca
 xontrib load vox
 #xontrib load pyenv
 xontrib load avox_poetry
+xontrib load jedi
