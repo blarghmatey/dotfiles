@@ -9,8 +9,8 @@
 ;; (setq mac-option-modifier nil)
 ;; (setq debug-on-error t)
 
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin"))
-(setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin")))
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin:/home/tmacey/.local/bin"))
+(setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin" "/home/tmacey/.local/bin")))
 
 (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo"  "~/.netrc"))
 
@@ -50,31 +50,6 @@
 (advice-add 'poetry-venv-toggle :after 'clear-flycheck-auto-disabled-checkers)
 (require 'flycheck)
 
-(flycheck-define-checker python-ruff
-  "A Python syntax and style checker using the ruff utility.
-To override the path to the ruff executable, set
-`flycheck-python-ruff-executable'.
-See URL `http://pypi.python.org/pypi/ruff'."
-  :command ("ruff"
-            "--output-format=text"
-            (eval (when buffer-file-name
-                    (concat "--stdin-filename=" buffer-file-name)))
-            "-")
-  :standard-input t
-  :error-filter (lambda (errors)
-                  (let ((errors (flycheck-sanitize-errors errors)))
-                    (seq-map #'flycheck-flake8-fix-error-level errors)))
-  :error-patterns
-  ((warning line-start
-            (file-name) ":" line ":" (optional column ":") " "
-            (id (one-or-more (any alpha)) (one-or-more digit)) " "
-            (message (one-or-more not-newline))
-            line-end))
-  :modes python-mode)
-
-(add-to-list 'flycheck-checkers 'python-ruff)
-
-(provide 'flycheck-ruff)
 ;; (setq speedbar-indentation-width 2
 ;;       speedbar-show-unknown-files t
 ;;       speedbar-smart-directory-expand-flag nil
@@ -248,7 +223,7 @@ See URL `http://pypi.python.org/pypi/ruff'."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ORGMODE CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'org-trello)
+;; (require 'org-trello)
 ;; (setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
 ;; (require 'org-gcal)
 (require 'ox-latex)

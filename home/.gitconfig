@@ -145,6 +145,7 @@
 
 [merge]
   tool = meld
+  conflictstyle = zdiff3
 
 [diff]
   tool = icdiff
@@ -170,8 +171,8 @@
 [init]
 	defaultBranch = main
 [credential "https://github.com"]
-	helper = 
 	helper = !/usr/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://github.mit.edu"]
 	helper = !/usr/bin/gh auth git-credential

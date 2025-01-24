@@ -4,7 +4,7 @@
 ;;; configurations.el as well as providing initialization routines
 
 ;;; Code:
-
+(setenv "LSP_USE_PLISTS" "true")
 ;;; Package manager settings
 (setq tls-checktrust t)
 (let ((trustfile
@@ -22,15 +22,19 @@
 
 (setq package-enable-at-startup nil)
 (setq straight-check-for-modifications nil)
+
 (defvar bootstrap-version)
 (let ((bootstrap-file
-      (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
-        "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-        'silent 'inhibit-cookies)
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
@@ -85,12 +89,91 @@
   :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
                 aw-scope 'frame))
 
+(use-package aider
+  :straight (:host github :repo "tninja/aider.el" :files ("aider.el"))
+  :config
+  (setq aider-args '("--model" "ollama_chat/qwen2.5-coder"))
+  (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
+  ;; Or use chatgpt model since it is most well known
+  ;; (setq aider-args '("--model" "gpt-4o-mini"))
+  ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
+  ;; ;;
+  ;; Optional: Set a key binding for the transient menu
+  (global-set-key (kbd "C-c A") 'aider-transient-menu))
+
+;; Optional helm support
+(use-package aider-helm
+  :straight (:host github :repo "tninja/aider.el" :files ("aider-helm.el"))
+  :after (aider helm))
+
 (use-package ag
   :straight t
   :defer t)
 
 (use-package all-the-icons
   :straight t)
+
+;; we recommend using use-package to organize your init.el
+;; (use-package codeium
+;;     ;; if you use straight
+;;     :straight '(:type git :host github :repo "Exafunction/codeium.el")
+;;     ;; otherwise, make sure that the codeium.el file is on load-path
+
+;;     :init
+;;     ;; use globally
+;;     (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+;;     ;; or on a hook
+;;     ;; (add-hook 'python-mode-hook
+;;     ;;     (lambda ()
+;;     ;;         (setq-local completion-at-point-functions '(codeium-completion-at-point))))
+
+;;     ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
+;;     ;; (add-hook 'python-mode-hook
+;;     ;;     (lambda ()
+;;     ;;         (setq-local completion-at-point-functions
+;;     ;;             (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
+;;     ;; an async company-backend is coming soon!
+
+;;     ;; codeium-completion-at-point is autoloaded, but you can
+;;     ;; optionally set a timer, which might speed up things as the
+;;     ;; codeium local language server takes ~0.2s to start up
+;;     ;; (add-hook 'emacs-startup-hook
+;;     ;;  (lambda () (run-with-timer 0.1 nil #'codeium-init)))
+
+;;     ;; :defer t ;; lazy loading, if you want
+;;     :config
+;;     (setq use-dialog-box nil) ;; do not use popup boxes
+
+;;     ;; if you don't want to use customize to save the api-key
+;;     ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+
+;;     ;; get codeium status in the modeline
+;;     (setq codeium-mode-line-enable
+;;         (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
+;;     (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
+;;     ;; alternatively for a more extensive mode-line
+;;     ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
+
+;;     ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
+;;     (setq codeium-api-enabled
+;;         (lambda (api)
+;;             (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
+;;     ;; you can also set a config for a single buffer like this:
+;;     ;; (add-hook 'python-mode-hook
+;;     ;;     (lambda ()
+;;     ;;         (setq-local codeium/editor_options/tab_size 4)))
+
+;;     ;; You can overwrite all the codeium configs!
+;;     ;; for example, we recommend limiting the string sent to codeium for better performance
+;;     (defun my-codeium/document/text ()
+;;         (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
+;;     ;; if you change the text, you should also change the cursor_offset
+;;     ;; warning: this is measured by UTF-8 encoded bytes
+;;     (defun my-codeium/document/cursor_offset ()
+;;         (codeium-utf8-byte-length
+;;             (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
+;;     (setq codeium/document/text 'my-codeium/document/text)
+;;     (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 
 (use-package company
   :straight t
@@ -139,11 +222,75 @@
   :straight t)
 
 (use-package ef-themes
-  :straight t)
+  :straight t
+  :config (setq ef-themes-mixed-fonts t
+                ef-themes-variable-pitch-ui t
+                ef-themes-to-toggle '(ef-symbiosis ef-trio-light))
+  :init (ef-themes-select 'ef-symbiosis))
 
 ;; Emacs IPython/Jupyter Notebooks
 (use-package ein
   :straight t)
+
+;; YOU DON'T NEED NONE OF THIS CODE FOR SIMPLE INSTALL
+;; IT IS AN EXAMPLE OF CUSTOMIZATION.
+(use-package ellama
+  :straight t
+  :init
+  ;; setup key bindings
+  (setopt ellama-keymap-prefix "C-c ;")
+  ;; language you want ellama to translate to
+  ;; could be llm-openai for example
+  (require 'llm-ollama)
+  ;; (setopt ellama-provider
+  ;;           (make-llm-ollama
+  ;;            ;; this model should be pulled to use it
+  ;;            ;; value should be the same as you print in terminal during pull
+  ;;            :chat-model "mistral:7b-instruct-v0.2-q6_K"
+  ;;            :embedding-model "mistral:7b-instruct-v0.2-q6_K"))
+  ;; Naming new sessions with llm
+  ;; (setopt ellama-naming-provider
+  ;;       (make-llm-ollama
+  ;;        :chat-model "mistral:7b-instruct-v0.2-q6_K"
+  ;;        :embedding-model "mistral:7b-instruct-v0.2-q6_K"))
+  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+  ;; Translation llm provider
+  ;; (setopt ellama-translation-provider (make-llm-ollama
+  ;;                    :chat-model "sskostyaev/openchat:8k"
+  ;;                    :embedding-model "nomic-embed-text"))
+  ;; Define the providers we like
+  (setq-default ellama-providers
+        (list
+         (cons "chat-semantic" (make-llm-ollama
+                    :chat-model "llama3.1"
+                    :embedding-model "llama3.1"))
+         (cons "chat-literal" (make-llm-ollama
+                       :chat-model "mistral"
+                       :embedding-model "mistral"))
+         (cons "code-completion" (make-llm-ollama
+                      :chat-model "codellama"
+                      :embedding-model "codellama"))))
+
+  ;; Now set specific providers from the list by name
+  (setq-default ellama-provider (alist-get "chat-semantic" ellama-providers
+                       nil nil 'string-equal))
+                    ; Code completion should go in
+                    ; here once supported
+  (setq-default ellama-naming-provider (alist-get "chat-literal" ellama-providers
+                          nil nil 'string-equal))
+
+  ;; Convenience functions for mode change events
+  (defun my-select-code-completion ()
+    (setq ellama-provider (alist-get "code-completion"
+                     ellama-providers nil nil 'string-equal)))
+  (defun my-select-chat ()
+    (setq ellama-provider (alist-get "chat-semantic"
+                     ellama-providers nil nil 'string-equal)))
+  
+  ;; This ought to use :hook, but start by getting it working at all
+  (add-hook 'prog-mode-hook  (lambda () 'my-select-code-completion))
+  (add-hook 'text-mode-hook  (lambda () 'my-select-chat))
+  )
 
 (use-package elpy
   :straight t
@@ -163,10 +310,8 @@
                        elpy-module-eldoc
                        elpy-module-folding
                        elpy-module-pyvenv
-                       elpy-module-highlight-indentation
-                       elpy-module-yasnippet)
-        elpy-test-runner 'elpy-test-pytest-runner
-        elpy-formatter "Black")
+                       elpy-module-highlight-indentation)
+        elpy-test-runner 'elpy-test-pytest-runner)
   (elpy-enable))
 
 (use-package fill-column-indicator
@@ -184,7 +329,6 @@
   :init
   (use-package flycheck-mypy :straight t)
   :config (setq flycheck-disabled-checkers '(python-pycompile python-pylint)
-                flycheck-python-pyright-executable "~/.emacs.d/.cache/lsp/npm/pyright/bin/pyright"
                 flycheck-python-mypy-config "pyproject.toml"))
 
 (use-package flycheck-projectile
@@ -194,15 +338,6 @@
   :straight t
   :after magit
   :config (setq forge-topic-list-limit 0))
-
-;; (use-package frontside-javascript
-;;   :straight t)
-
-(use-package git-gutter-fringe+
-  :straight t
-  :demand t
-  :hook (after-init . global-git-gutter+-mode)
-  :delight git-gutter+-mode)
 
 (use-package git-link
   :straight t)
@@ -273,13 +408,9 @@
        k8s-site-docs-url "https://kubernetes.io/docs/reference/generated/kubernetes-api/")
  :hook (k8s-mode . yas-minor-mode))
 
-(use-package kubernetes
+(use-package kubed
   :straight t
-  :commands (kubernetes-overview)
-  :bind ("C-x K" . kubernetes-overview)
-  :config
-  (setq kubernetes-poll-frequency 3600
-        kubernetes-redraw-frequency 3600))
+  :bind-keymap ("C-c K" . kubed-prefix-map))
 
 (use-package lice
   :straight t)
@@ -287,19 +418,6 @@
 (use-package linum-relative
   :straight t
   :bind ("C-c t l" . linum-relative-toggle))
-
-;; (use-package lsp-bridge
-;;   :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
-;;             :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
-;;             :build (:not compile))
-;;   :delight
-;;   :init
-;;   (global-lsp-bridge-mode)
-;;   :config (setq
-;;            lsp-bridge-python-multi-lsp-server "pyright_ruff"
-;;            lsp-bridge-default-mode-hooks '(js-mode json-mode shell-mode html-mode web-mode python-mode dockerfile-mode go-mode)
-;;            acm-enable-tabnine t
-;;            acm-enable-copilot t))
 
 (use-package lsp-mode
   :straight t
@@ -310,7 +428,11 @@
   (shell-mode . lsp-deferred)
   (html-mode . lsp-deferred)
   (web-mode . lsp-deferred)
-  (python-mode . lsp-deferred)
+  (python-mode . (lambda ()
+                   (let ((project-root (projectile-project-root)))
+                     (when project-root
+                       (setq lsp-ruff-python-path (concat project-root "/.venv/bin/python")
+                             lsp-ruff-ruff-args ("--preview" (concat "--config " project-root "/pyproject.toml")))))))
   (dockerfile-mode . lsp-deferred)
   (go-mode . lsp-deferred)
   (php-mode . lsp-deferred)
@@ -323,22 +445,25 @@
         gc-cons-threshold 3200000
         lsp-auto-configure t
         lsp-before-save-edits nil
+        lsp-copilot-enabled t
         lsp-diagnostic-package :none
         lsp-enable-completion-at-point t
-        lsp-enable-folding t
         lsp-enable-file-watchers t
-        lsp-enable-imenu t
+        lsp-enable-folding t
         lsp-enable-imenu t
         lsp-enable-indentation t
         lsp-enable-semantic-highlighting t
         lsp-enable-text-document-color t
         lsp-file-watch-threshold 15000
         lsp-imenu-show-container-name t
-        lsp-log-io nil
+        lsp-keep-workspace-alive nil
+        lsp-log-io t
         lsp-modeline-code-actions-mode t
         lsp-prefer-capf t
-        lsp-keep-workspace-alive nil
-        lsp-semantic-highlighting :immediate
+        ;; lsp-ruff-ruff-args '("--preview")
+        lsp-ruff-import-strategy "fromEnvironment"
+        lsp-use-plists t
+        lsp-semantic-tokens-enable t
         read-process-output-max (* 1024 1024))
   (with-eval-after-load 'lsp-mode
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?venv\\'")
@@ -354,6 +479,7 @@
 
 (use-package lsp-pyright
   :straight t
+  :custom (lsp-pyright-langserver-command "basedpyright") ;; or pyright
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp)))
@@ -361,13 +487,13 @@
                 lsp-pyright-use-library-code-for-types t
                 lsp-pyright-auto-import-completions t
                 lsp-pyright-disable-organize-imports t
+                lsp-pyright-langserver-command "basedpyright"
                 lsp-pyright-typechecking-mode "off"))
 
-(use-package lsp-java
+(use-package lsp-treemacs
   :straight t
-  :config
-  (add-hook 'java-mode-hook 'lsp)
-  (setq lsp-java-completion-enabled t))
+  :config (setq lsp-treemacs-sync-mode 1)
+  )
 
 (use-package lsp-ui
   :straight t
@@ -408,25 +534,6 @@
 (use-package mmm-mode
   :straight t
   :delight)
-
-;; (use-package modus-themes
-;;   :straight
-;;   :init
-;;   ;; Add all your customizations prior to loading the themes
-;;   (setq modus-themes-bold-constructs t
-;;         modus-themes-paren-match '(underline)
-;;         modus-themes-markup '(intense)
-;;         modus-themes-fringes '(subtle)
-;;         modus-themes-hl-line '(accented)
-;;         modus-themes-syntax '(alt-syntax green-strings yellow-comments)
-;;         modus-themes-region '(bg-only no-extend))
-
-;;   ;; Load the theme files before enabling a theme
-;;   (modus-themes-load-themes)
-;;   :config
-;;   ;; Load the theme of your choice:
-;;   (modus-themes-load-vivendi);; OR (modus-themes-load-operandi)
-;;   :bind ("<f5>" . modus-themes-toggle))
 
 (use-package nginx-mode
   :straight t)
@@ -527,10 +634,6 @@
   :init (setq projectile-completion-system 'helm)
   :hook (after-init . projectile-mode))
 
-(use-package py-isort
-  :straight t
-  :config (setq py-isort-options '("-w=120" "--balanced" "-m=3")))
-
 (use-package python-insert-docstring
   :straight t
   :init (setq python-docstring-field-no-arg-re "^\\s-*\\([@:]\\)\\(raise\\|raises\\|return\\|returns\\|rtype\\|returntype\\|type\\|sort\\|see\\|seealso\\|note\\|attention\\|bug\\|warning\\|warn\\|version\\|todo\\|deprecated\\|since\\|status\\|change\\|changed\\|permission\\|requires\\|require\\|requirement\\|precondition\\|precond\\|postcondition\\|postcod\\|invariant\\|author\\|organization\\|org\\|copyright\\|(c)\\|license\\|contact\\|summary\\|params\\|param\\|yield\\|yields\\)\\(:\\)"))
@@ -548,6 +651,14 @@
 (use-package salt-mode
   :straight t)
 
+(use-package sops
+  :straight (:type git :host github :repo "djgoku/sops")
+  :bind (("C-c C-c" . sops-save-file)
+         ("C-c C-k" . sops-cancel)
+         ("C-c C-d" . sops-edit-file))
+  :init
+  (global-sops-mode 1))
+
 (use-package sphinx-doc
   :straight t
   :delight sphinx-doc-mode
@@ -559,28 +670,28 @@
   :hook (python-mode . sphinx-mode))
 
 
-(use-package tabnine
-  :commands (tabnine-start-process)
-  :hook (prog-mode . tabnine-mode)
-  :straight t
-  :diminish "⌬"
-  :custom
-  (tabnine-wait 10)
-  (tabnine-minimum-prefix-length 0)
-  :hook (kill-emacs . tabnine-kill-process)
-  :config
-  (add-to-list 'completion-at-point-functions #'tabnine-completion-at-point)
-  (setq tabnine-idle-delay 1)
-  (tabnine-start-process)
-  :bind
-  (:map  tabnine-completion-map
-         ("C-<tab>" . tabnine-accept-completion)
-         ("C-TAB" . tabnine-accept-completion)
-         ("C-M-f" . tabnine-accept-completion-by-word)
-         ("C-M-<return>" . tabnine-accept-completion-by-line)
-         ("C-g" . tabnine-clear-overlay)
-         ("M-[" . tabnine-previous-completion)
-         ("M-]" . tabnine-next-completion)))
+;; (use-package tabnine
+;;   :commands (tabnine-start-process)
+;;   :hook (prog-mode . tabnine-mode)
+;;   :straight t
+;;   :diminish "⌬"
+;;   :custom
+;;   (tabnine-wait 10)
+;;   (tabnine-minimum-prefix-length 0)
+;;   :hook (kill-emacs . tabnine-kill-process)
+;;   :config
+;;   (add-to-list 'completion-at-point-functions #'tabnine-completion-at-point)
+;;   (setq tabnine-idle-delay 1)
+;;   (tabnine-start-process)
+;;   :bind
+;;   (:map  tabnine-completion-map
+;;          ("C-<tab>" . tabnine-accept-completion)
+;;          ("C-TAB" . tabnine-accept-completion)
+;;          ("C-M-f" . tabnine-accept-completion-by-word)
+;;          ("C-M-<return>" . tabnine-accept-completion-by-line)
+;;          ("C-g" . tabnine-clear-overlay)
+;;          ("M-[" . tabnine-previous-completion)
+;;          ("M-]" . tabnine-next-completion)))
 
 (use-package treemacs
   :straight t
@@ -724,17 +835,6 @@
   :config (which-key-mode)
   :commands which-key-mode)
 
-(use-package xonsh-mode
-  :straight t)
-
-(use-package yasnippet
-  :straight t
-  :delight yas
-  :init (yas-reload-all)
-  :hook (prog-mode . yas-minor-mode))
-
-(use-package yasnippet-snippets :straight t)
-
 (load-file "~/.emacs.d/functions.el")
 (load-file "~/.emacs.d/configurations.el")
 
@@ -747,12 +847,15 @@
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-color-names-vector
    (vector "#ffffff" "#f36c60" "#8bc34a" "#fff59d" "#4dd0e1" "#b39ddb" "#81d4fa" "#263238"))
+ '(codeium/metadata/api_key "c4716906-af39-45c3-8c42-c71afc182c7c")
  '(custom-safe-themes
    '("9b7d703afa15e320af9aa6b3e02bb1ebb8657c23043f7054357f86ce014b5461" "0f964c8dbc5a668cc2ba7aa1003792fbbf3000a6ed69c0e53b1eeb2c1afc25cb" "b87f0a7cc94fc07f1417f95de2382a7c1c853a6822d987af45b3b3c5e95e3abb" "9f97708991e9b0ddc2d428e5bae87d97d8b6c6c09ef82cbfa26a797560de7cec" "6abef8c5e70ae252c41e9c91a885635de66816204a0bd9102387f6f7c419a7a5" "2480d2400cf9eb2f58703d0f3e6ae23b15d8bc6c7b8070c65328f32f31df6a03" "a2c06295bcca9ffc56f22b4d1f1f145cf9a6953785099199afe2e4db75e54630" "448175cf1da8bdb6dd310a33283789bdb5b76402adcc0a23bcebeb3e6f667bdf" "13f4cc4607ec8c2aada98ee92293547d7134ffa4d746c9104647461bcbcab8a7" "cda446bf884e720497d5f1463ff699896c5de42352321c7bc91e637da25cad2e" "dd64cf49a64a5adeebc30a8e968db73f549e11d6adcd1318893fded4ee0b214b" "0c2d7f410f835d59a0293f2a55744e9d3be13aab8753705c6ad4a9a968fb3b28" "364e592858d85f3dff9d51af5c72737ca8ef2b76fc60d9d5f0a9995ea927635a" "0f2f1feff73a80556c8c228396d76c1a0342eb4eefd00f881b91e26a14c5b62a" default))
  '(debug-on-error nil)
+ '(elpy-syntax-check-command "ruff check")
+ '(grep-command "ag")
  '(helm-completion-style 'emacs)
  '(horizontal-scroll-bar-mode nil)
- '(org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
+ '(org-trello-current-prefix-keybinding "C-c o")
  '(scroll-bar-mode nil)
  '(url-handler-mode t))
 
