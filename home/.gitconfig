@@ -1,104 +1,33 @@
+# Core Git Settings
 [core]
+  # Use delta for improved diff viewing
   pager = delta
+  # Configure whitespace handling
   whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+  # Global gitignore file location
   excludesfile = ~/.config/gitignore
+  # Use Emacs as the default editor
   editor = emacsclient -c -a emacs
 
-[alias]
-  # branch
-  b  = branch
-  bc = checkout -b
-  bl = branch -v
-  bL = branch -av
-  bx = branch -d
-  bX = branch -D
-  bm = branch -m
-  bM = branch -M
-  bs = show-branch
-  bS = show-branch -a
+# Display and UI Settings
+[column]
+  # Automatically configure column display
+  ui = auto
 
-  # checkout/fetch/merge/push/rebase
-  # checkout
-  co  = checkout
-  com = checkout master
-  co0 = checkout HEAD --
-  # fetch
-  f   = fetch
-  fm  = pull
-  fo  = fetch origin
-  # merge
-  m   = merge
-  mom = merge origin/master
-  # push
-  p   = push
-  pa  = push --all
-  pt  = push --tags
-  ph = push origin HEAD
-  # rebase
-  r   = rebase
-  ra  = rebase --abort
-  rc  = rebase --continue
-  ri  = rebase --interactive
-  rs  = rebase --skip
-  rom = rebase origin/master
-
-  # commit
-  c      = commit -v -S
-  ca     = commit --all -v -S
-  cm     = commit --message -S
-  cam    = commit --all --message -S
-  camend = commit --amend --reuse-message HEAD -S
-  commit = commit -S
-  cundo  = reset --soft "HEAD^"
-  cp     = cherry-pick -x
-
-  # diff
-  d    = diff          # Diff working dir to index
-  ds   = diff --staged # Diff index to HEAD
-  dc   = diff --staged # Diff index to HEAD
-  dh   = diff HEAD     # Diff working dir and index to HEAD
-  hub  = browse
-  hubd = compare
-
-  # index
-  s  = status
-  a  = add
-  ia = add
-  ir = reset
-
-  # log
-  l   = log --topo-order --pretty=format:'%C(yellow)%h %C(cyan)%cn %C(blue)%cr%C(reset) %s'
-  ls  = log --topo-order --stat --pretty=format:'%C(bold)%C(yellow)Commit:%C(reset) %C(yellow)%H%C(red)%d%n%C(bold)%C(yellow)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)%C(yellow)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
-  ld  = log --topo-order --stat --patch --full-diff --pretty=format:'%C(bold)%C(yellow)Commit:%C(reset) %C(yellow)%H%C(red)%d%n%C(bold)%C(yellow)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)%C(yellow)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
-  lg  = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-  lga = log --topo-order --all --graph --pretty=format:'%C(yellow)%h %C(cyan)%cn%C(reset) %s %C(red)%d%C(reset)%n'
-  lm  = log --topo-order --pretty=format:'%s'
-  lh  = shortlog --summary --numbered
-  llf = fsck --lost-found
-  lcsv = log --pretty=format:%h,%an,%ai,%s
-  lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
-
-  # remote
-  re  = remote
-  rel = remote --verbose
-  rea = remote add
-  rex = remote rm
-  rem = remote rename
-
-  w = whatchanged
-  search = "!f() { query=\"$1\"; shift; git log -S\"$query\" \"$@\"; }; f \"$@\""
-  rdiff = diff --summary head
-  stat = diff --summary head
-  mt = mergetool
-  rc = rebase --continue
-  pr = pull-request
-  smc = log --author=\"Tobias Macey\" --grep=\"$1\"
-
-[mirror]
-  summary = true
+[diff]
+  # Use histogram diff algorithm for better diffs
+  algorithm = histogram
+  # Show moved lines in a plain format
+  colorMoved = plain
+  # Use short mnemonics for a/b/c/d
+  mnemonicPrefix = true
+  # Detect renamed files
+  renames = true
+  # Use icdiff as the diff tool
+  tool = icdiff
 
 [color]
+  # Enable color output
   diff = auto
   status = auto
   branch = auto
@@ -107,11 +36,8 @@
   pager = true
   showbranch = auto
 
-[interactive]
-  diffFilter = delta --color-only
-
 [color "interactive"]
-    error = red bold
+  error = red bold
 
 [color "branch"]
   current = green reverse
@@ -131,48 +57,198 @@
   untracked = red
   branch = magenta
 
-[rerere]
-  enabled = 1
+# Branch and Repository Management
+[branch]
+  # Sort branches by most recently committed
+  sort = -committerdate
 
-[mergetool]
-  keepBackup = false
+[tag]
+  # Sort tags by version number
+  sort = version:refname
 
-[gc]
-  rerereresolved = 256
+[init]
+  # Set default branch name to main
+  defaultBranch = main
 
 [push]
+  # Push only current branch to upstream
   default = simple
+  # Automatically set up remote tracking
+  autoSetupRemote = true
+  # Push tags along with branches
+  followTags = true
+  # Push to matching named branches
+  default = matching
+
+[fetch]
+  # Remove remote-tracking branches that no longer exist
+  prune = true
+  # Remove tags that no longer exist
+  pruneTags = true
+  # Fetch all remotes
+  all = true
+
+[pull]
+  # Use rebase instead of merge when pulling
+  rebase = true
 
 [merge]
+  # Use meld as merge tool
   tool = meld
+  # Use zdiff3 style conflict markers
   conflictstyle = zdiff3
 
-[diff]
-  tool = icdiff
+# Commit and Rebase Settings
+[commit]
+  # Show diff when editing commit message
+  verbose = true
+  # Sign commits with GPG
+  gpgsign = true
 
+[rebase]
+  # Automatically squash commits marked as squash
+  autoSquash = true
+  # Automatically stash/unstash changes when rebasing
+  autoStash = true
+  # Update refs during rebase
+  updateRefs = true
+
+[rerere]
+  # Remember resolved conflicts
+  enabled = true
+  # Automatically update index with resolved conflicts
+  autoupdate = true
+
+# Helper and URL Settings
+[help]
+  # Prompt for autocorrection of mistyped commands
+  autocorrect = prompt
+
+[url "git@github.com:"]
+  # Use SSH instead of HTTPS for GitHub
+  insteadof = github:
+
+[credential "https://github.com"]
+  helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+  helper = !/usr/bin/gh auth git-credential
+
+[credential "https://github.mit.edu"]
+  helper = !/usr/bin/gh auth git-credential
+
+# User and Platform Settings
 [user]
   name = Tobias Macey
   signingkey = D6260C616BD0FA33
+  email = tmacey@boundlessnotions.com
 
-[commit]
-  gpgsign = true
-
-[url "git@github.com:"]
-    insteadof = github:
-
-[push]
-    default = matching
 [github]
-    user = blarghmatey
-[pull]
-	rebase = true
+  user = blarghmatey
+
 [gitlab]
-	user = blarghmatey
-[init]
-	defaultBranch = main
-[credential "https://github.com"]
-	helper = !/usr/bin/gh auth git-credential
-[credential "https://gist.github.com"]
-	helper = !/usr/bin/gh auth git-credential
-[credential "https://github.mit.edu"]
-	helper = !/usr/bin/gh auth git-credential
+  user = blarghmatey
+
+[mirror]
+  summary = true
+
+# Git Aliases
+[alias]
+  # Branch operations
+  b  = branch
+  bc = checkout -b
+  bl = branch -v
+  bL = branch -av
+  bx = branch -d
+  bX = branch -D
+  bm = branch -m
+  bM = branch -M
+  bs = show-branch
+  bS = show-branch -a
+
+  # Checkout operations
+  co  = checkout
+  com = checkout master
+  co0 = checkout HEAD --
+
+  # Fetch operations
+  f   = fetch
+  fm  = pull
+  fo  = fetch origin
+
+  # Merge operations
+  m   = merge
+  mom = merge origin/master
+
+  # Push operations
+  p   = push
+  pa  = push --all
+  pt  = push --tags
+  ph = push origin HEAD
+
+  # Rebase operations
+  r   = rebase
+  ra  = rebase --abort
+  rc  = rebase --continue
+  ri  = rebase --interactive
+  rs  = rebase --skip
+  rom = rebase origin/master
+
+  # Commit operations
+  c      = commit -v -S
+  ca     = commit --all -v -S
+  cm     = commit --message -S
+  cam    = commit --all --message -S
+  camend = commit --amend --reuse-message HEAD -S
+  commit = commit -S
+  cundo  = reset --soft "HEAD^"
+  cp     = cherry-pick -x
+
+  # Diff operations
+  d    = diff          # Diff working dir to index
+  ds   = diff --staged # Diff index to HEAD
+  dc   = diff --staged # Diff index to HEAD
+  dh   = diff HEAD     # Diff working dir and index to HEAD
+  hub  = browse
+  hubd = compare
+
+  # Index operations
+  s  = status
+  a  = add
+  ia = add
+  ir = reset
+
+  # Log operations
+  l   = log --topo-order --pretty=format:'%C(yellow)%h %C(cyan)%cn %C(blue)%cr%C(reset) %s'
+  ls  = log --topo-order --stat --pretty=format:'%C(bold)%C(yellow)Commit:%C(reset) %C(yellow)%H%C(red)%d%n%C(bold)%C(yellow)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)%C(yellow)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
+  ld  = log --topo-order --stat --patch --full-diff --pretty=format:'%C(bold)%C(yellow)Commit:%C(reset) %C(yellow)%H%C(red)%d%n%C(bold)%C(yellow)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)%C(yellow)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
+  lg  = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  lga = log --topo-order --all --graph --pretty=format:'%C(yellow)%h %C(cyan)%cn%C(reset) %s %C(red)%d%C(reset)%n'
+  lm  = log --topo-order --pretty=format:'%s'
+  lh  = shortlog --summary --numbered
+  llf = fsck --lost-found
+  lcsv = log --pretty=format:%h,%an,%ai,%s
+  lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+
+  # Remote operations
+  re  = remote
+  rel = remote --verbose
+  rea = remote add
+  rex = remote rm
+  rem = remote rename
+
+  # Miscellaneous
+  w = whatchanged
+  search = "!f() { query=\"$1\"; shift; git log -S\"$query\" \"$@\"; }; f \"$@\""
+  rdiff = diff --summary head
+  stat = diff --summary head
+  mt = mergetool
+  rc = rebase --continue
+  pr = pull-request
+  smc = log --author=\"Tobias Macey\" --grep=\"$1\"
+
+# Delta Integration
+[interactive]
+  # Use delta for interactive diffs
+  diffFilter = delta --color-only
