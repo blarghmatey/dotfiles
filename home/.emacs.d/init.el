@@ -194,6 +194,29 @@
 (use-package company-quickhelp
   :straight t)
 
+(use-package copilot
+  :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))  ;; if you don't use "straight", install otherwise
+  :ensure t
+  :hook (prog-mode . copilot-mode)
+  :bind (
+         ("C-c <tab>" . copilot-accept-completion)
+         ("C-c C-<tab>" . copilot-accept-completion-by-word)
+         ("C-c M-<tab>" . copilot-accept-completion-by-line)
+         ("C-c C-g" . copilot-clear-overlay)
+         ("C-c C-n" . copilot-next-completion)
+         ("C-c C-p" . copilot-previous-completion)
+         )
+  ;; :config
+  ;; (setq copilot-network-proxy '(:host "127.0.0.1" :port 11434 :rejectUnauthorized :json-false))
+  )
+
+(use-package copilot-chat
+  :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
+  :after (request org markdown-mode shell-maker)
+  :hook (git-commit-setup-hook . copilot-chat-insert-commit-message)
+  ;; :config (setq copilot-chat-network-proxy '(:host "127.0.0.1" :port 11434 :rejectUnauthorized :json-false))
+)
+
 (use-package csv-mode
   :straight t)
 
@@ -309,7 +332,7 @@
                        elpy-module-autodoc
                        elpy-module-eldoc
                        elpy-module-folding
-                       elpy-module-pyvenv
+                       ;; elpy-module-pyvenv
                        elpy-module-highlight-indentation)
         elpy-test-runner 'elpy-test-pytest-runner)
   (elpy-enable))
@@ -460,7 +483,6 @@
         lsp-log-io t
         lsp-modeline-code-actions-mode t
         lsp-prefer-capf t
-        ;; lsp-ruff-ruff-args '("--preview")
         lsp-ruff-import-strategy "fromEnvironment"
         lsp-use-plists t
         lsp-semantic-tokens-enable t
@@ -482,7 +504,7 @@
   :custom (lsp-pyright-langserver-command "basedpyright") ;; or pyright
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
-                         (lsp)))
+                         (lsp-deferred)))
   :config (setq lsp-pyright-diagnostic-mode "workspace"
                 lsp-pyright-use-library-code-for-types t
                 lsp-pyright-auto-import-completions t
@@ -615,14 +637,16 @@
   (persp-mode)
   (run-with-timer 300 (* 5 60) 'persp-state-save "~/.emacs.d/perspective_state.el"))
 
+(use-package pet
+  :straight t
+  :config
+  (add-hook 'python-base-mode-hook 'pet-mode -10)
+(pet-def-config-accessor pre-commit-config
+                         :file-name ".no-such-file.yaml"
+                         :parser pet-parse-config-file))
+
 (use-package php-mode
   :straight t)
-
-(use-package poetry
-  :straight t
-  :hook
-  (python-mode . poetry-tracking-mode)
-  :config (setq poetry-tracking-strategy 'projectile))
 
 (use-package projectile
   :straight t
