@@ -87,6 +87,8 @@
   pruneTags = true
   # Fetch all remotes
   all = true
+  # Pull the tags as well
+  tags = true
 
 [pull]
   # Use rebase instead of merge when pulling

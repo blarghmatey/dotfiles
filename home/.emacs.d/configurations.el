@@ -111,6 +111,7 @@
 (global-set-key (kbd "C-c f m") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-14")))
 (global-set-key (kbd "C-c f t") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-10")))
 (global-set-key (kbd "C-c f u") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-8")))
+(global-set-key (kbd "C-c f f") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-7")))
 
 ;; Automatically handle theme changes with system light/dark mode
 ;; from https://emacs.stackexchange.com/a/71164

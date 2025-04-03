@@ -89,22 +89,22 @@
   :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
                 aw-scope 'frame))
 
-(use-package aider
-  :straight (:host github :repo "tninja/aider.el" :files ("aider.el"))
+(use-package aidermacs
+  :straight t
+  :bind (("C-c A" . aidermacs-transient-menu))
   :config
-  (setq aider-args '("--model" "ollama_chat/qwen2.5-coder"))
+  ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
-  ;; Or use chatgpt model since it is most well known
-  ;; (setq aider-args '("--model" "gpt-4o-mini"))
-  ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
-  ;; ;;
-  ;; Optional: Set a key binding for the transient menu
-  (global-set-key (kbd "C-c A") 'aider-transient-menu))
+  ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
+  :custom
+  ; See the Configuration section below
+  (aidermacs-use-architect-mode t)
+  (aidermacs-default-model "gemini/gemini-2.0-flash-exp")
+  ;; Optional: Set specific model for architect reasoning
+  (aidermacs-architect-model "gemini/gemini-2.5-exp")
 
-;; Optional helm support
-(use-package aider-helm
-  :straight (:host github :repo "tninja/aider.el" :files ("aider-helm.el"))
-  :after (aider helm))
+  ;; Optional: Set specific model for code generation
+  (aidermacs-editor-model "gemini/gemini-2.0-flash"))
 
 (use-package ag
   :straight t
@@ -251,69 +251,74 @@
                 ef-themes-to-toggle '(ef-symbiosis ef-trio-light))
   :init (ef-themes-select 'ef-symbiosis))
 
-;; Emacs IPython/Jupyter Notebooks
-(use-package ein
-  :straight t)
-
-;; YOU DON'T NEED NONE OF THIS CODE FOR SIMPLE INSTALL
-;; IT IS AN EXAMPLE OF CUSTOMIZATION.
 (use-package ellama
   :straight t
+  :bind ("C-c e" . ellama-transient-main-menu)
+  ;; send last message in chat buffer with C-c C-c
+  :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
   :init
   ;; setup key bindings
-  (setopt ellama-keymap-prefix "C-c ;")
+  ;; (setopt ellama-keymap-prefix "C-c e")
   ;; language you want ellama to translate to
+  (setopt ellama-language "English")
   ;; could be llm-openai for example
   (require 'llm-ollama)
-  ;; (setopt ellama-provider
-  ;;           (make-llm-ollama
-  ;;            ;; this model should be pulled to use it
-  ;;            ;; value should be the same as you print in terminal during pull
-  ;;            :chat-model "mistral:7b-instruct-v0.2-q6_K"
-  ;;            :embedding-model "mistral:7b-instruct-v0.2-q6_K"))
+  (setopt ellama-provider
+          (make-llm-ollama
+           ;; this model should be pulled to use it
+           ;; value should be the same as you print in terminal during pull
+           :chat-model "olmo2:13b"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("num_ctx" . 8192))))
+  (setopt ellama-summarization-provider
+          (make-llm-ollama
+           :chat-model "qwen2.5:14b"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  (setopt ellama-coding-provider
+          (make-llm-ollama
+           :chat-model "qwen2.5-coder:14b"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  ;; Predefined llm providers for interactive switching.
+  ;; You shouldn't add ollama providers here - it can be selected interactively
+  ;; without it. It is just example.
+  ;; (setopt ellama-providers
+  ;;         '(("zephyr" . (make-llm-ollama
+  ;;                        :chat-model "zephyr:7b-beta-q6_K"
+  ;;                        :embedding-model "zephyr:7b-beta-q6_K"))
+  ;;           ("mistral" . (make-llm-ollama
+  ;;                         :chat-model "mistral:7b-instruct-v0.2-q6_K"
+  ;;                         :embedding-model "mistral:7b-instruct-v0.2-q6_K"))
+  ;;           ("mixtral" . (make-llm-ollama
+  ;;                         :chat-model "mixtral:8x7b-instruct-v0.1-q3_K_M-4k"
+  ;;                         :embedding-model "mixtral:8x7b-instruct-v0.1-q3_K_M-4k"))))
   ;; Naming new sessions with llm
-  ;; (setopt ellama-naming-provider
-  ;;       (make-llm-ollama
-  ;;        :chat-model "mistral:7b-instruct-v0.2-q6_K"
-  ;;        :embedding-model "mistral:7b-instruct-v0.2-q6_K"))
+  (setopt ellama-naming-provider
+          (make-llm-ollama
+           :chat-model "llama3.2"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("stop" . ("\n")))))
   (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
   ;; Translation llm provider
-  ;; (setopt ellama-translation-provider (make-llm-ollama
-  ;;                    :chat-model "sskostyaev/openchat:8k"
-  ;;                    :embedding-model "nomic-embed-text"))
-  ;; Define the providers we like
-  (setq-default ellama-providers
-        (list
-         (cons "chat-semantic" (make-llm-ollama
-                    :chat-model "llama3.1"
-                    :embedding-model "llama3.1"))
-         (cons "chat-literal" (make-llm-ollama
-                       :chat-model "mistral"
-                       :embedding-model "mistral"))
-         (cons "code-completion" (make-llm-ollama
-                      :chat-model "codellama"
-                      :embedding-model "codellama"))))
-
-  ;; Now set specific providers from the list by name
-  (setq-default ellama-provider (alist-get "chat-semantic" ellama-providers
-                       nil nil 'string-equal))
-                    ; Code completion should go in
-                    ; here once supported
-  (setq-default ellama-naming-provider (alist-get "chat-literal" ellama-providers
-                          nil nil 'string-equal))
-
-  ;; Convenience functions for mode change events
-  (defun my-select-code-completion ()
-    (setq ellama-provider (alist-get "code-completion"
-                     ellama-providers nil nil 'string-equal)))
-  (defun my-select-chat ()
-    (setq ellama-provider (alist-get "chat-semantic"
-                     ellama-providers nil nil 'string-equal)))
-  
-  ;; This ought to use :hook, but start by getting it working at all
-  (add-hook 'prog-mode-hook  (lambda () 'my-select-code-completion))
-  (add-hook 'text-mode-hook  (lambda () 'my-select-chat))
-  )
+  (setopt ellama-translation-provider
+          (make-llm-ollama
+           :chat-model "qwen2.5:14b"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params
+           '(("num_ctx" . 32768))))
+  (setopt ellama-extraction-provider (make-llm-ollama
+                                      :chat-model "qwen2.5-coder:14b"
+                                      :embedding-model "nomic-embed-text"
+                                      :default-chat-non-standard-params
+                                      '(("num_ctx" . 32768))))
+  ;; customize display buffer behaviour
+  ;; see ~(info "(elisp) Buffer Display Action Functions")~
+  (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
+  (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
+  :config
+  ;; show ellama context in header line in all buffers
+  (ellama-context-header-line-global-mode +1))
 
 (use-package elpy
   :straight t
@@ -359,8 +364,7 @@
 
 (use-package forge
   :straight t
-  :after magit
-  :config (setq forge-topic-list-limit 0))
+  :after magit)
 
 (use-package git-link
   :straight t)
@@ -560,21 +564,6 @@
 (use-package nginx-mode
   :straight t)
 
-(use-package obsidian
-  :straight t
-  :demand t
-  :config
-  (obsidian-specify-path "~/Dropbox/Obsidian-Notes/")
-  (global-obsidian-mode t)
-  :custom
-  ;; This directory will be used for `obsidian-capture' if set.
-  (obsidian-inbox-directory "Inbox")
-  :bind (:map obsidian-mode-map
-              ;; Replace C-c C-o with Obsidian.el's implementation. It's ok to use another key binding.
-              ("C-c C-o" . obsidian-follow-link-at-point)
-              ;; If you prefer you can use `obsidian-insert-wikilink'
-              ("C-c C-l" . obsidian-insert-wikilink)))
-
 (use-package org
   :straight t
   :bind (("C-c L" . org-store-link)
@@ -666,11 +655,6 @@
   :straight t
   :delight
   :hook (python-mode . python-docstring-mode))
-
-(use-package pyvenv
-  :straight t
-  :config
-  (pyvenv-mode 1))
 
 (use-package salt-mode
   :straight t)
