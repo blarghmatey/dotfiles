@@ -95,6 +95,9 @@
   :config
   ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
   (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
+  ;; Enable file watching
+  (setq aidermacs-watch-files t
+        aidermacs-backend 'vterm)
   ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
   :custom
   ; See the Configuration section below
@@ -455,11 +458,12 @@
   (shell-mode . lsp-deferred)
   (html-mode . lsp-deferred)
   (web-mode . lsp-deferred)
-  (python-mode . (lambda ()
-                   (let ((project-root (projectile-project-root)))
-                     (when project-root
-                       (setq lsp-ruff-python-path (concat project-root "/.venv/bin/python")
-                             lsp-ruff-ruff-args ("--preview" (concat "--config " project-root "/pyproject.toml")))))))
+  ;; (python-mode . (lambda ()
+  ;;                  (let ((project-root (projectile-project-root)))
+  ;;                    (when project-root
+  ;;                      (setq lsp-ruff-python-path (concat project-root "/.venv/bin/python")
+  ;;                            lsp-ruff-ruff-args '("--preview" (concat "--config " project-root "/pyproject.toml")))))))
+  (python-mode . lsp-deferred)
   (dockerfile-mode . lsp-deferred)
   (go-mode . lsp-deferred)
   (php-mode . lsp-deferred)
