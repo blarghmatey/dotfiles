@@ -102,12 +102,12 @@
   :custom
   ; See the Configuration section below
   (aidermacs-use-architect-mode t)
-  (aidermacs-default-model "gemini/gemini-2.0-flash-exp")
+  (aidermacs-default-model "gemini/gemini-2.0-flash")
   ;; Optional: Set specific model for architect reasoning
-  (aidermacs-architect-model "gemini/gemini-2.5-exp")
+  (aidermacs-architect-model "gemini/gemini-2.5-flash-preview-04-17")
 
   ;; Optional: Set specific model for code generation
-  (aidermacs-editor-model "gemini/gemini-2.0-flash"))
+  (aidermacs-editor-model "gemini/gemini-2.5-flash-preview-04-17"))
 
 (use-package ag
   :straight t
@@ -275,12 +275,12 @@
            :default-chat-non-standard-params '(("num_ctx" . 8192))))
   (setopt ellama-summarization-provider
           (make-llm-ollama
-           :chat-model "qwen2.5:14b"
+           :chat-model "gemma3:12b"
            :embedding-model "nomic-embed-text"
            :default-chat-non-standard-params '(("num_ctx" . 32768))))
   (setopt ellama-coding-provider
           (make-llm-ollama
-           :chat-model "qwen2.5-coder:14b"
+           :chat-model "gemma3:12b"
            :embedding-model "nomic-embed-text"
            :default-chat-non-standard-params '(("num_ctx" . 32768))))
   ;; Predefined llm providers for interactive switching.
@@ -828,6 +828,10 @@
 
 (use-package vcl-mode
   :straight t)
+
+(use-package vterm
+  :straight t
+  :config (setq vterm-max-scrollback 10000))
 
 (use-package web-mode
   :straight t
