@@ -13,6 +13,15 @@ from pyinfra.operations import pacman, server
 from deploy._manifest import profile as get_profile
 
 
+def _pkg_summary(packages: list[str], limit: int = 8) -> str:
+    """Return a compact package list for use in operation names."""
+    if not packages:
+        return "(none)"
+    shown = packages[:limit]
+    suffix = f" … +{len(packages) - limit} more" if len(packages) > limit else ""
+    return ", ".join(shown) + suffix
+
+
 @deploy("System packages")
 def install_packages() -> None:
     """Install pacman and AUR packages for the active profile."""
@@ -24,18 +33,17 @@ def install_packages() -> None:
 
     if pacman_pkgs:
         pacman.packages(
-            name=f"pacman packages [{profile_name}]",
+            name=f"pacman [{profile_name}] ({len(pacman_pkgs)} pkgs): {_pkg_summary(pacman_pkgs)}",
             packages=pacman_pkgs,
             update=True,
             _sudo=True,
         )
 
     if aur_pkgs:
-        # yay --needed is idempotent: skips already-installed packages.
         # yay must NOT run as root — it handles sudo internally for makepkg steps.
         # Bootstrap requirement: yay must be installed before this runs on a
         # fresh system (bootstrap.sh handles that).
         server.shell(
-            name=f"AUR packages [{profile_name}]",
+            name=f"AUR [{profile_name}] ({len(aur_pkgs)} pkgs): {_pkg_summary(aur_pkgs)}",
             commands=[f"yay -S --needed --noconfirm {' '.join(aur_pkgs)}"],
         )
