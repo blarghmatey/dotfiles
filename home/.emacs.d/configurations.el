@@ -26,7 +26,9 @@
 
 (add-hook 'yaml-ts-mode-hook
           (lambda ()
-            (setq-local indent-line-function #'indent-rigidly)))
+            ;; Disable electric-indent to prevent YAML from being auto-reindented
+            ;; on newlines/colons. TAB uses yaml-ts-mode's tree-sitter indentation.
+            (setq-local electric-indent-inhibit t)))
 
 ;; Better support for using emacsclient
 (setq kill-emacs-query-functions
