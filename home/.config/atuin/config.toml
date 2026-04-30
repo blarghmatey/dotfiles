@@ -1,0 +1,40 @@
+## Atuin config — tracked in dotfiles
+## Full option reference: https://docs.atuin.sh/configuration/config/
+
+## Search mode: fuzzy gives best interactive experience
+search_mode = "fuzzy"
+
+## Filter by directory within current git repo when pressing up-arrow
+filter_mode_shell_up_key_binding = "directory"
+
+## Show a preview of the full command when it's truncated
+show_preview = true
+
+## Accept and execute immediately on Enter (press Tab to edit first)
+enter_accept = true
+
+## Sync history across machines
+auto_sync = true
+
+## Filter secrets from history (AWS keys, GitHub PATs, Slack tokens, etc.)
+secrets_filter = true
+
+## Workspaces: filter history to git repo tree
+workspaces = true
+
+## Compact UI style
+style = "compact"
+
+## Invert: search bar at top
+invert = false
+
+[stats]
+common_subcommands = [
+  "cargo", "go", "git", "npm", "yarn", "pnpm",
+  "kubectl", "docker", "gh", "aws", "uv", "dbt",
+  "pulumi", "terraform",
+]
+common_prefix = ["sudo", "time"]
+
+[sync]
+records = true

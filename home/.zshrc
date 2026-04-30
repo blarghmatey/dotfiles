@@ -1,16 +1,27 @@
 setopt COMPLETE_ALIASES
 autoload -U select-word-style
 select-word-style bash
+
 # Aliases
 alias ls='/bin/ls --indicator-style=slash --color=auto'
 alias et='emacsclient -nw -t'
 alias cat='/usr/sbin/bat'
 alias vim='/usr/sbin/nvim'
+alias prune_pods='kubectl delete pods --field-selector=status.phase!=Running --all-namespaces'
+
+# eza — modern ls (install: cargo install eza)
+if command -v eza &>/dev/null; then
+  alias ls='eza --icons --group-directories-first'
+  alias ll='eza --icons --group-directories-first -la'
+  alias la='eza --icons --group-directories-first -a'
+  alias lt='eza --icons --tree --level=2'
+fi
+
+# AI CLI tools — installed globally, fallback to npx
 alias gemini='npx -y @google/gemini-cli'
 alias ghc='npx -y @github/copilot'
 alias amp='npx -y @sourcegraph/amp'
 alias kilo='npx -y @kilocode/cli'
-alias prune_pods='kubectl delete pods --field-selector=status.phase!=Running --all-namespaces'
 alias ccr='npx -y @musistudio/claude-code-router'
 
 function retire_concourse_worker {
@@ -79,7 +90,17 @@ zinit light carapace-sh/carapace-bin
 ### End of Zinit's installer chunk
 export SPACESHIP_PROMPT_ASYNC=FALSE
 eval "$(starship init zsh)"
-#source <(carapace _carapace)
+
+# fzf — fuzzy finder keybindings and completion
+if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
+  source /usr/share/fzf/key-bindings.zsh
+fi
+if [[ -f /usr/share/fzf/completion.zsh ]]; then
+  source /usr/share/fzf/completion.zsh
+fi
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 if [[ -z "$SSH_AUTH_SOCK" ]]; then
   eval "$(ssh-agent)"
@@ -115,6 +136,12 @@ export AWS_REGION=us-east-1  # or your preferred region
 export OPENROUTER_API_KEY=$(pass openrouter-key)
 
 export HF_TOKEN=$(pass huggingface-token)
+
+# uv — Python package manager shell completions
+if command -v uv &>/dev/null; then
+  eval "$(uv generate-shell-completion zsh)"
+  eval "$(uvx --generate-shell-completion zsh)"
+fi
 
 # Java Setup
 JAVA_HOME=/usr/lib/jvm/default

@@ -169,7 +169,8 @@
 
   # Checkout operations
   co  = checkout
-  com = checkout master
+  com = checkout main
+  com-master = checkout master
   co0 = checkout HEAD --
 
   # Fetch operations
@@ -179,7 +180,8 @@
 
   # Merge operations
   m   = merge
-  mom = merge origin/master
+  mom = merge origin/main
+  mom-master = merge origin/master
 
   # Push operations
   p   = push
@@ -193,7 +195,8 @@
   rc  = rebase --continue
   ri  = rebase --interactive
   rs  = rebase --skip
-  rom = rebase origin/master
+  rom = rebase origin/main
+  rom-master = rebase origin/master
 
   # Commit operations
   c      = commit -v -S

@@ -1,0 +1,46 @@
+# Editor artifacts
+*.~undo-tree~
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Python
+.mypy_cache/
+.ruff_cache/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+dist/
+*.egg-info/
+
+# Node
+node_modules/
+.npm/
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+.direnv/
+
+# Build artifacts
+.build/
+target/
+
+# Version manager configs (project-level, not tracked globally)
+.mise.toml
+.nvmrc
+.python-version
+.tool-versions
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Tools
+.aider*

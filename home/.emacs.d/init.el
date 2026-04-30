@@ -122,35 +122,40 @@
 ;; openai/gemini-2.0-flash-001
 ;; openai/gemini-2.5-pro
 ;; openai/gpt-4.1-2025-04-14
-(use-package aidermacs
+(use-package gptel
   :straight t
-  :bind (("C-c A" . aidermacs-transient-menu))
+  :bind (("C-c A" . gptel)
+         ("C-c M-A" . gptel-menu))
   :config
-  ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
-  (setenv "OLLAMA_API_BASE" "http://127.0.0.1:11434")
-  ;; Enable file watching
-  (setq aidermacs-watch-files t
-        aidermacs-backend 'vterm)
-  ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
-  :custom
-  ; See the Configuration section below
-  (aidermacs-use-architect-mode t)
-  (aidermacs-default-model "gemini/gemini-2.5-pro")
-  ;; Optional: Set specific model for architect reasoning
-  ;; (aidermacs-architect-model "gemini/gemini-2.5-flash-preview-05-20")
-  (aidermacs-architect-model "gemini/gemini-2.5-pro")
-
-  ;; Optional: Set specific model for code generation
-  (aidermacs-editor-model "gemini/gemini-2.5-flash"))
+  (setq gptel-default-mode 'org-mode)
+  ;; Gemini via OpenAI-compatible endpoint
+  (gptel-make-gemini "Gemini"
+    :key (lambda () (auth-source-pick-first-password :host "generativelanguage.googleapis.com"))
+    :stream t)
+  ;; Ollama for local models
+  (gptel-make-ollama "Ollama"
+    :host "localhost:11434"
+    :stream t
+    :models '(gemma3:12b olmo2:13b qwen2.5-coder:14b))
+  ;; OpenRouter for model routing
+  (gptel-make-openai "OpenRouter"
+    :host "openrouter.ai"
+    :endpoint "/api/v1/chat/completions"
+    :key (lambda () (getenv "OPENROUTER_API_KEY"))
+    :stream t
+    :models '(google/gemini-2.5-pro anthropic/claude-sonnet-4-5))
+  (setq gptel-backend (gptel-get-backend "Gemini")
+        gptel-model 'gemini-2.5-pro))
 
 (use-package shell-maker
     :straight (:type git :host github :repo "xenodium/shell-maker" :files ("*.el")))
 
 (use-package agent-shell
-    :straight t
-    :ensure-system-package
-    ;; Add agent installation configs here
-    ((copilot . "npm install -g @github/copilot")))
+  :straight t
+  :ensure-system-package
+  ((copilot-cli  . "npm install -g @github/copilot")
+   (gemini-cli   . "npm install -g @google/gemini-cli")
+   (kilocode-cli . "npm install -g @kilocode/cli")))
 
 (use-package ag
   :straight t
@@ -246,11 +251,14 @@
     :bind-keymap ("C-c o" . combobulate-key-map)
     :hook ((prog-mode . combobulate-mode))))
 
+;; claude-code-ide provides MCP-based bidirectional integration (Claude
+;; can call LSP, tree-sitter, project commands from within Emacs).
+;; Requires an active Claude Code (claude.ai/code) subscription.
 ;; (use-package claude-code-ide
 ;;   :straight (:type git :host github :repo "manzaltu/claude-code-ide.el")
-;;   :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
+;;   :bind ("C-c C-'" . claude-code-ide-menu)
 ;;   :config
-;;   (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+;;   (claude-code-ide-emacs-tools-setup))
 
 (use-package company
   :straight t
