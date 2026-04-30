@@ -27,10 +27,12 @@ def install_packages() -> None:
             name=f"pacman packages [{profile_name}]",
             packages=pacman_pkgs,
             update=True,
+            _sudo=True,
         )
 
     if aur_pkgs:
         # yay --needed is idempotent: skips already-installed packages.
+        # yay must NOT run as root — it handles sudo internally for makepkg steps.
         # Bootstrap requirement: yay must be installed before this runs on a
         # fresh system (bootstrap.sh handles that).
         server.shell(
