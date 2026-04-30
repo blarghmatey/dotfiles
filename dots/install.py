@@ -16,6 +16,18 @@ console = Console()
 _PYINFRA = [sys.executable, "-m", "pyinfra"]
 
 
+def _sudo_authenticate() -> None:
+    """Pre-authenticate sudo so non-interactive sub-processes can use cached creds.
+
+    yay runs as the current user but calls ``sudo pacman -U`` internally to
+    install built AUR packages.  pyinfra spawns commands without a TTY, so if
+    the sudo credential cache is cold yay's install step hangs/fails.  Running
+    ``sudo -v`` here prompts the user once interactively before pyinfra starts.
+    """
+    console.print("[dim]Authenticating sudo (required for pacman/AUR installs)…[/dim]")
+    subprocess.run(["sudo", "-v"], check=True)
+
+
 def _confirm_removals(category: str, pkgs: list[str]) -> list[str]:
     """Show packages queued for removal and return the confirmed subset (or [])."""
     console.print(
@@ -29,6 +41,8 @@ def _confirm_removals(category: str, pkgs: list[str]) -> list[str]:
 
 def install_packages(repo_root: Path, profile: str, *, verbose: bool = False) -> None:
     """Run pyinfra deploy: remove stale packages then install manifest packages."""
+    _sudo_authenticate()
+
     with open(repo_root / "manifest.toml", "rb") as f:
         manifest = tomllib.load(f)
     profile_data = manifest.get("profiles", {}).get(profile, {})
