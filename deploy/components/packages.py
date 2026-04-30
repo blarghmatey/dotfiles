@@ -6,7 +6,8 @@ via pacman for official packages and yay for AUR packages.
 
 from __future__ import annotations
 
-from pyinfra import deploy, host
+from pyinfra import host
+from pyinfra.api import deploy
 from pyinfra.operations import pacman, server
 
 from deploy._manifest import profile as get_profile

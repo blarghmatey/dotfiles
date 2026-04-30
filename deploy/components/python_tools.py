@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pyinfra import deploy
+from pyinfra.api import deploy
 from pyinfra.operations import server
 
 _LOCKFILE = Path(__file__).parent.parent.parent / "uvenv.lock"
