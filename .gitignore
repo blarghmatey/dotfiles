@@ -1,3 +1,4 @@
 *.swp
 # Aider leftover artifacts (tool no longer in use)
 .aider*
+pyinfra-debug.log
