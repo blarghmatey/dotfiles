@@ -12,31 +12,15 @@ console = Console()
 _PYINFRA = [sys.executable, "-m", "pyinfra"]
 
 
-def install_packages(
-    repo_root: Path,
-    profile: str,
-    *,
-    dry_run: bool = False,
-    verbose: bool = False,
-) -> None:
-    """Run the pyinfra deploy to install system packages.
-
-    dry_run=True passes --dry so facts are collected and diffs shown but nothing
-    is executed.  verbose=True passes -v so per-item noop / change lines are
-    printed alongside the operations table.
-    """
+def install_packages(repo_root: Path, profile: str, *, verbose: bool = False) -> None:
+    """Run the pyinfra deploy to install system packages."""
     deploy_script = repo_root / "deploy" / "deploy.py"
-    mode = "[yellow]dry-run[/yellow]" if dry_run else "[green]apply[/green]"
     console.print(
-        f"[bold]Running pyinfra deploy[/bold]  profile=[cyan]{profile}[/cyan]  {mode}"
+        f"[bold]Running pyinfra deploy[/bold]  profile=[cyan]{profile}[/cyan]"
     )
-    cmd = [*_PYINFRA, "@local", str(deploy_script), "--data", f"profile={profile}"]
-    if dry_run:
-        cmd.append("--dry")
+    cmd = [*_PYINFRA, "@local", str(deploy_script), "--data", f"profile={profile}", "-y"]
     if verbose:
         cmd.append("-v")
-    if not dry_run:
-        cmd.append("-y")
     subprocess.run(cmd, check=True, cwd=str(repo_root))
 
 

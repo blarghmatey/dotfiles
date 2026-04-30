@@ -37,7 +37,7 @@ description = "Manjaro/Arch Linux on WSL2"
 pacman = [
     # Shell & terminal
     "zsh", "tmux", "starship", "atuin", "fzf", "eza", "bat",
-    "ripgrep", "fd", "zoxide", "direnv", "carapace",
+    "ripgrep", "fd", "zoxide", "direnv", "carapace", "dog",
 
     # Git
     "git", "git-delta", "lazygit", "github-cli",

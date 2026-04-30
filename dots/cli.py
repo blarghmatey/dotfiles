@@ -84,20 +84,15 @@ def upgrade(*, profile: str = DEFAULT_PROFILE) -> None:
 
 
 @app.command
-def diff(
-    *,
-    profile: str = DEFAULT_PROFILE,
-    verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = True,
-) -> None:
-    """Show what install would change — collects facts, prints per-item diff, no execution.
+def diff(*, profile: str = DEFAULT_PROFILE) -> None:
+    """Show what install would change — queries each package manager, no execution.
 
-    Uses pyinfra --dry to determine which packages/tools are missing or need
-    updating without applying any changes.  Verbose output (on by default) shows
-    each package as [noop] already installed or [change] to be installed.
+    Compares the manifest and uvenv.lock against actually installed packages and
+    prints a per-category table of what is present vs missing.
     """
-    from .install import install_packages
+    from .diff import print_diff
 
-    install_packages(REPO_ROOT, profile, dry_run=True, verbose=verbose)
+    print_diff(REPO_ROOT, profile)
 
 
 
