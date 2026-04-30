@@ -1,0 +1,76 @@
+# Dotfiles manifest — profiles, package lists, and sync configuration.
+
+# ──────────────────────────────────────────────
+# Sync configuration
+# ──────────────────────────────────────────────
+[sync]
+# Glob patterns (relative to home/) to skip when syncing
+exclude = [
+    "**/.DS_Store",
+    "**/.gitkeep",
+]
+
+# Sensitive files — still synced, but flagged with a warning in `dots status`.
+# These contain secrets or machine-local values; do not commit real values.
+sensitive = [
+    ".npmrc",
+    ".claude/settings.json",
+    ".copilot/mcp-config.json",
+]
+
+# Template files: source lives in home/ with a .tmpl extension and is rendered
+# to ~ at sync time (not symlinked). Supports:
+#   {{ pass:secret-name }}  — resolved via `pass show secret-name`
+#   {{ env:VAR_NAME }}      — resolved from the current environment
+[[sync.templates]]
+source = ".npmrc.tmpl"
+target = ".npmrc"
+
+# ──────────────────────────────────────────────
+# Profiles
+# ──────────────────────────────────────────────
+
+[profiles.arch-wsl2]
+description = "Manjaro/Arch Linux on WSL2"
+
+[profiles.arch-wsl2.packages]
+pacman = [
+    # Shell & terminal
+    "zsh", "tmux", "starship", "atuin", "fzf", "eza", "bat",
+    "ripgrep", "fd", "zoxide", "direnv",
+
+    # Git
+    "git", "git-delta", "lazygit", "github-cli",
+
+    # Editors
+    "neovim", "emacs",
+
+    # Languages & runtimes
+    "nodejs", "npm", "go", "rustup", "base-devel",
+
+    # DevOps & infra
+    "kubectl", "helm", "jq", "just", "docker",
+
+    # Search
+    "the_silver_searcher",
+
+    # System utils
+    "pass", "gnupg", "openssh", "curl", "wget", "rsync", "htop",
+
+    # Python (uv manages Python versions; system Python bootstraps uv)
+    "python", "python-pip",
+]
+
+aur = [
+    "carapace-bin",
+    "yq",          # go-based yq (not python-yq)
+]
+
+[profiles.arch-wsl2.node]
+global = [
+    "@google/gemini-cli",
+    "@github/copilot",
+    "@kilocode/cli",
+    "@sourcegraph/amp",
+    "@musistudio/claude-code-router",
+]

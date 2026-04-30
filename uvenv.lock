@@ -1,0 +1,30 @@
+version = 1
+
+[packages]
+aider-chat = { spec = "aider-chat", version = "~=0.86.2", python = "3.12", injected = [], editable = false }
+basedpyright = { spec = "basedpyright", version = "~=1.39.3", python = "3.12", injected = [], editable = false }
+batrachian-toad = { spec = "batrachian-toad", version = "~=0.6.16", python = "3.14", injected = [], editable = false }
+black = { spec = "black", version = "~=26.3.1", python = "3.14", injected = [], editable = false }
+codegen = { spec = "codegen", version = "~=0.57.0", python = "3.12", injected = [], editable = false }
+datamodel-code-generator = { spec = "datamodel-code-generator[http]", version = "~=0.56.1", python = "3.12", injected = [], editable = false }
+erk = { spec = "erk", version = "~=0.9.11", python = "3.14", injected = [], editable = false }
+hatch = { spec = "hatch", version = "~=1.16.5", python = "3.12", injected = [], editable = false }
+httpie = { spec = "httpie", version = "~=3.2.4", python = "3.12", injected = [], editable = false }
+huggingface-hub = { spec = "huggingface_hub", version = "~=1.12.0", python = "3.14", injected = [], editable = false }
+icdiff = { spec = "icdiff", version = "~=2.0.10", python = "3.12", injected = [], editable = false }
+kcwarden = { spec = "kcwarden", version = "~=0.16.0", python = "3.12", injected = [], editable = false }
+kubediagrams = { spec = "KubeDiagrams", version = "~=0.7.0", python = "3.12", injected = [], editable = false }
+llm = { spec = "llm", version = "~=0.31", python = "3.12", injected = ["llm-ollama"], editable = false }
+marimo = { spec = "marimo", version = "~=0.23.4", python = "3.12", injected = [], editable = false }
+migrate-to-uv = { spec = "migrate-to-uv", version = "~=0.12.0", python = "3.12", injected = [], editable = false }
+poetry = { spec = "poetry", version = "~=2.3.4", python = "3.12", injected = [], editable = false }
+pre-commit = { spec = "pre-commit", version = "~=4.6.0", python = "3.12", injected = [], editable = false }
+pydantic-monty = { spec = "pydantic-monty", version = "~=0.0.17", python = "3.14", injected = [], editable = false }
+pyiceberg = { spec = "pyiceberg[glue]", version = "~=0.11.1", python = "3.12", injected = ["s3fs", "pyarrow"], editable = false }
+pyrefly = { spec = "pyrefly", version = "~=0.63.0", python = "3.12", injected = [], editable = false }
+ra-aid = { spec = "ra-aid", version = "~=0.30.2", python = "3.12", injected = ["levenshtein"], editable = false }
+ruff = { spec = "ruff", version = "~=0.15.12", python = "3.12", injected = [], editable = false }
+sourcery-cli = { spec = "sourcery-cli", version = "~=1.18.0", python = "3.12", injected = [], editable = false }
+twine = { spec = "twine", version = "~=6.2.0", python = "3.12", injected = [], editable = false }
+ty = { spec = "ty", version = "~=0.0.33", python = "3.12", injected = [], editable = false }
+vectorcode = { spec = "vectorcode", version = "~=0.7.20", python = "3.12", injected = [], editable = false }
