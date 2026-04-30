@@ -5,6 +5,11 @@
 
 ;;; Code:
 (setenv "LSP_USE_PLISTS" "true")
+;; Optimizations due to LSP mode
+(setq gc-cons-threshold most-positive-fixnum)
+(add-function :after
+                  after-focus-change-function
+                  (lambda () (unless (frame-focus-state) (garbage-collect))))
 ;;; Package manager settings
 (setq tls-checktrust t)
 (let ((trustfile
@@ -41,7 +46,8 @@
 
 (straight-use-package 'use-package)
 
-(setq straight-use-package-by-default t)
+(setq straight-use-package-by-default t
+      straight-disable-compile nil)
 ;; (require 'package)
 ;; (setq package-archives
 ;;       '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -60,12 +66,9 @@
 (setq epg-pinentry-mode 'loopback)
 (global-whitespace-mode)
 (global-auto-revert-mode t)
-(display-time-mode 1)
 ;; http://news.ycombinator.com/item?id=873541
-(add-hook 'text-mode-hook 'flyspell-mode)
+;; (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'program-mode-hook 'default-minor-modes)
-;; (add-hook 'python-mode-hook 'flycheck-python-setup)
-(add-hook 'yaml-mode-hook (lambda () (setq-local electric-indent-mode -1)))
 (add-hook 'markdown-mode-hook (lambda () (setq-local whitespace-style
                                                      '(face trailing empty tab-mark))))
 (add-hook 'org-mode-hook (lambda () (setq-local whitespace-style
@@ -89,6 +92,36 @@
   :config (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
                 aw-scope 'frame))
 
+;; Copilot models:
+;; curl -s https://api.githubcopilot.com/models \
+;;   -H "Authorization: Bearer $OPENAI_API_KEY" \
+;;   -H "Content-Type: application/json" \
+;;   -H "Copilot-Integration-Id: vscode-chat" | jq -r '.data[].id'
+;; openai/gpt-4.1
+;; openai/gpt-3.5-turbo
+;; openai/gpt-3.5-turbo-0613
+;; openai/gpt-4o-mini
+;; openai/gpt-4o-mini-2024-07-18
+;; openai/gpt-4
+;; openai/gpt-4-0613
+;; openai/gpt-4o
+;; openai/gpt-4o-2024-11-20
+;; openai/gpt-4o-2024-05-13
+;; openai/gpt-4-o-preview
+;; openai/gpt-4o-2024-08-06
+;; openai/o3-mini
+;; openai/o3-mini-2025-01-31
+;; openai/o3-mini-paygo
+;; openai/text-embedding-ada-002
+;; openai/text-embedding-3-small
+;; openai/text-embedding-3-small-inference
+;; openai/claude-3.5-sonnet
+;; openai/claude-3.7-sonnet
+;; openai/claude-3.7-sonnet-thought
+;; openai/claude-sonnet-4
+;; openai/gemini-2.0-flash-001
+;; openai/gemini-2.5-pro
+;; openai/gpt-4.1-2025-04-14
 (use-package aidermacs
   :straight t
   :bind (("C-c A" . aidermacs-transient-menu))
@@ -102,12 +135,22 @@
   :custom
   ; See the Configuration section below
   (aidermacs-use-architect-mode t)
-  (aidermacs-default-model "gemini/gemini-2.0-flash")
+  (aidermacs-default-model "gemini/gemini-2.5-pro")
   ;; Optional: Set specific model for architect reasoning
-  (aidermacs-architect-model "gemini/gemini-2.5-flash-preview-04-17")
+  ;; (aidermacs-architect-model "gemini/gemini-2.5-flash-preview-05-20")
+  (aidermacs-architect-model "gemini/gemini-2.5-pro")
 
   ;; Optional: Set specific model for code generation
-  (aidermacs-editor-model "gemini/gemini-2.5-flash-preview-04-17"))
+  (aidermacs-editor-model "gemini/gemini-2.5-flash"))
+
+(use-package shell-maker
+    :straight (:type git :host github :repo "xenodium/shell-maker" :files ("*.el")))
+
+(use-package agent-shell
+    :straight t
+    :ensure-system-package
+    ;; Add agent installation configs here
+    ((copilot . "npm install -g @github/copilot")))
 
 (use-package ag
   :straight t
@@ -116,67 +159,98 @@
 (use-package all-the-icons
   :straight t)
 
-;; we recommend using use-package to organize your init.el
-;; (use-package codeium
-;;     ;; if you use straight
-;;     :straight '(:type git :host github :repo "Exafunction/codeium.el")
-;;     ;; otherwise, make sure that the codeium.el file is on load-path
+;; Combobulate with tresitter for structured editing
+(use-package treesit
+  :straight nil
+  :mode (("\\.tsx\\'" . tsx-ts-mode))
+  :preface
+  (defun mp-setup-install-grammars ()
+    "Install Tree-sitter grammars if they are absent."
+    (interactive)
+    (dolist (grammar
+             ;; Note the version numbers. These are the versions that
+             ;; are known to work with Combobulate *and* Emacs.
+             '(
+               (bash . ("https://github.com/tree-sitter/tree-sitter-bash" "v0.25.0"))
+               (c . ("https://github.com/tree-sitter/tree-sitter-c" "v0.24.1"))
+               ;; (c++ . ("https://github.com/tree-sitter/tree-sitter-cpp" "v0.23.4"))
+               (css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.23.2"))
+               (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.23.4"))
+               ;; (haskell . ("https://github.com/tree-sitter/tree-sitter-haskell" "v0.23.1"))
+               (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.23.2"))
+               (java . ("https://github.com/tree-sitter/tree-sitter-java" "v0.23.5"))
+               (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.23.1"))
+               (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.24.8"))
+               ;; (julia . ("https://github.com/tree-sitter/tree-sitter-julia" "v0.23.1"))
+               ;; (markdown . ("https://github.com/ikatyang/tree-sitter-markdown" "v0.7.1"))
+               ;; (ocaml . ("https://github.com/tree-sitter/tree-sitter-ocaml" "v0.24.2"))
+               ;; (php . ("https://github.com/tree-sitter/tree-sitter-php" "v0.24.2"))
+               (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.23.6"))
+               (ruby . ("https://github.com/tree-sitter/tree-sitter-ruby" "v0.23.1"))
+               (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.24.0"))
+               ;; (scala . ("https://github.com/tree-sitter/tree-sitter-scala" "v0.24.0"))
+               ;; (swift . ("https://github.com/tree-sitter/swift-tree-sitter" "0.9.0"))
+               (toml . ("https://github.com/tree-sitter/tree-sitter-toml" "v0.5.1"))
+               (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.2" "tsx/src"))
+               (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.2" "typescript/src"))
+               ;; (verilog . ("https://github.com/tree-sitter/tree-sitter-verilog" "v1.0.3"))
+               (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
+               )
+             )
+      (add-to-list 'treesit-language-source-alist grammar)
+      ;; Only install `grammar' if we don't already have it
+      ;; installed. However, if you want to *update* a grammar then
+      ;; this obviously prevents that from happening.
+      (unless (treesit-language-available-p (car grammar))
+        (treesit-install-language-grammar (car grammar)))))
 
-;;     :init
-;;     ;; use globally
-;;     (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
-;;     ;; or on a hook
-;;     ;; (add-hook 'python-mode-hook
-;;     ;;     (lambda ()
-;;     ;;         (setq-local completion-at-point-functions '(codeium-completion-at-point))))
+  ;; Optional. Combobulate works in both xxxx-ts-modes and
+  ;; non-ts-modes.
 
-;;     ;; if you want multiple completion backends, use cape (https://github.com/minad/cape):
-;;     ;; (add-hook 'python-mode-hook
-;;     ;;     (lambda ()
-;;     ;;         (setq-local completion-at-point-functions
-;;     ;;             (list (cape-super-capf #'codeium-completion-at-point #'lsp-completion-at-point)))))
-;;     ;; an async company-backend is coming soon!
+  ;; You can remap major modes with `major-mode-remap-alist'. Note
+  ;; that this does *not* extend to hooks! Make sure you migrate them
+  ;; also
+  (dolist (mapping
+           '(
+             (bash-mode . bash-ts-mode)
+             (c++-mode . c++-ts-mode)
+             (c-mode . c-ts-mode)
+             (conf-toml-mode . toml-ts-mode)
+             (css-mode . css-ts-mode)
+             (css-mode . css-ts-mode)
+             (go-mode . go-ts-mode)
+             (java-mode . java-ts-mode)
+             (js-json-mode . json-ts-mode)
+             (js2-mode . js-ts-mode)
+             (json-mode . json-ts-mode)
+             (php-mode . php-ts-mode)
+             (python-mode . python-ts-mode)
+             (ruby-mode . ruby-ts-mode)
+             (sh-mode . bash-ts-mode)
+             (typescript-mode . typescript-ts-mode)
+             (yaml-mode . yaml-ts-mode)
+             )
+           )
+    (add-to-list 'major-mode-remap-alist mapping))
+  :config
+  (mp-setup-install-grammars)
+  ;; Do not forget to customize Combobulate to your liking:
+  ;;
+  ;;  M-x customize-group RET combobulate RET
+  ;;
+  (use-package combobulate
+    :straight (:host github :repo "mickeynp/combobulate" :files ("combobulate*.el"))
+    ;; :custom
+    ;; You can customize Combobulate's key prefix here.
+    ;; Note that you may have to restart Emacs for this to take effect!
+    :bind-keymap ("C-c o" . combobulate-key-map)
+    :hook ((prog-mode . combobulate-mode))))
 
-;;     ;; codeium-completion-at-point is autoloaded, but you can
-;;     ;; optionally set a timer, which might speed up things as the
-;;     ;; codeium local language server takes ~0.2s to start up
-;;     ;; (add-hook 'emacs-startup-hook
-;;     ;;  (lambda () (run-with-timer 0.1 nil #'codeium-init)))
-
-;;     ;; :defer t ;; lazy loading, if you want
-;;     :config
-;;     (setq use-dialog-box nil) ;; do not use popup boxes
-
-;;     ;; if you don't want to use customize to save the api-key
-;;     ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
-
-;;     ;; get codeium status in the modeline
-;;     (setq codeium-mode-line-enable
-;;         (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
-;;     (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
-;;     ;; alternatively for a more extensive mode-line
-;;     ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
-
-;;     ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
-;;     (setq codeium-api-enabled
-;;         (lambda (api)
-;;             (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
-;;     ;; you can also set a config for a single buffer like this:
-;;     ;; (add-hook 'python-mode-hook
-;;     ;;     (lambda ()
-;;     ;;         (setq-local codeium/editor_options/tab_size 4)))
-
-;;     ;; You can overwrite all the codeium configs!
-;;     ;; for example, we recommend limiting the string sent to codeium for better performance
-;;     (defun my-codeium/document/text ()
-;;         (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
-;;     ;; if you change the text, you should also change the cursor_offset
-;;     ;; warning: this is measured by UTF-8 encoded bytes
-;;     (defun my-codeium/document/cursor_offset ()
-;;         (codeium-utf8-byte-length
-;;             (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
-;;     (setq codeium/document/text 'my-codeium/document/text)
-;;     (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
+;; (use-package claude-code-ide
+;;   :straight (:type git :host github :repo "manzaltu/claude-code-ide.el")
+;;   :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
+;;   :config
+;;   (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
 
 (use-package company
   :straight t
@@ -197,10 +271,14 @@
 (use-package company-quickhelp
   :straight t)
 
+(use-package company-box
+  :straight t
+  :hook (company-mode . company-box-mode))
+
 (use-package copilot
   :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))  ;; if you don't use "straight", install otherwise
   :ensure t
-  :hook (prog-mode . copilot-mode)
+  ;; :hook (prog-mode . copilot-mode)
   :bind (
          ("C-c <tab>" . copilot-accept-completion)
          ("C-c C-<tab>" . copilot-accept-completion-by-word)
@@ -209,15 +287,13 @@
          ("C-c C-n" . copilot-next-completion)
          ("C-c C-p" . copilot-previous-completion)
          )
-  ;; :config
-  ;; (setq copilot-network-proxy '(:host "127.0.0.1" :port 11434 :rejectUnauthorized :json-false))
+  :config (setq copilot-idle-delay 5)
   )
 
 (use-package copilot-chat
   :straight (:host github :repo "chep/copilot-chat.el" :files ("*.el"))
   :after (request org markdown-mode shell-maker)
   :hook (git-commit-setup-hook . copilot-chat-insert-commit-message)
-  ;; :config (setq copilot-chat-network-proxy '(:host "127.0.0.1" :port 11434 :rejectUnauthorized :json-false))
 )
 
 (use-package csv-mode
@@ -226,17 +302,10 @@
 (use-package delight
   :straight t)
 
-(use-package docker
-  :straight t
-  :bind ("C-c d" . docker))
-
 (use-package dockerfile-mode
   :straight t)
 
 (use-package dumb-jump
-  :straight t)
-
-(use-package earthfile-mode
   :straight t)
 
 (use-package editorconfig
@@ -249,10 +318,27 @@
 
 (use-package ef-themes
   :straight t
-  :config (setq ef-themes-mixed-fonts t
-                ef-themes-variable-pitch-ui t
-                ef-themes-to-toggle '(ef-symbiosis ef-trio-light))
-  :init (ef-themes-select 'ef-symbiosis))
+  :init
+  ;; This makes the Modus commands listed below consider only the Ef
+  ;; themes.  For an alternative that includes Modus and all
+  ;; derivative themes (like Ef), enable the
+  ;; `modus-themes-include-derivatives-mode' instead.
+  (ef-themes-take-over-modus-themes-mode 1)
+  :bind
+  (("<f5>" . modus-themes-rotate)
+   ("C-<f5>" . modus-themes-select)
+   ("M-<f5>" . modus-themes-load-random))
+  :config
+  ;; All customisations here.
+  (setq modus-themes-mixed-fonts t
+        modus-themes-italic-constructs t
+        modus-themes-variable-pitch-ui t
+        modus-themes-to-toggle '(ef-symbiosis ef-trio-light))
+
+  ;; Finally, load your theme of choice (or a random one with
+  ;; `modus-themes-load-random', `modus-themes-load-random-dark',
+  ;; `modus-themes-load-random-light').
+  (modus-themes-load-theme 'ef-symbiosis))
 
 (use-package ellama
   :straight t
@@ -358,9 +444,9 @@
   :delight flycheck-mode
   :hook (after-init . global-flycheck-mode)
   :init
-  (use-package flycheck-mypy :straight t)
-  :config (setq flycheck-disabled-checkers '(python-pycompile python-pylint)
-                flycheck-python-mypy-config "pyproject.toml"))
+  ;; (use-package flycheck-mypy :straight t)
+  :config (setq flycheck-disabled-checkers '(python-pycompile python-pylint)))
+                ;; flycheck-python-mypy-config "pyproject.toml"))
 
 (use-package flycheck-projectile
   :straight t)
@@ -370,9 +456,6 @@
   :after magit)
 
 (use-package git-link
-  :straight t)
-
-(use-package github-review
   :straight t)
 
 (use-package go-mode
@@ -430,21 +513,6 @@
 (use-package json-mode
   :straight t)
 
-(use-package k8s-mode
- :straight t
- :config
- (setq k8s-search-documentation-browser-function 'browse-url-firefox
-       k8s-site-docs-version "v1.22"
-       k8s-site-docs-url "https://kubernetes.io/docs/reference/generated/kubernetes-api/")
- :hook (k8s-mode . yas-minor-mode))
-
-(use-package kubed
-  :straight t
-  :bind-keymap ("C-c K" . kubed-prefix-map))
-
-(use-package lice
-  :straight t)
-
 (use-package linum-relative
   :straight t
   :bind ("C-c t l" . linum-relative-toggle))
@@ -453,47 +521,57 @@
   :straight t
   :delight
   :hook
-  (js-mode . lsp-deferred)
-  (json-mode . lsp-deferred)
-  (shell-mode . lsp-deferred)
-  (html-mode . lsp-deferred)
-  (web-mode . lsp-deferred)
-  ;; (python-mode . (lambda ()
-  ;;                  (let ((project-root (projectile-project-root)))
-  ;;                    (when project-root
-  ;;                      (setq lsp-ruff-python-path (concat project-root "/.venv/bin/python")
-  ;;                            lsp-ruff-ruff-args '("--preview" (concat "--config " project-root "/pyproject.toml")))))))
-  (python-mode . lsp-deferred)
-  (dockerfile-mode . lsp-deferred)
-  (go-mode . lsp-deferred)
-  (php-mode . lsp-deferred)
+;;  (python-mode . (lambda ()
+;;                   (let ((project-root (projectile-project-root)))
+;;                     (when project-root
+;;                       (setq lsp-ruff-python-path (concat project-root "/.venv/bin/python")
+;;                             lsp-ruff-ruff-args '("--verbose" "--preview" (concat "--config " project-root "/pyproject.toml")))))))
+  ;; (dockerfile-mode . lsp-deferred)
+  ;; (go-mode . lsp-deferred)
+  ;; (go-ts-mode . lsp-deferred)
+  ;; (html-mode . lsp-deferred)
+  ;; (js-mode . lsp-deferred)
+  ;; (js-ts-mode . lsp-deferred)
+  ;; (json-mode . lsp-deferred)
+  ;; (json-ts-mode . lsp-deferred)
+  ;; (php-mode . lsp-deferred)
+  ;; (php-ts-mode . lsp-deferred)
+  ;; (python-mode . lsp-deferred)
+  ;; (python-ts-mode . lsp-deferred)
+  ;; (shell-mode . lsp-deferred)
+  ;; (web-mode . lsp-deferred)
+  (prog-mode . lsp-deferred)
   :bind
   (:map lsp-mode-map)
   ("M-." . xref-find-definitions)
   :bind-keymap ("C-;" . lsp-command-map)
   :init
   (setq lsp-keymap-prefix "C-;"
-        gc-cons-threshold 3200000
         lsp-auto-configure t
+        lsp-auto-register-remote-clients nil
         lsp-before-save-edits nil
-        lsp-copilot-enabled t
+        lsp-copilot-enabled nil
         lsp-diagnostic-package :none
         lsp-enable-completion-at-point t
         lsp-enable-file-watchers t
         lsp-enable-folding t
         lsp-enable-imenu t
+        lsp-auto-guess-root t
+        lsp-eldoc-render-all t
         lsp-enable-indentation t
         lsp-enable-semantic-highlighting t
         lsp-enable-text-document-color t
         lsp-file-watch-threshold 15000
+        lsp-idle-delay 2
         lsp-imenu-show-container-name t
         lsp-keep-workspace-alive nil
-        lsp-log-io t
+        lsp-log-io nil
         lsp-modeline-code-actions-mode t
         lsp-prefer-capf t
-        lsp-ruff-import-strategy "fromEnvironment"
+        lsp-ruff-log-level "debug"
+        lsp-ruff-show-notifications "always"
         lsp-use-plists t
-        lsp-semantic-tokens-enable t
+        lsp-semantic-tokens-enable nil
         read-process-output-max (* 1024 1024))
   (with-eval-after-load 'lsp-mode
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?venv\\'")
@@ -507,23 +585,23 @@
                            (ht)))))
   :commands (lsp lsp-deferred))
 
-(use-package lsp-pyright
-  :straight t
-  :custom (lsp-pyright-langserver-command "basedpyright") ;; or pyright
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-pyright)
-                         (lsp-deferred)))
-  :config (setq lsp-pyright-diagnostic-mode "workspace"
-                lsp-pyright-use-library-code-for-types t
-                lsp-pyright-auto-import-completions t
-                lsp-pyright-disable-organize-imports t
-                lsp-pyright-langserver-command "basedpyright"
-                lsp-pyright-typechecking-mode "off"))
+;; (use-package lsp-pyright
+;;   :straight t
+;;   :custom (lsp-pyright-langserver-command "basedpyright") ;; or pyright
+;;   :config (setq lsp-pyright-diagnostic-mode "workspace"
+;;                 lsp-pyright-use-library-code-for-types t
+;;                 lsp-pyright-auto-import-completions t
+;;                 lsp-pyright-disable-organize-imports t
+;;                 lsp-pyright-langserver-command "basedpyright"
+;;                 lsp-pyright-typechecking-mode "off"))
 
-(use-package lsp-treemacs
-  :straight t
-  :config (setq lsp-treemacs-sync-mode 1)
-  )
+(use-package lsp-java
+  :straight t)
+
+; (use-package lsp-treemacs
+;   :straight t
+;   :config (setq lsp-treemacs-sync-mode 1)
+;   )
 
 (use-package lsp-ui
   :straight t
@@ -550,6 +628,7 @@
 
 (use-package magit
   :straight t
+  :demand t  ; Load magit immediately to avoid autoload issues
   :bind ("C-x g" . magit-status)
   :config (setq magit-last-seen-setup-instructions "1.4.0"
                 magit-commit-arguments '("-S")
@@ -561,22 +640,15 @@
 (use-package markdown-changelog
   :straight t)
 
-(use-package mmm-mode
-  :straight t
-  :delight)
-
-(use-package nginx-mode
-  :straight t)
-
 (use-package org
   :straight t
   :bind (("C-c L" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
-         ("C-c s e" . org-edit-src-code)
-         ("C-c o n" lambda () (interactive) (find-file (concat org-directory "notes/")))
-         ("C-c o t" lambda () (interactive) (find-file (concat org-directory "todo/")))
-         ("C-c o T" lambda () (interactive) (find-file (concat org-directory "trello/"))))
+         ("C-c s e" . org-edit-src-code))
+         ;; ("C-c o n" lambda () (interactive) (find-file (concat org-directory "notes/")))
+         ;; ("C-c o t" lambda () (interactive) (find-file (concat org-directory "todo/")))
+         ;; ("C-c o T" lambda () (interactive) (find-file (concat org-directory "trello/"))))
   :config
   (setq org-directory "~/Dropbox/org/"
         org-log-done t
@@ -614,9 +686,6 @@
 ;;   :straight t
 ;;   :mode ("\\.trello" . org-mode))
 
-(use-package ox-hugo
-  :straight t)
-
 (use-package perspective
   :straight t
   :bind-keymap ("C-z" . perspective-map)
@@ -627,8 +696,8 @@
               ("d" . persp-remove-buffer))
   :init (setq persp-state-default-file "~/.emacs.d/perspective_state.el")
   :config
-  (persp-mode)
-  (run-with-timer 300 (* 5 60) 'persp-state-save "~/.emacs.d/perspective_state.el"))
+  (persp-mode))
+  ;; (run-with-timer 300 (* 5 60) 'persp-state-save "~/.emacs.d/perspective_state.el"))
 
 (use-package pet
   :straight t
@@ -644,10 +713,9 @@
 (use-package projectile
   :straight t
   :bind-keymap ("C-c p" . projectile-command-map)
-  :bind (("M-P" . projectile-find-file)
-         :map projectile-command-map
-         ("p" . projectile-switch-project)
-         ("C-c" . flycheck-projectile-list-errors))
+  :bind (:map projectile-command-map
+              ("p" . projectile-switch-project)
+              ("C-c" . flycheck-projectile-list-errors))
   :init (setq projectile-completion-system 'helm)
   :hook (after-init . projectile-mode))
 
@@ -659,9 +727,6 @@
   :straight t
   :delight
   :hook (python-mode . python-docstring-mode))
-
-(use-package salt-mode
-  :straight t)
 
 (use-package sops
   :straight (:type git :host github :repo "djgoku/sops")
@@ -823,8 +888,10 @@
                 undo-tree-visualizer-timestamps t
                 undo-tree-history-directory-alist '(("." . "/home/tmacey/.emacs.d/undo-tree/"))))
 
-(use-package lush-theme
-  :straight t)
+(use-package unicode-fonts
+  :straight t
+  :config
+  (unicode-fonts-setup))
 
 (use-package vcl-mode
   :straight t)
@@ -851,6 +918,10 @@
   :config (which-key-mode)
   :commands which-key-mode)
 
+(use-package yaml-mode
+  :straight t
+  :hook (yaml-mode . (lambda () (setq-local electric-indent-mode nil))))
+
 (load-file "~/.emacs.d/functions.el")
 (load-file "~/.emacs.d/configurations.el")
 
@@ -859,20 +930,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(ansi-color-names-vector
-   (vector "#ffffff" "#f36c60" "#8bc34a" "#fff59d" "#4dd0e1" "#b39ddb" "#81d4fa" "#263238"))
- '(codeium/metadata/api_key "c4716906-af39-45c3-8c42-c71afc182c7c")
- '(custom-safe-themes
-   '("9b7d703afa15e320af9aa6b3e02bb1ebb8657c23043f7054357f86ce014b5461" "0f964c8dbc5a668cc2ba7aa1003792fbbf3000a6ed69c0e53b1eeb2c1afc25cb" "b87f0a7cc94fc07f1417f95de2382a7c1c853a6822d987af45b3b3c5e95e3abb" "9f97708991e9b0ddc2d428e5bae87d97d8b6c6c09ef82cbfa26a797560de7cec" "6abef8c5e70ae252c41e9c91a885635de66816204a0bd9102387f6f7c419a7a5" "2480d2400cf9eb2f58703d0f3e6ae23b15d8bc6c7b8070c65328f32f31df6a03" "a2c06295bcca9ffc56f22b4d1f1f145cf9a6953785099199afe2e4db75e54630" "448175cf1da8bdb6dd310a33283789bdb5b76402adcc0a23bcebeb3e6f667bdf" "13f4cc4607ec8c2aada98ee92293547d7134ffa4d746c9104647461bcbcab8a7" "cda446bf884e720497d5f1463ff699896c5de42352321c7bc91e637da25cad2e" "dd64cf49a64a5adeebc30a8e968db73f549e11d6adcd1318893fded4ee0b214b" "0c2d7f410f835d59a0293f2a55744e9d3be13aab8753705c6ad4a9a968fb3b28" "364e592858d85f3dff9d51af5c72737ca8ef2b76fc60d9d5f0a9995ea927635a" "0f2f1feff73a80556c8c228396d76c1a0342eb4eefd00f881b91e26a14c5b62a" default))
- '(debug-on-error nil)
- '(elpy-syntax-check-command "ruff check")
- '(grep-command "ag")
- '(helm-completion-style 'emacs)
  '(horizontal-scroll-bar-mode nil)
- '(org-trello-current-prefix-keybinding "C-c o")
- '(scroll-bar-mode nil)
  '(url-handler-mode t))
 
 (set-cursor-color "white")

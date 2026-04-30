@@ -61,6 +61,7 @@
 [branch]
   # Sort branches by most recently committed
   sort = -committerdate
+  autoSetupMerge = always
 
 [tag]
   # Sort tags by version number
@@ -254,3 +255,16 @@
 [interactive]
   # Use delta for interactive diffs
   diffFilter = delta --color-only
+[credential]
+	helper = store
+[lfs]
+	concurrenttransfers = 3
+[lfs "customtransfer.xet"]
+	path = git-xet
+	args = transfer
+	concurrent = true
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f

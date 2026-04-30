@@ -24,6 +24,10 @@
       whitespace-style
       '(face trailing empty lines-tail tab-mark))
 
+(add-hook 'yaml-ts-mode-hook
+          (lambda ()
+            (setq-local indent-line-function #'indent-rigidly)))
+
 ;; Better support for using emacsclient
 (setq kill-emacs-query-functions
       (cons (lambda () (yes-or-no-p "Really kill Emacs? "))
@@ -46,9 +50,37 @@
                   :server-id 'sourcery
                   :add-on? t))
 
+;;; Commentary:
+
+;; LSP Clients for the Python(pyrefly) Type Checker .
+
+;;; Code:
+
+(require 'lsp-mode)
+
+(defgroup lsp-python-refly nil
+  "LSP support for Python(pyrefly)."
+  :group 'lsp-mode
+  :link '(url-link "https://pyrefly.org"))
+
+(defcustom lsp-python-refly-clients-server-command '("pyrefly" "lsp" "-v")
+  "Command to start the python pyrefly language server."
+  :group 'lsp-python-refly
+  :risky t
+  :type '(repeat string))
+
+(lsp-register-client
+ (make-lsp-client :new-connection (lsp-stdio-connection (lambda () lsp-python-refly-clients-server-command))
+                  :activation-fn (lsp-activate-on "python")
+                  :priority -1
+                  :add-on? t
+                  :server-id 'py-refly))
+
+(lsp-consistency-check lsp-python-refly)
+
+(provide 'lsp-python-refly)
+
 (setq-default fill-column 88)
-(advice-add 'poetry-venv-toggle :after 'clear-flycheck-auto-disabled-checkers)
-(require 'flycheck)
 
 ;; (setq speedbar-indentation-width 2
 ;;       speedbar-show-unknown-files t
@@ -96,6 +128,7 @@
 
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
 (setq default-frame-alist '((font . "Hack-12") (load-theme 'lush)))
+(set-fontset-font t 'emoji '("Noto Color Emoji" . "iso10646-1") nil 'prepend)
 
 (tool-bar-mode -1)
 
