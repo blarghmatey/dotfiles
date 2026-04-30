@@ -5,25 +5,16 @@
 
 ;;; Code:
 (setenv "LSP_USE_PLISTS" "true")
-;; Optimizations due to LSP mode
+;; Defer GC during startup for performance; reset to 16MB after init
 (setq gc-cons-threshold most-positive-fixnum)
+(add-hook 'emacs-startup-hook
+          (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
 (add-function :after
                   after-focus-change-function
                   (lambda () (unless (frame-focus-state) (garbage-collect))))
 ;;; Package manager settings
-(setq tls-checktrust t)
-(let ((trustfile
-       (replace-regexp-in-string
-        "\\\\" "/"
-        (replace-regexp-in-string
-         "\n" ""
-         (shell-command-to-string "python -m certifi")))))
-  (setq tls-program
-        (list
-         (format "gnutls-cli%s --x509cafile %s -p %%p %%h"
-                 (if (eq window-system 'w32) ".exe" "") trustfile)))
-  (setq gnutls-verify-error t)
-  (setq gnutls-trustfiles (list trustfile)))
+(setq tls-checktrust t
+      gnutls-verify-error t)
 
 (setq package-enable-at-startup nil)
 (setq straight-check-for-modifications nil)
@@ -68,20 +59,11 @@
 (global-auto-revert-mode t)
 ;; http://news.ycombinator.com/item?id=873541
 ;; (add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'program-mode-hook 'default-minor-modes)
+(add-hook 'prog-mode-hook 'default-minor-modes)
 (add-hook 'markdown-mode-hook (lambda () (setq-local whitespace-style
                                                      '(face trailing empty tab-mark))))
 (add-hook 'org-mode-hook (lambda () (setq-local whitespace-style
                                                 '(face trailing empty tab-mark))))
-(add-hook 'org-mode-hook
-          (lambda ()
-            (let ((filename (buffer-file-name (current-buffer))))
-              (when (and filename (string= "trello" (file-name-extension filename)))
-                (org-trello-mode)))))
-(add-hook 'org-mime-html-hook
-          (lambda ()
-            (org-mime-change-element-style
-             "blockquote" "border-left: 2px solid gray; padding-left: 4px;")))
 
 (winner-mode)
 
@@ -238,7 +220,8 @@
            )
     (add-to-list 'major-mode-remap-alist mapping))
   :config
-  (mp-setup-install-grammars)
+  ;; Grammar installation is manual: M-x mp-setup-install-grammars
+  ;; Run this once after initial setup or when upgrading Emacs/grammars.
   ;; Do not forget to customize Combobulate to your liking:
   ;;
   ;;  M-x customize-group RET combobulate RET
@@ -417,36 +400,6 @@
   ;; show ellama context in header line in all buffers
   (ellama-context-header-line-global-mode +1))
 
-(use-package elpy
-  :straight t
-  :delight
-  (elpy-mode)
-  (hl-line-mode)
-  (subword-mode)
-  (highlight-indentation-mode)
-  (hs-minor-mode)
-  (eldoc-mode)
-  :after python
-  ;; :hook (elpy-mode . (subword-mode hl-line-mode flycheck-mode))
-  :config
-  (setq elpy-modules '(elpy-module-company
-                       elpy-module-django
-                       elpy-module-autodoc
-                       elpy-module-eldoc
-                       elpy-module-folding
-                       ;; elpy-module-pyvenv
-                       elpy-module-highlight-indentation)
-        elpy-test-runner 'elpy-test-pytest-runner)
-  (elpy-enable))
-
-(use-package fill-column-indicator
-  :straight t
-  :delight fci-mode
-  :hook (python-mode . fci-mode)
-  :config (setq fill-column 88
-                fci-rule-column 88
-                fci-rule-color "#37474f"))
-
 (use-package flycheck
   :straight t
   :delight flycheck-mode
@@ -521,10 +474,6 @@
 (use-package json-mode
   :straight t)
 
-(use-package linum-relative
-  :straight t
-  :bind ("C-c t l" . linum-relative-toggle))
-
 (use-package lsp-mode
   :straight t
   :delight
@@ -576,7 +525,7 @@
         lsp-log-io nil
         lsp-modeline-code-actions-mode t
         lsp-prefer-capf t
-        lsp-ruff-log-level "debug"
+        lsp-ruff-log-level "warn"
         lsp-ruff-show-notifications "always"
         lsp-use-plists t
         lsp-semantic-tokens-enable nil
@@ -585,12 +534,6 @@
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?venv\\'")
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?undo-tree\\'")
     )
-  :config (advice-add 'lsp :before
-                      (lambda (&rest _args)
-                        (eval
-                         '(setf
-                           (lsp-session-server-id->folders (lsp-session))
-                           (ht)))))
   :commands (lsp lsp-deferred))
 
 ;; (use-package lsp-pyright
@@ -638,12 +581,13 @@
   :straight t
   :demand t  ; Load magit immediately to avoid autoload issues
   :bind ("C-x g" . magit-status)
-  :config (setq magit-last-seen-setup-instructions "1.4.0"
-                magit-commit-arguments '("-S")
+  :config (setq magit-commit-arguments '("-S")
                 magit-log-section-arguments '("-n256" "--decorate")))
 
 (use-package magit-delta
-  :straight t)
+  :straight t
+  :after magit
+  :hook (magit-mode . magit-delta-mode))
 
 (use-package markdown-changelog
   :straight t)
@@ -738,7 +682,8 @@
 
 (use-package sops
   :straight (:type git :host github :repo "djgoku/sops")
-  :bind (("C-c C-c" . sops-save-file)
+  :bind (:map sops-mode-map
+         ("C-c C-c" . sops-save-file)
          ("C-c C-k" . sops-cancel)
          ("C-c C-d" . sops-edit-file))
   :init

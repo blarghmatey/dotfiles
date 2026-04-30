@@ -41,44 +41,34 @@
               (local-set-key (kbd "C-x k") 'server-edit))))
 ;; end emacsclient
 
-(lsp-register-client
- (make-lsp-client :new-connection (lsp-stdio-connection '("sourcery" "lsp"))
-                  :initialization-options `((token . ,(auth-source-pick-first-password :host "sourcery.ai"))
-                                            (extension_version . "emacs-lsp")
-                                            (editor_version . "emacs"))
-                  :activation-fn (lsp-activate-on "python")
-                  :server-id 'sourcery
-                  :add-on? t))
+(with-eval-after-load 'lsp-mode
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("sourcery" "lsp"))
+                    :initialization-options `((token . ,(auth-source-pick-first-password :host "sourcery.ai"))
+                                              (extension_version . "emacs-lsp")
+                                              (editor_version . "emacs"))
+                    :activation-fn (lsp-activate-on "python")
+                    :server-id 'sourcery
+                    :add-on? t))
 
-;;; Commentary:
+  ;;; LSP Client for the Python (pyrefly) type checker.
+  (defgroup lsp-python-refly nil
+    "LSP support for Python (pyrefly)."
+    :group 'lsp-mode
+    :link '(url-link "https://pyrefly.org"))
 
-;; LSP Clients for the Python(pyrefly) Type Checker .
+  (defcustom lsp-python-refly-clients-server-command '("pyrefly" "lsp" "-v")
+    "Command to start the python pyrefly language server."
+    :group 'lsp-python-refly
+    :risky t
+    :type '(repeat string))
 
-;;; Code:
-
-(require 'lsp-mode)
-
-(defgroup lsp-python-refly nil
-  "LSP support for Python(pyrefly)."
-  :group 'lsp-mode
-  :link '(url-link "https://pyrefly.org"))
-
-(defcustom lsp-python-refly-clients-server-command '("pyrefly" "lsp" "-v")
-  "Command to start the python pyrefly language server."
-  :group 'lsp-python-refly
-  :risky t
-  :type '(repeat string))
-
-(lsp-register-client
- (make-lsp-client :new-connection (lsp-stdio-connection (lambda () lsp-python-refly-clients-server-command))
-                  :activation-fn (lsp-activate-on "python")
-                  :priority -1
-                  :add-on? t
-                  :server-id 'py-refly))
-
-(lsp-consistency-check lsp-python-refly)
-
-(provide 'lsp-python-refly)
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection (lambda () lsp-python-refly-clients-server-command))
+                    :activation-fn (lsp-activate-on "python")
+                    :priority -1
+                    :add-on? t
+                    :server-id 'py-refly)))
 
 (setq-default fill-column 88)
 
@@ -127,7 +117,7 @@
       `((".*" ,temporary-file-directory t)))
 
 ;; Had to use default-frame-alist to fix crash when starting in daemon mode
-(setq default-frame-alist '((font . "Hack-12") (load-theme 'lush)))
+(setq default-frame-alist '((font . "Hack-12")))
 (set-fontset-font t 'emoji '("Noto Color Emoji" . "iso10646-1") nil 'prepend)
 
 (tool-bar-mode -1)
@@ -214,7 +204,7 @@
 ;; Use C-c t as a prefix for toggling things
 (global-set-key (kbd "C-c i d") 'insert-date)
 
-(global-set-key (kbd "C-c e") 'eval-and-replace)
+(global-set-key (kbd "C-c E") 'eval-and-replace)
 (global-set-key (kbd "C-x p") 'other-window-backward)
 
 (global-set-key (kbd "C-c C-t") 'visit-ansi-term)
@@ -264,31 +254,21 @@
 (add-to-list 'org-latex-packages-alist '("" "listings"))
 (add-to-list 'org-latex-packages-alist '("" "color"))
 
-;; Allow direct edting of permission flags in wdired
-(defvar wdired-allow-to-change-permissions t)
+;; Allow direct editing of permission flags in wdired
+(setq wdired-allow-to-change-permissions t)
 
 ;; Don't ask to delete excess versions of files
-(defvar trim-versions-without-asking t)
+(setq trim-versions-without-asking t)
 
 ;;
-;; Unscroll support
+;; Unscroll support is implemented in functions.el
 ;;
-
-(put 'scroll-up 'unscrollable t)
-(put 'scroll-down 'unscrollable t)
-(put 'scroll-left 'unscrollable t)
-(put 'scroll-right 'unscrollable t)
-
-(defvar unscroll-point (make-marker)
-  "Cursor position for next call to unscroll")
-(defvar unscroll-window-start (make-marker)
-  "Window start position for next call to unscroll")
-(defvar unscroll-hscroll nil
-  "Hscroll position for next call to unscroll")
 
 (when window-system
   (blink-cursor-mode 0))
-(set-cursor-color "#ffffff")
+
+(setq display-line-numbers-type 'relative)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
 (defvar hexcolor-keywords
   '(("#[abcdef[:digit:]]+"
