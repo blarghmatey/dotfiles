@@ -1,9 +1,0 @@
-{
-  "xontribs": [
-    "bashisms",
-    "coreutils",
-    "jedi",
-    "mpl",
-    "schedule"
-  ]
-}

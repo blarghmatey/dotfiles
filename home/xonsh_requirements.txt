@@ -1,3 +1,0 @@
-requests
-geoip2
-xontrib-schedule
