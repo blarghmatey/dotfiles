@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 import tomllib
 from pathlib import Path
 
@@ -8,16 +9,35 @@ from rich.console import Console
 
 console = Console()
 
+_PYINFRA = [sys.executable, "-m", "pyinfra"]
 
-def install_packages(repo_root: Path, profile: str) -> None:
-    """Run the pyinfra deploy to install system packages."""
+
+def install_packages(
+    repo_root: Path,
+    profile: str,
+    *,
+    dry_run: bool = False,
+    verbose: bool = False,
+) -> None:
+    """Run the pyinfra deploy to install system packages.
+
+    dry_run=True passes --dry so facts are collected and diffs shown but nothing
+    is executed.  verbose=True passes -v so per-item noop / change lines are
+    printed alongside the operations table.
+    """
     deploy_script = repo_root / "deploy" / "deploy.py"
-    console.print(f"[bold]Running pyinfra deploy[/bold]  profile=[cyan]{profile}[/cyan]")
-    subprocess.run(
-        ["pyinfra", "@local", str(deploy_script), "--data", f"profile={profile}"],
-        check=True,
-        cwd=str(repo_root),
+    mode = "[yellow]dry-run[/yellow]" if dry_run else "[green]apply[/green]"
+    console.print(
+        f"[bold]Running pyinfra deploy[/bold]  profile=[cyan]{profile}[/cyan]  {mode}"
     )
+    cmd = [*_PYINFRA, "@local", str(deploy_script), "--data", f"profile={profile}"]
+    if dry_run:
+        cmd.append("--dry")
+    if verbose:
+        cmd.append("-v")
+    if not dry_run:
+        cmd.append("-y")
+    subprocess.run(cmd, check=True, cwd=str(repo_root))
 
 
 def install_python(repo_root: Path) -> None:

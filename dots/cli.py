@@ -83,15 +83,36 @@ def upgrade(*, profile: str = DEFAULT_PROFILE) -> None:
     upgrade_all(profile)
 
 
-# ── install sub-commands ──────────────────────────────────────────────────────
+@app.command
+def diff(
+    *,
+    profile: str = DEFAULT_PROFILE,
+    verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = True,
+) -> None:
+    """Show what install would change — collects facts, prints per-item diff, no execution.
+
+    Uses pyinfra --dry to determine which packages/tools are missing or need
+    updating without applying any changes.  Verbose output (on by default) shows
+    each package as [noop] already installed or [change] to be installed.
+    """
+    from .install import install_packages
+
+    install_packages(REPO_ROOT, profile, dry_run=True, verbose=verbose)
+
+
+
 
 
 @install.command
-def packages(*, profile: str = DEFAULT_PROFILE) -> None:
+def packages(
+    *,
+    profile: str = DEFAULT_PROFILE,
+    verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = False,
+) -> None:
     """Install system packages via pyinfra (pacman + AUR)."""
     from .install import install_packages
 
-    install_packages(REPO_ROOT, profile)
+    install_packages(REPO_ROOT, profile, verbose=verbose)
 
 
 @install.command(name="python")
@@ -111,9 +132,13 @@ def node(*, profile: str = DEFAULT_PROFILE) -> None:
 
 
 @install.command(name="all")
-def install_all(*, profile: str = DEFAULT_PROFILE) -> None:
+def install_all(
+    *,
+    profile: str = DEFAULT_PROFILE,
+    verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = False,
+) -> None:
     """Run all install subcommands in order: packages → python → node."""
-    packages(profile=profile)
+    packages(profile=profile, verbose=verbose)
     python_tools()
     node(profile=profile)
 

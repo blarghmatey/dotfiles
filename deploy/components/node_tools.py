@@ -1,13 +1,15 @@
 """Pyinfra component: global npm packages.
 
 Installs the npm packages listed in the active profile's [node.global] section.
+Uses pyinfra's npm.packages() operation which checks installed state via
+`npm list -g` before installing — idempotent and distribution-aware.
 """
 
 from __future__ import annotations
 
 from pyinfra import host
 from pyinfra.api import deploy
-from pyinfra.operations import server
+from pyinfra.operations import npm
 
 from deploy._manifest import profile as get_profile
 
@@ -30,8 +32,8 @@ def install_node_tools() -> None:
     if not packages:
         return
 
-    # `npm install -g` is idempotent when a package is already at the latest version.
-    server.shell(
+    npm.packages(
         name=f"npm global [{profile_name}] ({len(packages)} pkgs): {_pkg_summary(packages)}",
-        commands=[f"npm install -g {' '.join(packages)}"],
+        packages=packages,
+        # directory=None means global install (npm install -g)
     )
