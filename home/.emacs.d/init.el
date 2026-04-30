@@ -55,15 +55,26 @@
 
 (require 'epg)
 (setq epg-pinentry-mode 'loopback)
-(global-whitespace-mode)
+
+;; Load user functions early so hook callbacks (e.g. default-minor-modes)
+;; are defined before any package loading can trigger prog-mode-hook.
+(load-file "~/.emacs.d/functions.el")
+
 (global-auto-revert-mode t)
+
+;; Whitespace: set options before enabling the mode so they take effect on startup.
+(use-package whitespace
+  :straight nil
+  :init
+  (setq whitespace-line-column 150
+        whitespace-style '(face trailing empty lines-tail tab-mark))
+  :hook ((after-init . global-whitespace-mode)
+         (markdown-mode . (lambda () (setq-local whitespace-style '(face trailing empty tab-mark))))
+         (org-mode . (lambda () (setq-local whitespace-style '(face trailing empty tab-mark))))))
+
 ;; http://news.ycombinator.com/item?id=873541
 ;; (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'default-minor-modes)
-(add-hook 'markdown-mode-hook (lambda () (setq-local whitespace-style
-                                                     '(face trailing empty tab-mark))))
-(add-hook 'org-mode-hook (lambda () (setq-local whitespace-style
-                                                '(face trailing empty tab-mark))))
 
 (winner-mode)
 
@@ -291,7 +302,11 @@
   :straight t)
 
 (use-package delight
-  :straight t)
+  :straight t
+  :config
+  (delight '((global-whitespace-mode nil "whitespace")
+             (subword-mode nil "subword")
+             (flyspell-mode nil "flyspell"))))
 
 (use-package dockerfile-mode
   :straight t)
@@ -530,10 +545,34 @@
         lsp-use-plists t
         lsp-semantic-tokens-enable nil
         read-process-output-max (* 1024 1024))
-  (with-eval-after-load 'lsp-mode
-    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?venv\\'")
-    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?undo-tree\\'")
-    )
+  :config
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?venv\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?undo-tree\\'")
+  ;; Sourcery LSP add-on for Python
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("sourcery" "lsp"))
+                    :initialization-options `((token . ,(auth-source-pick-first-password :host "sourcery.ai"))
+                                              (extension_version . "emacs-lsp")
+                                              (editor_version . "emacs"))
+                    :activation-fn (lsp-activate-on "python")
+                    :server-id 'sourcery
+                    :add-on? t))
+  ;; Pyrefly LSP client for Python type checking
+  (defgroup lsp-python-refly nil
+    "LSP support for Python (pyrefly)."
+    :group 'lsp-mode
+    :link '(url-link "https://pyrefly.org"))
+  (defcustom lsp-python-refly-clients-server-command '("pyrefly" "lsp" "-v")
+    "Command to start the python pyrefly language server."
+    :group 'lsp-python-refly
+    :risky t
+    :type '(repeat string))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection (lambda () lsp-python-refly-clients-server-command))
+                    :activation-fn (lsp-activate-on "python")
+                    :priority -1
+                    :add-on? t
+                    :server-id 'py-refly))
   :commands (lsp lsp-deferred))
 
 ;; (use-package lsp-pyright
@@ -625,7 +664,10 @@
           ("n" "Note" entry (file org-default-notes-file)
            "* %?\n:PROPERTIES:\n:Created: %U\n:END:")
           ("f" "Followup" entry (file+headline ,(concat org-directory "todo/todo.org") "Tasks")
-           "* TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n"))))
+           "* TODO [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n")))
+  (require 'ox-latex)
+  (add-to-list 'org-latex-packages-alist '("" "listings"))
+  (add-to-list 'org-latex-packages-alist '("" "color")))
 
 (use-package org-journal
   :straight t
@@ -873,9 +915,14 @@
 
 (use-package yaml-mode
   :straight t
-  :hook (yaml-mode . (lambda () (setq-local electric-indent-mode nil))))
+  :hook ((yaml-mode . (lambda () (setq-local electric-indent-mode nil)))
+         ;; yaml-ts-mode is a remap target; hooks do not carry over from yaml-mode.
+         (yaml-ts-mode . (lambda () (setq-local electric-indent-inhibit t)))))
 
-(load-file "~/.emacs.d/functions.el")
+(use-package wdired
+  :straight nil
+  :custom (wdired-allow-to-change-permissions t))
+
 (load-file "~/.emacs.d/configurations.el")
 
 (custom-set-variables

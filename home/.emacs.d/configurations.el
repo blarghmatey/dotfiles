@@ -14,21 +14,7 @@
 
 (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo"  "~/.netrc"))
 
-(require 'delight)
-(delight '((global-whitespace-mode nil "whitespace")
-           (subword-mode nil "subword")
-           (flyspell-mode nil "flyspell")))
-
 (setq ring-bell-function 'ignore)
-(setq whitespace-line-column 150
-      whitespace-style
-      '(face trailing empty lines-tail tab-mark))
-
-(add-hook 'yaml-ts-mode-hook
-          (lambda ()
-            ;; Disable electric-indent to prevent YAML from being auto-reindented
-            ;; on newlines/colons. TAB uses yaml-ts-mode's tree-sitter indentation.
-            (setq-local electric-indent-inhibit t)))
 
 ;; Better support for using emacsclient
 (setq kill-emacs-query-functions
@@ -42,35 +28,6 @@
             (when server-buffer-clients
               (local-set-key (kbd "C-x k") 'server-edit))))
 ;; end emacsclient
-
-(with-eval-after-load 'lsp-mode
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("sourcery" "lsp"))
-                    :initialization-options `((token . ,(auth-source-pick-first-password :host "sourcery.ai"))
-                                              (extension_version . "emacs-lsp")
-                                              (editor_version . "emacs"))
-                    :activation-fn (lsp-activate-on "python")
-                    :server-id 'sourcery
-                    :add-on? t))
-
-  ;;; LSP Client for the Python (pyrefly) type checker.
-  (defgroup lsp-python-refly nil
-    "LSP support for Python (pyrefly)."
-    :group 'lsp-mode
-    :link '(url-link "https://pyrefly.org"))
-
-  (defcustom lsp-python-refly-clients-server-command '("pyrefly" "lsp" "-v")
-    "Command to start the python pyrefly language server."
-    :group 'lsp-python-refly
-    :risky t
-    :type '(repeat string))
-
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection (lambda () lsp-python-refly-clients-server-command))
-                    :activation-fn (lsp-activate-on "python")
-                    :priority -1
-                    :add-on? t
-                    :server-id 'py-refly)))
 
 (setq-default fill-column 88)
 
@@ -138,71 +95,6 @@
 (global-set-key (kbd "C-c f u") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-8")))
 (global-set-key (kbd "C-c f f") (lambda () (interactive) (set-face-attribute 'default nil :font "Hack-7")))
 
-;; Automatically handle theme changes with system light/dark mode
-;; from https://emacs.stackexchange.com/a/71164
-;; (when (and IS-LINUX ;; this is doom specific
-;;            (featurep! :ui dbus)) ;; so is this
-;;   ;; I should use a better name than `a`
-;;   (defun theme--handle-dbus-event (a setting values)
-;;     "Handler for FreeDesktop theme changes."
-;;     (when (string= setting "ColorScheme")
-;;       (let ((scheme (car values)))
-;;         (cond
-;;          ((string-match-p "Dark" scheme)
-;;           (+theme-dark)) ;; my custom function that sets a dark theme
-;;          ((string-match-p "Light" scheme)
-;;           (+theme-light)) ;; 1000 internet points to whoever guesses what this does
-;;          (t (message "I don't know how to handle scheme: %s" scheme))))))
-
-;;   (require 'dbus)
-
-;;   ;; since this is all FreeDesktop stuff, this *might* work on GNOME without changes
-;;   (dbus-register-signal :session
-;;                         "org.freedesktop.portal"
-;;                         "/org/freedesktop/portal/desktop"
-;;                         "org.freedesktop.impl.portal.Settings"
-;;                         "SettingChanged"
-;;                         #'theme--handle-dbus-event))
-
-;; Alternative implementation from
-;; https://www.reddit.com/r/emacs/comments/o49v2w/automatically_switch_emacs_theme_when_changing/
-;; (use-package dbus)
-;; (use-package modus-themes
-;;   :after (dbus)
-;;   :config
-;;   (defun set-modus-theme-from-gtk ()
-;;     "Set modus theme by checking whether GTK theme is dark."
-;;     (let ((gtk-theme (downcase
-;;                       (call-process-string "gsettings"
-;;                                            "get"
-;;                                            "org.gnome.desktop.interface"
-;;                                            "gtk-theme"))))
-;;       (if (or (string-match-p "dark"  gtk-theme)
-;;               (string-match-p "black" gtk-theme))
-;;           (modus-themes-load-vivendi)
-;;         (modus-themes-load-operandi))))
-
-;;   (defun gtk-theme-changed (path _ _)
-;;     "DBus handler to detect when the GTK theme has changed."
-;;     (when (string-equal path "/org/gnome/desktop/interface/gtk-theme")
-;;       (set-modus-theme-from-gtk)))
-
-;;   (dbus-register-signal
-;;    :session
-;;    "ca.desrt.dconf"
-;;    "/ca/desrt/dconf/Writer/user"
-;;    "ca.desrt.dconf.Writer"
-;;    "Notify"
-;;    #'gtk-theme-changed)
-
-;;   (set-modus-theme-from-gtk))
-
-(defun call-process-string (program &rest args)
-  "Call process`PROGRAM' with `ARGS' and return the output as string."
-  (with-temp-buffer
-    (apply #'call-process program nil t nil args)
-    (buffer-string)))
-
 ;; Use C-c t as a prefix for toggling things
 (global-set-key (kbd "C-c i d") 'insert-date)
 
@@ -249,15 +141,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ORGMODE CONFIGS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; (require 'org-trello)
-;; (setq org-trello-current-prefix-keybinding "C-c o" nil (org-trello))
-;; (require 'org-gcal)
-(require 'ox-latex)
-(add-to-list 'org-latex-packages-alist '("" "listings"))
-(add-to-list 'org-latex-packages-alist '("" "color"))
-
-;; Allow direct editing of permission flags in wdired
-(setq wdired-allow-to-change-permissions t)
+;; org-latex packages and wdired config now live in their use-package blocks in init.el.
 
 ;; Don't ask to delete excess versions of files
 (setq trim-versions-without-asking t)
@@ -271,14 +155,6 @@
 
 (setq display-line-numbers-type 'relative)
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
-
-(defvar hexcolor-keywords
-  '(("#[abcdef[:digit:]]+"
-     (0 (put-text-property
-         (match-beginning 0)
-         (match-end 0)
-         'face (list :background
-                     (match-string-no-properties 0)))))))
 
 (provide 'configurations)
 ;;; configurations.el ends here

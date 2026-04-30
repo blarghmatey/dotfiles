@@ -104,9 +104,8 @@ version control if file is under version control."
 (defun default-minor-modes ()
   "Enable several minor modes that are generally applicable."
   (interactive)
-  (rainbow-mode 1)
-  (hexcolor-add-to-font-lock)
-  )
+  (when (fboundp 'rainbow-mode) (rainbow-mode 1))
+  (when (fboundp 'hexcolor-add-to-font-lock) (hexcolor-add-to-font-lock)))
 
 ;; Behave like vi's o command
 (defun open-next-line (arg)
@@ -234,31 +233,18 @@ is considered to be a project root."
          (directory-file-name root-dir))
       nil)))
 
-(defun flycheck-python-set-executables ()
-  (let ((exec-path (python-shell-calculate-exec-path)))
-    (setq flycheck-python-pylint-executable (executable-find "pylint")
-          flycheck-python-flake8-executable (executable-find "flake8")))
-  ;; Force Flycheck mode on
-  (flycheck-mode))
-
-(defun flycheck-python-setup ()
-  (add-hook 'hack-local-variables-hook 'flycheck-python-set-executables
-            nil 'local))
-
-;(defun load-packages ()
-  ;"Load package list and install missing packages."
-  ;(interactive)
-  ;(load-file "~/Dropbox/.emacs-packages-installed.el")
-  ;(dolist (p my-packages)
-    ;(when (not (package-installed-p p))
-      ;(package-install p))))
-
-
-
 (defun toggle-fold-to-signatures ()
   "Toggle selective display of only function signatures."
   (interactive)
   (set-selective-display (if selective-display nil 1)))
+
+(defvar hexcolor-keywords
+  '(("#[abcdef[:digit:]]+"
+     (0 (put-text-property
+         (match-beginning 0)
+         (match-end 0)
+         'face (list :background
+                     (match-string-no-properties 0)))))))
 
 (defun hexcolor-add-to-font-lock ()
   (font-lock-add-keywords nil hexcolor-keywords))
