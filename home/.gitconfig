@@ -78,8 +78,6 @@
   autoSetupRemote = true
   # Push tags along with branches
   followTags = true
-  # Push to matching named branches
-  default = matching
 
 [fetch]
   # Remove remote-tracking branches that no longer exist
@@ -247,7 +245,6 @@
   rdiff = diff --summary head
   stat = diff --summary head
   mt = mergetool
-  rc = rebase --continue
   pr = pull-request
   smc = log --author=\"Tobias Macey\" --grep=\"$1\"
 
@@ -255,8 +252,18 @@
 [interactive]
   # Use delta for interactive diffs
   diffFilter = delta --color-only
+
+[delta]
+  navigate = true        # use n/N to move between diff sections
+  side-by-side = true
+  line-numbers = true
+  syntax-theme = Dracula
+  hyperlinks = true
+
 [credential]
-	helper = store
+  # Use gh CLI for GitHub authentication
+  helper = !/usr/bin/gh auth git-credential
+
 [lfs]
 	concurrenttransfers = 3
 [lfs "customtransfer.xet"]

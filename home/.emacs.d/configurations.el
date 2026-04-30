@@ -43,7 +43,7 @@
 
 (lsp-register-client
  (make-lsp-client :new-connection (lsp-stdio-connection '("sourcery" "lsp"))
-                  :initialization-options '((token . "user_4C2rLVblb6DVCi1QQV_uL4stau_1tjski5VIxux4UAfAePWowD18NSJYw6s")
+                  :initialization-options `((token . ,(auth-source-pick-first-password :host "sourcery.ai"))
                                             (extension_version . "emacs-lsp")
                                             (editor_version . "emacs"))
                   :activation-fn (lsp-activate-on "python")
