@@ -20,7 +20,7 @@ migrate-to-uv = { spec = "migrate-to-uv", version = "~=0.12.0", python = "3.12",
 poetry = { spec = "poetry", version = "~=2.3.4", python = "3.12", injected = [], editable = false }
 pre-commit = { spec = "pre-commit", version = "~=4.6.0", python = "3.12", injected = [], editable = false }
 pydantic-monty = { spec = "pydantic-monty", version = "~=0.0.17", python = "3.14", injected = [], editable = false }
-pyiceberg = { spec = "pyiceberg[glue]", version = "~=0.11.1", python = "3.12", injected = ["s3fs", "pyarrow"], editable = false }
+pyiceberg = { spec = "pyiceberg[glue]", version = "~=0.11.1", python = "3.12", injected = ["pyarrow", "s3fs"], editable = false }
 pyrefly = { spec = "pyrefly", version = "~=0.63.0", python = "3.12", injected = [], editable = false }
 ra-aid = { spec = "ra-aid", version = "~=0.30.2", python = "3.12", injected = ["levenshtein"], editable = false }
 ruff = { spec = "ruff", version = "~=0.15.12", python = "3.12", injected = [], editable = false }

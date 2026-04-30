@@ -56,9 +56,12 @@ else
 fi
 
 # ── 5. dots CLI ───────────────────────────────────────────────────────────────
+# Use uv tool install directly (not uvenv) — uvenv install has a bug where it
+# tries to parse the existing uvenv.lock before writing and fails if any entry
+# is missing the `classifier` field added in newer uvenv versions.
 step "Installing dots CLI (editable install from repo)"
 cd "$REPO_DIR"
-uvenv install -e .
+uv tool install --editable .
 
 echo ""
 echo -e "${GREEN}Bootstrap complete.${RESET}"
