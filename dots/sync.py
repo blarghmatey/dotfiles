@@ -92,7 +92,14 @@ def sync_all(
     force: bool = False,
     dry_run: bool = False,
 ) -> None:
-    """Sync every tracked file: render templates, create symlinks."""
+    """Sync every tracked file: render templates, create symlinks.
+
+    Replacement rules:
+      - Missing / broken symlink        → create symlink (always)
+      - Existing copy, identical content → replace with symlink (always)
+      - Existing copy, local edits       → skip; use --force to overwrite
+      - Symlink pointing elsewhere       → skip; use --force to overwrite
+    """
     tracked_files = iter_tracked(repo_root, home)
     results: list[FileStatus] = []
 
@@ -107,11 +114,8 @@ def sync_all(
             _do_render(f, dry_run=dry_run)
             results.append(FileStatus(f, FileState.RENDERED))
         else:
-            _do_link(f, force=force, dry_run=dry_run)
-            if current.state not in (FileState.COPY_SAME,):
-                results.append(FileStatus(f, FileState.LINKED_OK))
-            else:
-                results.append(current)
+            linked = _do_link(f, current_state=current.state, force=force, dry_run=dry_run)
+            results.append(FileStatus(f, FileState.LINKED_OK if linked else current.state))
 
     _print_summary(results, dry_run=dry_run)
 
@@ -123,16 +127,43 @@ def _do_render(f: TrackedFile, *, dry_run: bool) -> None:
         render_file(f.src, f.dst)
 
 
-def _do_link(f: TrackedFile, *, force: bool, dry_run: bool) -> None:
-    dst = f.dst
+def _do_link(
+    f: TrackedFile,
+    *,
+    current_state: FileState,
+    force: bool,
+    dry_run: bool,
+) -> bool:
+    """Create a symlink at f.dst pointing to f.src.
 
-    if dst.exists() or dst.is_symlink():
+    Returns True if the symlink was created (or would be in dry-run), False if skipped.
+
+    Replacement policy:
+      - MISSING / BROKEN                → always replace
+      - COPY_SAME (identical content)   → always replace (no data loss)
+      - COPY_DIFFERENT / LINKED_WRONG   → only replace when --force is set
+    """
+    dst = f.dst
+    safe_to_replace = current_state in (FileState.MISSING, FileState.BROKEN, FileState.COPY_SAME)
+
+    if (dst.exists() or dst.is_symlink()) and not safe_to_replace:
         if not force:
+            reason = (
+                "local edits" if current_state == FileState.COPY_DIFFERENT else "wrong symlink target"
+            )
             console.print(
                 f"  [yellow]skip[/yellow]       {f.rel}"
-                "  [dim](exists — use --force to overwrite)[/dim]"
+                f"  [dim]({reason} — use --force to overwrite)[/dim]"
             )
-            return
+            return False
+        if not dry_run:
+            dst.unlink()
+    elif dst.is_symlink():
+        # BROKEN symlink — unlink before re-creating
+        if not dry_run:
+            dst.unlink()
+    elif dst.exists():
+        # COPY_SAME — safe to replace
         if not dry_run:
             dst.unlink()
 
@@ -141,6 +172,7 @@ def _do_link(f: TrackedFile, *, force: bool, dry_run: bool) -> None:
     if not dry_run:
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.symlink_to(f.src)
+    return True
 
 
 def _print_summary(results: list[FileStatus], *, dry_run: bool) -> None:
@@ -148,11 +180,15 @@ def _print_summary(results: list[FileStatus], *, dry_run: bool) -> None:
     for r in results:
         counts[r.state] = counts.get(r.state, 0) + 1
 
+    skipped = sum(
+        counts.get(s, 0)
+        for s in (FileState.COPY_DIFFERENT, FileState.LINKED_WRONG)
+    )
     prefix = "[dim]Dry run —[/dim] " if dry_run else ""
     console.print(
         f"\n{prefix}"
         f"[green]{counts.get(FileState.LINKED_OK, 0)}[/green] linked  "
         f"[blue]{counts.get(FileState.RENDERED, 0)}[/blue] rendered  "
-        f"[yellow]{counts.get(FileState.COPY_SAME, 0)}[/yellow] already in sync  "
+        f"[yellow]{skipped}[/yellow] skipped (use --force)  "
         f"[red]{counts.get(FileState.MISSING, 0)}[/red] missing"
     )
