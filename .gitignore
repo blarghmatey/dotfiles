@@ -2,3 +2,5 @@
 # Aider leftover artifacts (tool no longer in use)
 .aider*
 pyinfra-debug.log
+# Emacs Custom — machine-specific; may contain API keys written by packages
+home/.emacs.d/custom.el

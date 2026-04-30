@@ -4,6 +4,12 @@
 ;;; configurations.el as well as providing initialization routines
 
 ;;; Code:
+
+;; Redirect Custom to an untracked file so Emacs never writes API keys,
+;; theme hashes, or other machine-specific data into the tracked init.el.
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file) (load custom-file :noerror))
+
 (setenv "LSP_USE_PLISTS" "true")
 ;; Defer GC during startup for performance; reset to 16MB after init
 (setq gc-cons-threshold most-positive-fixnum)
@@ -925,21 +931,11 @@
 
 (load-file "~/.emacs.d/configurations.el")
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(horizontal-scroll-bar-mode nil)
- '(url-handler-mode t))
+;; Values previously managed by Custom — now explicit to keep init.el clean.
+(setq horizontal-scroll-bar-mode nil)
+(url-handler-mode 1)
 
 (set-cursor-color "white")
 
 (provide 'init)
 ;;; init.el ends here
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
