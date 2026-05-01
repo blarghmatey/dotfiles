@@ -1,0 +1,237 @@
+{
+  "version": 1,
+  "skills": {
+    "adding-dbt-unit-test": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "answering-natural-language-questions-with-dbt": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "building-dbt-semantic-layer": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "configuring-dbt-mcp-server": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "context-engineering-collection": {
+      "source": "muratcankoylan/agent-skills-for-context-engineering",
+      "sourceType": "well-known"
+    },
+    "create-github-issue": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "create-pull-request": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "creating-mermaid-dbt-dag": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "creating-skills": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "cyclopts-cli-scripts": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "dagster-best-practices": {
+      "source": "dagster-io/skills",
+      "sourceType": "well-known"
+    },
+    "dagster-code-location-structure": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "dagster-integrations": {
+      "source": "dagster-io/skills",
+      "sourceType": "well-known"
+    },
+    "data-warehouse": {
+      "source": "pluginagentmarketplace/custom-plugin-sql",
+      "sourceType": "well-known"
+    },
+    "dg": {
+      "source": "dagster-io/skills",
+      "sourceType": "well-known"
+    },
+    "dignified-python": {
+      "source": "dagster-io/skills",
+      "sourceType": "well-known"
+    },
+    "doc-coauthoring": {
+      "source": "anthropics/skills",
+      "sourceType": "well-known"
+    },
+    "docker-uv-image-builds": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "fetching-dbt-docs": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-animating-apps": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-architecting-apps": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-building-forms": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-building-layouts": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-building-plugins": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-caching-data": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-handling-concurrency": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-handling-http-and-json": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-implementing-navigation-and-routing": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-improving-accessibility": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-interoperating-with-native-apis": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-localizing-apps": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-managing-state": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-reducing-app-size": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-setting-up-on-linux": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-testing-apps": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-theming-apps": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "flutter-working-with-databases": {
+      "source": "flutter/skills",
+      "sourceType": "well-known"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "well-known"
+    },
+    "generate-standup": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "internal-comms": {
+      "source": "anthropics/skills",
+      "sourceType": "well-known"
+    },
+    "mcp-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "well-known"
+    },
+    "migrating-dbt-core-to-fusion": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "migrating-dbt-project-across-platforms": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "pulumi-automation-api": {
+      "source": "pulumi/agent-skills",
+      "sourceType": "well-known"
+    },
+    "pulumi-best-practices": {
+      "source": "pulumi/agent-skills",
+      "sourceType": "well-known"
+    },
+    "pulumi-component": {
+      "source": "pulumi/agent-skills",
+      "sourceType": "well-known"
+    },
+    "pulumi-modify-existing": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "running-dbt-commands": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "well-known"
+    },
+    "superset-asset-manager": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "troubleshooting-dbt-job-errors": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "using-dbt-for-analytics-engineering": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    },
+    "uv-python-workflow": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "validate-before-commit": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "vault-k8s-auth": {
+      "source": "mitodl/agent-kit",
+      "sourceType": "well-known"
+    },
+    "warehouse-init": {
+      "source": "astronomer/agents",
+      "sourceType": "well-known"
+    },
+    "working-with-dbt-mesh": {
+      "source": "dbt-labs/dbt-agent-skills",
+      "sourceType": "well-known"
+    }
+  }
+}

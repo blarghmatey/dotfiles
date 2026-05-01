@@ -91,11 +91,21 @@ def diff(*, profile: str = DEFAULT_PROFILE) -> None:
     prints a per-category table of what is present vs missing.
     """
     from .diff import print_diff
+    from .skills import diff_skills
 
     print_diff(REPO_ROOT, profile)
+    diff_skills(REPO_ROOT)
 
 
+@install.command
+def skills(
+    *,
+    yes: Annotated[bool, cyclopts.Parameter(name=["--yes", "-y"])] = False,
+) -> None:
+    """Install global agent skills from skills-lock.json via the Vercel Skills CLI."""
+    from .skills import install_skills
 
+    install_skills(REPO_ROOT, yes=yes)
 
 
 @install.command
@@ -131,11 +141,13 @@ def install_all(
     *,
     profile: str = DEFAULT_PROFILE,
     verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = False,
+    yes: Annotated[bool, cyclopts.Parameter(name=["--yes", "-y"])] = False,
 ) -> None:
-    """Run all install subcommands in order: packages → python → node."""
+    """Run all install subcommands in order: packages → python → node → skills."""
     packages(profile=profile, verbose=verbose)
     python_tools()
     node(profile=profile)
+    skills(yes=yes)
 
 
 if __name__ == "__main__":
