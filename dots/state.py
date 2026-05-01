@@ -43,6 +43,8 @@ class DotsState:
     aur: list[str] = field(default_factory=list)
     npm_global: list[str] = field(default_factory=list)
     uvenv_tools: list[str] = field(default_factory=list)
+    cargo_tools: list[str] = field(default_factory=list)
+    go_tools: list[str] = field(default_factory=list)
 
 
 def load() -> DotsState:
@@ -59,6 +61,8 @@ def load() -> DotsState:
         aur=data.get("packages", {}).get("aur", []),
         npm_global=data.get("node", {}).get("global", []),
         uvenv_tools=data.get("uvenv", {}).get("tools", []),
+        cargo_tools=data.get("cargo", {}).get("tools", []),
+        go_tools=data.get("go", {}).get("tools", []),
     )
 
 
@@ -83,6 +87,12 @@ def save(state: DotsState, profile: str) -> None:
         "\n"
         "[uvenv]\n"
         f"tools = {_fmt_list(state.uvenv_tools)}\n"
+        "\n"
+        "[cargo]\n"
+        f"tools = {_fmt_list(state.cargo_tools)}\n"
+        "\n"
+        "[go]\n"
+        f"tools = {_fmt_list(state.go_tools)}\n"
     )
     tmp = path.with_suffix(".toml.tmp")
     tmp.write_text(content)

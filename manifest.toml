@@ -74,3 +74,38 @@ global = [
     "@sourcegraph/amp",
     "@musistudio/claude-code-router",
 ]
+
+# ──────────────────────────────────────────────
+# Global tools (not profile-scoped)
+# ──────────────────────────────────────────────
+
+[cargo]
+tools = [
+    "lsp-ai",  # AI-powered LSP server supporting multiple editors and backends
+    "taws",    # AWS resource browser / TUI
+]
+
+[go]
+tools = [
+    # Go language server (required for gopls/LSP in editors)
+    "golang.org/x/tools/gopls@latest",
+    # OCI/Docker image semantic diff
+    "github.com/reproducible-containers/diffoci/cmd/diffoci@latest",
+    # Route53 DNS management CLI
+    "github.com/barnybug/cli53/cmd/cli53@latest",
+    # AWS configuration diagnostics
+    "github.com/elC0mpa/aws-doctor@latest",
+    # Custom Caddy server builder
+    "github.com/caddyserver/xcaddy/cmd/xcaddy@latest",
+
+    # ── stale / work-specific: review and remove if no longer needed ──
+    # "github.com/fatih/hclfmt@latest",                                            # HCL formatter (2018; superseded by terraform fmt)
+    # "github.com/cappyzawa/concourse-pipeline-jsonschema@latest",                 # Concourse CI pipeline JSON schema generator
+    # "github.com/alphagov/terraform-provider-concourse@latest",                   # Terraform provider for Concourse CI
+    # "github.com/hashicorp/terraform-provider-nomad@latest",                      # Terraform provider for Nomad (was terraform-providers/...)
+    # "github.com/pulumi/pulumi-nomad/cmd/pulumi-resource-nomad@latest",           # Pulumi Nomad resource provider
+    # "github.com/pulumi/pulumi-nomad/cmd/pulumi-tfgen-nomad@latest",              # Pulumi Nomad tfgen
+    # "github.com/adamdecaf/vault-backend-migrator@latest",                        # One-time Vault backend migration tool (2020)
+    # "github.com/pulumi/scripts/gomod-doccopy@latest",                            # Internal Pulumi doc utility (2020)
+    # tf2pulumi deprecated 2022; use 'pulumi convert --from terraform' instead
+]

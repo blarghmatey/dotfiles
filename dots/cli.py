@@ -136,6 +136,22 @@ def node(*, profile: str = DEFAULT_PROFILE) -> None:
     install_node(REPO_ROOT, profile)
 
 
+@install.command(name="cargo")
+def cargo_tools() -> None:
+    """Install Rust/Cargo tools from manifest [cargo].tools."""
+    from .install import install_cargo
+
+    install_cargo(REPO_ROOT)
+
+
+@install.command(name="go")
+def go_tools() -> None:
+    """Install Go tools from manifest [go].tools."""
+    from .install import install_go
+
+    install_go(REPO_ROOT)
+
+
 @install.command(name="all")
 def install_all(
     *,
@@ -143,10 +159,12 @@ def install_all(
     verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = False,
     yes: Annotated[bool, cyclopts.Parameter(name=["--yes", "-y"])] = False,
 ) -> None:
-    """Run all install subcommands in order: packages → python → node → skills."""
+    """Run all install subcommands in order: packages → python → node → cargo → go → skills."""
     packages(profile=profile, verbose=verbose)
     python_tools()
     node(profile=profile)
+    cargo_tools()
+    go_tools()
     skills(yes=yes)
 
 
