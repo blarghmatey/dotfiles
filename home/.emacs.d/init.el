@@ -237,8 +237,10 @@
            )
     (add-to-list 'major-mode-remap-alist mapping))
   :config
-  ;; Grammar installation is manual: M-x mp-setup-install-grammars
-  ;; Run this once after initial setup or when upgrading Emacs/grammars.
+  ;; Auto-install any missing grammars at startup. Safe to run repeatedly
+  ;; because mp-setup-install-grammars checks treesit-language-available-p.
+  ;; To upgrade grammars manually: M-x mp-setup-install-grammars
+  (mp-setup-install-grammars)
   ;; Do not forget to customize Combobulate to your liking:
   ;;
   ;;  M-x customize-group RET combobulate RET
@@ -549,7 +551,7 @@
         lsp-ruff-log-level "warn"
         lsp-ruff-show-notifications "always"
         lsp-use-plists t
-        lsp-semantic-tokens-enable nil
+        lsp-semantic-tokens-enable t
         read-process-output-max (* 1024 1024))
   :config
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.?venv\\'")
@@ -726,7 +728,7 @@
 (use-package python-docstring
   :straight t
   :delight
-  :hook (python-mode . python-docstring-mode))
+  :hook (python-base-mode . python-docstring-mode))
 
 (use-package sops
   :straight (:type git :host github :repo "djgoku/sops")
@@ -740,12 +742,12 @@
 (use-package sphinx-doc
   :straight t
   :delight sphinx-doc-mode
-  :hook (python-mode . sphinx-doc-mode))
+  :hook (python-base-mode . sphinx-doc-mode))
 
 (use-package sphinx-mode
   :straight t
   :delight sphinx-mode
-  :hook (python-mode . sphinx-mode))
+  :hook (python-base-mode . sphinx-mode))
 
 
 ;; (use-package tabnine
