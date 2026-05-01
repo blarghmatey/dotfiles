@@ -564,35 +564,34 @@
                     :activation-fn (lsp-activate-on "python")
                     :server-id 'sourcery
                     :add-on? t))
-  ;; Pyrefly LSP client for Python type checking (lightweight, no semantic tokens)
-  ;; NOTE: pyrefly does not support semantic tokens, so we prefer basedpyright
-  ;; (defgroup lsp-python-refly nil
-  ;;   "LSP support for Python (pyrefly)."
-  ;;   :group 'lsp-mode
-  ;;   :link '(url-link "https://pyrefly.org"))
-  ;; (defcustom lsp-python-refly-clients-server-command '("pyrefly" "lsp" "-v")
-  ;;   "Command to start the python pyrefly language server."
-  ;;   :group 'lsp-python-refly
-  ;;   :risky t
-  ;;   :type '(repeat string))
-  ;; (lsp-register-client
-  ;;  (make-lsp-client :new-connection (lsp-stdio-connection (lambda () lsp-python-refly-clients-server-command))
-  ;;                   :activation-fn (lsp-activate-on "python")
-  ;;                   :priority -1
-  ;;                   :add-on? t
-  ;;                   :server-id 'py-refly))
+  ;; Basedpyright LSP (primary): semantic tokens for rich highlighting
+  ;; Pyrefly LSP (add-on): faster jump-to-definition
+  (use-package lsp-pyright
+    :straight t
+    :custom (lsp-pyright-langserver-command "basedpyright")
+    :config (setq lsp-pyright-diagnostic-mode "workspace"
+                  lsp-pyright-use-library-code-for-types t
+                  lsp-pyright-auto-import-completions t
+                  lsp-pyright-disable-organize-imports t
+                  lsp-pyright-typechecking-mode "basic"))
+  
+  ;; Pyrefly LSP as add-on (faster navigation)
+  (defgroup lsp-python-refly nil
+    "LSP support for Python (pyrefly) - fast navigation add-on."
+    :group 'lsp-mode
+    :link '(url-link "https://pyrefly.org"))
+  (defcustom lsp-python-refly-clients-server-command '("pyrefly" "lsp")
+    "Command to start the python pyrefly language server."
+    :group 'lsp-python-refly
+    :risky t
+    :type '(repeat string))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection (lambda () lsp-python-refly-clients-server-command))
+                    :activation-fn (lsp-activate-on "python")
+                    :priority -1
+                    :add-on? t
+                    :server-id 'py-refly))
   :commands (lsp lsp-deferred))
-
-(use-package lsp-pyright
-  :straight t
-  :custom (lsp-pyright-langserver-command "basedpyright")
-  :config (setq lsp-pyright-diagnostic-mode "workspace"
-                lsp-pyright-use-library-code-for-types t
-                lsp-pyright-auto-import-completions t
-                lsp-pyright-disable-organize-imports t
-                lsp-pyright-typechecking-mode "basic"
-                ;; basedpyright supports semantic tokens for rich highlighting
-                lsp-pyright-prefer-remote-server t))
 
 (use-package lsp-java
   :straight t)
