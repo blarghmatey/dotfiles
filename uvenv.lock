@@ -1,10 +1,8 @@
 version = 1
 
 [packages]
-aider-chat = { spec = "aider-chat", version = "~=0.86.2", python = "3.12", injected = [], editable = false }
 basedpyright = { spec = "basedpyright", version = "~=1.39.3", python = "3.12", injected = [], editable = false }
 batrachian-toad = { spec = "batrachian-toad", version = "~=0.6.16", python = "3.14", injected = [], editable = false }
-black = { spec = "black", version = "~=26.3.1", python = "3.14", injected = [], editable = false }
 codegen = { spec = "codegen", version = "~=0.57.0", python = "3.12", injected = [], editable = false }
 datamodel-code-generator = { spec = "datamodel-code-generator[http]", version = "~=0.56.1", python = "3.12", injected = [], editable = false }
 erk = { spec = "erk", version = "~=0.9.11", python = "3.14", injected = [], editable = false }

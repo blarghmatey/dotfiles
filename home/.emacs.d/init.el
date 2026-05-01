@@ -486,8 +486,7 @@
  (helm-projectile-on)
  (setq projectile-mode-line-prefix ""))
 
-(use-package indent-control
-  :straight t)
+;; indent-control removed — tree-sitter + LSP provide superior, modern indentation
 
 (use-package jinja2-mode
   :straight t
@@ -516,8 +515,8 @@
   ;; (json-ts-mode . lsp-deferred)
   ;; (php-mode . lsp-deferred)
   ;; (php-ts-mode . lsp-deferred)
-  ;; (python-mode . lsp-deferred)
-  ;; (python-ts-mode . lsp-deferred)
+  (python-mode . lsp-deferred)
+  (python-ts-mode . lsp-deferred)
   ;; (shell-mode . lsp-deferred)
   ;; (web-mode . lsp-deferred)
   (prog-mode . lsp-deferred)
@@ -923,9 +922,13 @@
 
 (use-package yaml-mode
   :straight t
-  :hook ((yaml-mode . (lambda () (setq-local electric-indent-mode nil)))
+  :hook ((yaml-mode . (lambda () 
+                        (setq-local electric-indent-mode nil)
+                        (setq-local indent-line-function 'insert-tab)))
          ;; yaml-ts-mode is a remap target; hooks do not carry over from yaml-mode.
-         (yaml-ts-mode . (lambda () (setq-local electric-indent-inhibit t)))))
+         (yaml-ts-mode . (lambda () 
+                          (setq-local electric-indent-mode nil)
+                          (setq-local indent-line-function 'insert-tab)))))
 
 (use-package wdired
   :straight nil
