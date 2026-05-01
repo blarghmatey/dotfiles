@@ -1,8 +1,7 @@
-#[┣─system─❯](bold yellow) $hostname
 format = """
-[╭─user───❯](bold blue) $username - $time
-[┣─project❯](bold red) $directory$rust$git_branch$git_status$package$golang$terraform$docker_context$python$docker_context$nodejs
-[╰─cmd────❯](bold green) 
+[╭─user───❯](bold blue) $username$hostname- $time
+[┣─project❯](bold red) $directory$rust$git_branch$git_status$package$golang$terraform$docker_context$python$nodejs$direnv
+[╰─cmd────❯](bold green) $cmd_duration$character
 """
 [time]
 disabled = false
@@ -16,7 +15,7 @@ disabled = false
 show_always = true
 
 [hostname]
-ssh_only = false
+ssh_only = true
 format = 'on [$hostname](bold yellow) '
 trim_at = "."
 disabled = false
@@ -34,7 +33,7 @@ truncate_to_repo = true # truncates directory to root folder if in github repo
 style = "bold italic blue"
 
 [cmd_duration]
-min_time = 4
+min_time = 4000
 show_milliseconds = false
 disabled = false
 style = "bold italic red"
@@ -102,7 +101,7 @@ symbol = " "
 format = 'via [${symbol}python (${version} )(\($virtualenv\) )]($style)'
 style = "bold yellow"
 pyenv_prefix = "venv "
-python_binary = ["./venv/bin/python", "python", "python3", "python2"]
+python_binary = ["./.venv/bin/python", "./venv/bin/python", "python", "python3", "python2"]
 detect_extensions = ["py"]
 version_format = "v${raw}"
 
@@ -122,6 +121,12 @@ symbol = " "
 symbol = "ﯣ "
 
 [nodejs]
-format = "via [ Node.js $version](bold green) "
+format = "via [ $version](bold green) "
 detect_files = ["package.json", ".node-version"]
 detect_folders = ["node_modules"]
+
+[direnv]
+disabled = false
+format = '[$symbol$loaded/$allowed]($style) '
+symbol = "direnv "
+style = "bold orange"
