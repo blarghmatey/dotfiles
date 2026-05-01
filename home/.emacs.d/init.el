@@ -924,11 +924,11 @@
   :straight t
   :hook ((yaml-mode . (lambda () 
                         (setq-local electric-indent-mode nil)
-                        (setq-local indent-line-function 'insert-tab)))
+                        (setq-local indent-line-function 'yaml-indent-line)))
          ;; yaml-ts-mode is a remap target; hooks do not carry over from yaml-mode.
          (yaml-ts-mode . (lambda () 
                           (setq-local electric-indent-mode nil)
-                          (setq-local indent-line-function 'insert-tab)))))
+                          (setq-local indent-line-function 'yaml-indent-line)))))
 
 (use-package wdired
   :straight nil
