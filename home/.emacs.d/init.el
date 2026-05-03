@@ -241,6 +241,9 @@
   ;; because mp-setup-install-grammars checks treesit-language-available-p.
   ;; To upgrade grammars manually: M-x mp-setup-install-grammars
   (mp-setup-install-grammars)
+  ;; Load tree-sitter fixes for Emacs 30.2 Python fontlock bug
+  ;; This patch corrects the broken multi-word operators in the default query
+  (load (expand-file-name "patches/python-treesit-fixes" user-emacs-directory) :noerror :nomessage)
   ;; Do not forget to customize Combobulate to your liking:
   ;;
   ;;  M-x customize-group RET combobulate RET
@@ -566,14 +569,6 @@
                     :add-on? t))
   ;; Basedpyright LSP (primary): semantic tokens for rich highlighting
   ;; Pyrefly LSP (add-on): faster jump-to-definition
-  (use-package lsp-pyright
-    :straight t
-    :custom (lsp-pyright-langserver-command "basedpyright")
-    :config (setq lsp-pyright-diagnostic-mode "workspace"
-                  lsp-pyright-use-library-code-for-types t
-                  lsp-pyright-auto-import-completions t
-                  lsp-pyright-disable-organize-imports t
-                  lsp-pyright-typechecking-mode "basic"))
   
   ;; Pyrefly LSP as add-on (faster navigation)
   (defgroup lsp-python-refly nil
