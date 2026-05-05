@@ -8,7 +8,7 @@ dependencies = [
     # Pin to git main until pyinfra 3.8 ships; 3.7 has a gevent+Python-3.13
     # signature-mismatch bug in connectors/util.py (issue #1652 / PR #1653).
     # Revert to "pyinfra>=3.8" once released on PyPI.
-    "pyinfra @ git+https://github.com/pyinfra-dev/pyinfra.git",
+    "pyinfra>=3.8",
     "rich>=13",
 ]
 
