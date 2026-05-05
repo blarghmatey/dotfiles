@@ -260,7 +260,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "cyclopts", specifier = ">=4" },
-    { name = "pyinfra", git = "https://github.com/pyinfra-dev/pyinfra.git" },
+    { name = "pyinfra", specifier = ">=3.8" },
     { name = "rich", specifier = ">=13" },
 ]
 
@@ -530,8 +530,8 @@ wheels = [
 
 [[package]]
 name = "pyinfra"
-version = "3.7.post56.dev0+b63d2c1e"
-source = { git = "https://github.com/pyinfra-dev/pyinfra.git#b63d2c1eab653f84d9f05ec347c14074db70ac47" }
+version = "3.8.0"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
     { name = "distro" },
@@ -543,6 +543,10 @@ dependencies = [
     { name = "python-dateutil" },
     { name = "typeguard" },
     { name = "types-paramiko" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a4/57/95df8eb3decd127802fe9b5b19c0e00fa77374b2ff1ea9e23c4f108035dd/pyinfra-3.8.0.tar.gz", hash = "sha256:a00562c9cb87d8a911c9d08035885f341bb423a93488ebd2e1fce594b104c0e2", size = 651818, upload-time = "2026-05-04T12:26:18.376Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c8/3d/744ef64322068c264425e7491c566bc63575ca5f304ed08e46e7210741f7/pyinfra-3.8.0-py3-none-any.whl", hash = "sha256:023ae01ef1326b670f88ef77b28b2a83039ef1551faa554a74cbd50ba923aba4", size = 299052, upload-time = "2026-05-04T12:26:19.726Z" },
 ]
 
 [[package]]
