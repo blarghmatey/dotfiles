@@ -27,10 +27,5 @@
       "groupName": "tree-sitter grammars",
       "automerge": false
     },
-    {
-      "description": "Ignore the intentionally git-pinned pyinfra (tracking upstream until 3.8 ships on PyPI)",
-      "matchPackageNames": ["pyinfra"],
-      "enabled": false
-    }
   ]
 }
