@@ -4,6 +4,9 @@
 ## Search mode: fuzzy gives best interactive experience
 search_mode = "fuzzy"
 
+## Show history across all shell sessions and hosts
+filter_mode = "global"
+
 ## Filter by directory within current git repo when pressing up-arrow
 filter_mode_shell_up_key_binding = "directory"
 

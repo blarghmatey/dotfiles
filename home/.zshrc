@@ -23,6 +23,8 @@ alias ghc='npx -y @github/copilot'
 alias amp='npx -y @sourcegraph/amp'
 alias kilo='npx -y @kilocode/cli'
 alias ccr='npx -y @musistudio/claude-code-router'
+alias pi='npx -y @earendil-works/pi-coding-agent'
+
 
 function retire_concourse_worker {
     aws ec2 describe-instances --filters Name=private-dns-name,Values=$1.ec2.internal | jq ".Reservations[0].Instances[0].InstanceId" | xargs aws ec2 terminate-instances --instance-id
@@ -124,7 +126,9 @@ export OLLAMA_BASE_URL
 export EXPERT_OLLAMA_BASE_URL
 export OLLAMA_CUDA=1
 export OLLAMA_NUM_THREADS=8
+export OLLAMA_API_KEY=$(pass ollama-cloud-api-key)
 
+export KILO_API_KEY=$(pass kilo-api-key)
 # Claude Code
 # Enable Bedrock integration
 # export CLAUDE_CODE_USE_BEDROCK=1
@@ -156,3 +160,7 @@ export PATH="$PATH:/home/tmacey/.local/bin"
 
 # dbt aliases
 alias dbtf=/home/tmacey/.local/bin/dbt
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/tmacey/.local/bin:$PATH"

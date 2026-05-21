@@ -1,13 +1,36 @@
 {
   "mcpServers": {
+    "semble": {
+      "tools": [
+        "*"
+      ],
+      "command": "uvx",
+      "args": [
+        "--from",
+        "semble[mcp]",
+        "semble"
+      ],
+      "source": "user",
+      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+    },
     "Mantic": {
-      "tools": ["*"],
+      "tools": [
+        "*"
+      ],
       "type": "local",
       "command": "npx",
-      "args": ["-y", "mantic.sh@latest", "server"],
-      "source": "user"
+      "args": [
+        "-y",
+        "mantic.sh@latest",
+        "server"
+      ],
+      "source": "user",
+      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
     },
     "filesystem": {
+      "tools": [
+        "*"
+      ],
       "type": "local",
       "command": "npx",
       "args": [
@@ -16,30 +39,85 @@
         "/home/tmacey/code",
         "/home/tmacey/.config",
         "/tmp"
-      ]
+      ],
+      "source": "user",
+      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
     },
-    "github": {
-      "type": "local",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
-      }
+    "grafana-production": {
+      "tools": [
+        "*"
+      ],
+      "type": "http",
+      "url": "https://mcp.grafana.com/mcp",
+      "headers": {
+        "X-Grafana-URL": "https://mitolproduction.grafana.net"
+      },
+      "source": "user",
+      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
     },
-    "fetch": {
-      "type": "local",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-fetch"]
+    "grafana-qa": {
+      "tools": [
+        "*"
+      ],
+      "type": "http",
+      "url": "https://mcp.grafana.com/mcp",
+      "headers": {
+        "X-Grafana-URL": "https://mitolqa.grafana.net"
+      },
+      "source": "user",
+      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
     },
     "memory": {
+      "tools": [
+        "*"
+      ],
       "type": "local",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "source": "user",
+      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
     },
     "sequential-thinking": {
+      "tools": [
+        "*"
+      ],
       "type": "local",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "source": "user",
+      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+    },
+    "vantage": {
+      "tools": [
+        "*"
+      ],
+      "type": "http",
+      "url": "https://mcp.vantage.sh/mcp",
+      "source": "user",
+      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+    },
+    "OpenMetadata": {
+      "tools": [
+        "*"
+      ],
+      "type": "http",
+      "url": "https://data.ol.mit.edu/mcp",
+      "source": "user",
+      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+    },
+    "sentry": {
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp",
+      "headers": {},
+      "tools": [
+        "*"
+      ]
     }
   }
 }
