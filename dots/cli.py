@@ -91,10 +91,20 @@ def diff(*, profile: str = DEFAULT_PROFILE) -> None:
     prints a per-category table of what is present vs missing.
     """
     from .diff import print_diff
+    from .pi import diff_pi
     from .skills import diff_skills
 
     print_diff(REPO_ROOT, profile)
+    diff_pi(REPO_ROOT)
     diff_skills(REPO_ROOT)
+
+
+@install.command(name="pi")
+def pi_extensions() -> None:
+    """Install the pi coding-agent CLI globally and all extensions from settings.json."""
+    from .pi import install_pi
+
+    install_pi(REPO_ROOT)
 
 
 @install.command
@@ -159,12 +169,13 @@ def install_all(
     verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = False,
     yes: Annotated[bool, cyclopts.Parameter(name=["--yes", "-y"])] = False,
 ) -> None:
-    """Run all install subcommands in order: packages → python → node → cargo → go → skills."""
+    """Run all install subcommands in order: packages → python → node → cargo → go → pi → skills."""
     packages(profile=profile, verbose=verbose)
     python_tools()
     node(profile=profile)
     cargo_tools()
     go_tools()
+    pi_extensions()
     skills(yes=yes)
 
 

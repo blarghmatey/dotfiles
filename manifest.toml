@@ -16,6 +16,7 @@ sensitive = [
     ".npmrc",
     ".claude/settings.json",
     ".copilot/mcp-config.json",
+    ".pi/agent/settings.json",
 ]
 
 # Template files: source lives in home/ with a .tmpl extension and is rendered
@@ -73,6 +74,7 @@ global = [
     "@kilocode/cli",
     "@sourcegraph/amp",
     "@musistudio/claude-code-router",
+    "@earendil-works/pi-coding-agent",
 ]
 
 # ──────────────────────────────────────────────

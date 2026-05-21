@@ -1,0 +1,9 @@
+{
+  "lastChangelogVersion": "0.75.4",
+  "defaultProvider": "github-copilot",
+  "defaultModel": "claude-sonnet-4.6",
+  "packages": [
+    "npm:pi-mcp-adapter",
+    "npm:pi-lens"
+  ]
+}

@@ -254,7 +254,7 @@ def install_go(repo_root: Path) -> None:
 
 
 def upgrade_all(profile: str) -> None:
-    """Upgrade system packages, Python tools, npm globals, and cargo/go tools."""
+    """Upgrade system packages, Python tools, npm globals, cargo/go tools, and pi."""
     console.print("[bold]Upgrading system packages[/bold]  (yay -Syu)")
     subprocess.run(["yay", "-Syu", "--noconfirm"], check=True)
 
@@ -265,8 +265,11 @@ def upgrade_all(profile: str) -> None:
     subprocess.run(["npm", "update", "-g"], check=True)
 
     console.print("[bold]Upgrading Cargo tools[/bold]  (cargo install --all-features)")
-    subprocess.run(["cargo", "install", "--all-features"], check=True)
+    subprocess.run(["cargo", "install-update", "-a"], check=True)
 
     console.print("[bold]Upgrading Go tools[/bold]  (go install @latest)")
     console.print("[dim]Run 'dots install go' to re-install all go tools at @latest[/dim]")
+
+    from .pi import upgrade_pi
+    upgrade_pi()
 

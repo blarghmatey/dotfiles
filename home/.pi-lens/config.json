@@ -1,0 +1,9 @@
+{
+  "widget": {
+    "visible": true
+  },
+  "format": {
+    "enabled": true,
+    "mode": "deferred"
+  }
+}
