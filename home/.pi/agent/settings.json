@@ -4,6 +4,7 @@
   "defaultModel": "claude-sonnet-4.6",
   "packages": [
     "npm:pi-mcp-adapter",
-    "npm:pi-lens"
+    "npm:pi-lens",
+    "npm:pi-total-recall"
   ]
 }
