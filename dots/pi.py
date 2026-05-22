@@ -5,6 +5,12 @@ a dotfile, symlinked to ``~/.pi/agent/settings.json``).  After ``dots sync``
 that file IS the live settings file, so ``pi install`` writes back into the
 repo automatically — no separate lock file is needed.
 
+Additional tracked config files (all under ``home/.pi/agent/``):
+    mcp.json              — MCP server connections (sensitive: contains org URLs)
+    models.json           — Custom model provider definitions
+    pi-worktrees.config.json — pi-worktrees extension config
+    npm/package.json      — Extension package manifest with semver constraints
+
 ``dots install pi``  — install the pi CLI globally and any missing extensions
 ``dots diff``        — includes a pi section comparing settings vs installed
 ``dots upgrade``     — includes ``pi update`` to upgrade pi + all extensions
@@ -23,15 +29,29 @@ from rich.table import Table
 console = Console()
 
 _PI_CLI_PKG = "@earendil-works/pi-coding-agent"
-_PI_NPM_MODULES = Path.home() / ".pi" / "agent" / "npm" / "node_modules"
+_PI_AGENT = Path.home() / ".pi" / "agent"
+_PI_NPM_MODULES = _PI_AGENT / "npm" / "node_modules"
+
+# Config files tracked in the dotfiles repo (relative to home/.pi/agent/)
+_TRACKED_CONFIGS = [
+    "mcp.json",
+    "models.json",
+    "pi-worktrees.config.json",
+    "npm/package.json",
+]
 
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
 
+def _agent_path(repo_root: Path, rel: str) -> Path:
+    """Return the dotfiles copy of a file under home/.pi/agent/."""
+    return repo_root / "home" / ".pi" / "agent" / rel
+
+
 def _settings_path(repo_root: Path) -> Path:
     """Return the dotfiles copy of pi's settings.json (source of truth)."""
-    return repo_root / "home" / ".pi" / "agent" / "settings.json"
+    return _agent_path(repo_root, "settings.json")
 
 
 def _read_packages(repo_root: Path) -> list[str]:
@@ -39,7 +59,7 @@ def _read_packages(repo_root: Path) -> list[str]:
     path = _settings_path(repo_root)
     if not path.exists():
         # Graceful fallback to the live file before first sync
-        live = Path.home() / ".pi" / "agent" / "settings.json"
+        live = _PI_AGENT / "settings.json"
         if live.exists():
             path = live
         else:
@@ -90,6 +110,18 @@ def _extension_installed(pkg_name: str) -> bool:
     return (_PI_NPM_MODULES / pkg_name).exists()
 
 
+def _config_in_sync(repo_root: Path, rel: str) -> bool | None:
+    """Compare a tracked config file against the live copy.
+
+    Returns True if identical, False if different, None if either copy is missing.
+    """
+    repo_copy = _agent_path(repo_root, rel)
+    live_copy = _PI_AGENT / rel
+    if not repo_copy.exists() or not live_copy.exists():
+        return None
+    return repo_copy.read_text() == live_copy.read_text()
+
+
 # ── public API ────────────────────────────────────────────────────────────────
 
 
@@ -133,7 +165,8 @@ def install_pi(repo_root: Path) -> None:
 
 
 def diff_pi(repo_root: Path) -> None:
-    """Print a diff table comparing settings.json packages vs what is installed."""
+    """Print a diff table comparing settings.json packages vs what is installed,
+    and flagging any tracked config files that are out of sync with the live copies."""
     packages = _read_packages(repo_root)
 
     console.print("\n[bold]Pi extensions diff[/bold]\n")
@@ -144,7 +177,7 @@ def diff_pi(repo_root: Path) -> None:
         header_style="bold",
         padding=(0, 1),
     )
-    table.add_column("Category", min_width=22)
+    table.add_column("Category", min_width=28)
     table.add_column("Status", min_width=16)
     table.add_column("Details")
 
@@ -185,6 +218,26 @@ def diff_pi(repo_root: Path) -> None:
             "  ".join(status_parts) or "[dim]—[/dim]",
             detail,
         )
+
+    # Rows: tracked config files
+    for rel in _TRACKED_CONFIGS:
+        in_sync = _config_in_sync(repo_root, rel)
+        label = f".pi/agent/{rel}"
+        if in_sync is None:
+            live_missing = not (_PI_AGENT / rel).exists()
+            repo_missing = not _agent_path(repo_root, rel).exists()
+            if live_missing and repo_missing:
+                status, detail = "[dim]—[/dim]", "[dim]not present in either location[/dim]"
+            elif live_missing:
+                status, detail = "[yellow]?[/yellow]", "[yellow]live copy missing — run dots sync[/yellow]"
+            else:
+                status, detail = "[yellow]?[/yellow]", "[yellow]not yet tracked in dotfiles[/yellow]"
+        elif in_sync:
+            status, detail = "[green]✓[/green]", "[dim]in sync[/dim]"
+        else:
+            status = "[yellow]≠[/yellow]"
+            detail = f"[yellow]live copy differs — run: cp ~/.pi/agent/{rel} home/.pi/agent/{rel}[/yellow]"
+        table.add_row(label, status, detail)
 
     console.print(table)
 

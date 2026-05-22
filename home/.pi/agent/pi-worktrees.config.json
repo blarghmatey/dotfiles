@@ -1,0 +1,20 @@
+{
+  "worktrees": {
+    "**": {
+      "worktreeRoot": "{{mainWorktree}}.worktrees",
+      "onCreate": []
+    },
+    "github.com/blarghmatey/dotfiles": {
+      "worktreeRoot": "{{mainWorktree}}.worktrees",
+      "onCreate": []
+    }
+  },
+  "matchingStrategy": "fail-on-tie",
+  "onCreateDisplayOutputMaxLines": 5,
+  "onCreateCmdDisplayPending": "[ ] {{cmd}}",
+  "onCreateCmdDisplaySuccess": "[x] {{cmd}}",
+  "onCreateCmdDisplayError": "[ ] {{cmd}} [ERROR]",
+  "onCreateCmdDisplayPendingColor": "dim",
+  "onCreateCmdDisplaySuccessColor": "success",
+  "onCreateCmdDisplayErrorColor": "error"
+}

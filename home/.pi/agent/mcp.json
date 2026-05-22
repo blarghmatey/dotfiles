@@ -1,0 +1,70 @@
+{
+  "mcpServers": {
+    "semble": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "semble[mcp]",
+        "semble"
+      ]
+    },
+    "Mantic": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mantic.sh@latest",
+        "server"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/home/tmacey/code",
+        "/home/tmacey/.config",
+        "/tmp"
+      ]
+    },
+    "grafana-production": {
+      "type": "http",
+      "url": "https://mcp.grafana.com/mcp",
+      "headers": {
+        "X-Grafana-URL": "https://mitolproduction.grafana.net"
+      }
+    },
+    "grafana-qa": {
+      "type": "http",
+      "url": "https://mcp.grafana.com/mcp",
+      "headers": {
+        "X-Grafana-URL": "https://mitolqa.grafana.net"
+      }
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "vantage": {
+      "type": "http",
+      "url": "https://mcp.vantage.sh/mcp"
+    },
+    "OpenMetadata": {
+      "type": "http",
+      "url": "https://data.ol.mit.edu/mcp"
+    },
+    "sentry": {
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp"
+    }
+  }
+}

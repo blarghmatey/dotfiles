@@ -2,5 +2,14 @@
 # Aider leftover artifacts (tool no longer in use)
 .aider*
 pyinfra-debug.log
+# Global gitignore ignores .pi/ entirely; opt specific tracked files back in
+!home/.pi/
+!home/.pi/agent/
+!home/.pi/agent/settings.json
+!home/.pi/agent/mcp.json
+!home/.pi/agent/models.json
+!home/.pi/agent/pi-worktrees.config.json
+!home/.pi/agent/npm/
+!home/.pi/agent/npm/package.json
 # Emacs Custom — machine-specific; may contain API keys written by packages
 home/.emacs.d/custom.el
