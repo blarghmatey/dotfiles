@@ -5,19 +5,16 @@
 # ──────────────────────────────────────────────
 [sync]
 # Glob patterns (relative to home/) to skip when syncing
-exclude = [
-    "**/.DS_Store",
-    "**/.gitkeep",
-]
+exclude = ["**/.DS_Store", "**/.gitkeep"]
 
 # Sensitive files — still synced, but flagged with a warning in `dots status`.
 # These contain secrets or machine-local values; do not commit real values.
 sensitive = [
-    ".npmrc",
-    ".claude/settings.json",
-    ".copilot/mcp-config.json",
-    ".pi/agent/settings.json",
-    ".pi/agent/mcp.json",
+  ".npmrc",
+  ".claude/settings.json",
+  ".copilot/mcp-config.json",
+  ".pi/agent/settings.json",
+  ".pi/agent/mcp.json",
 ]
 
 # Template files: source lives in home/ with a .tmpl extension and is rendered
@@ -37,45 +34,74 @@ description = "Manjaro/Arch Linux on WSL2"
 
 [profiles.arch-wsl2.packages]
 pacman = [
-    # Shell & terminal
-    "zsh", "tmux", "starship", "atuin", "fzf", "eza", "bat",
-    "ripgrep", "fd", "zoxide", "direnv", "dog",
+  # Shell & terminal
+  "zsh",
+  "tmux",
+  "starship",
+  "atuin",
+  "fzf",
+  "eza",
+  "bat",
+  "ripgrep",
+  "fd",
+  "zoxide",
+  "direnv",
+  "dog",
 
-    # Git
-    "git", "git-delta", "lazygit", "github-cli",
+  # Git
+  "git",
+  "git-delta",
+  "lazygit",
+  "github-cli",
 
-    # Editors
-    "neovim", "emacs",
+  # Editors
+  "neovim",
+  "emacs",
 
-    # Languages & runtimes
-    "nodejs", "npm", "go", "rustup", "base-devel",
+  # Languages & runtimes
+  "nodejs",
+  "npm",
+  "go",
+  "rustup",
+  "base-devel",
 
-    # DevOps & infra
-    "kubectl", "helm", "jq", "just", "docker",
+  # DevOps & infra
+  "kubectl",
+  "helm",
+  "jq",
+  "just",
+  "docker",
 
-    # Search
-    "the_silver_searcher",
+  # Search
+  "the_silver_searcher",
 
-    # System utils
-    "pass", "gnupg", "openssh", "curl", "wget", "rsync", "htop",
+  # System utils
+  "pass",
+  "gnupg",
+  "openssh",
+  "curl",
+  "wget",
+  "rsync",
+  "htop",
 
-    # Python (uv manages Python versions; system Python bootstraps uv)
-    "python", "python-pip",
+  # Python (uv manages Python versions; system Python bootstraps uv)
+  "python",
+  "python-pip",
 ]
 
 aur = [
-    "carapace",
-    "yq",          # go-based yq (not python-yq)
+  "carapace",
+  "yq",       # go-based yq (not python-yq)
 ]
 
 [profiles.arch-wsl2.node]
 global = [
-    "@google/gemini-cli",
-    "@github/copilot",
-    "@kilocode/cli",
-    "@sourcegraph/amp",
-    "@musistudio/claude-code-router",
-    "@earendil-works/pi-coding-agent",
+  "@google/gemini-cli",
+  "@github/copilot",
+  "@kilocode/cli",
+  "@sourcegraph/amp",
+  "@musistudio/claude-code-router",
+  "@earendil-works/pi-coding-agent",
 ]
 
 # ──────────────────────────────────────────────
@@ -84,31 +110,31 @@ global = [
 
 [cargo]
 tools = [
-    "lsp-ai",  # AI-powered LSP server supporting multiple editors and backends
-    "taws",    # AWS resource browser / TUI
+  "lsp-ai", # AI-powered LSP server supporting multiple editors and backends
+  "taws",   # AWS resource browser / TUI
 ]
 
 [go]
 tools = [
-    # Go language server (required for gopls/LSP in editors)
-    "golang.org/x/tools/gopls@latest",
-    # OCI/Docker image semantic diff
-    "github.com/reproducible-containers/diffoci/cmd/diffoci@latest",
-    # Route53 DNS management CLI
-    "github.com/barnybug/cli53/cmd/cli53@latest",
-    # AWS configuration diagnostics
-    "github.com/elC0mpa/aws-doctor@latest",
-    # Custom Caddy server builder
-    "github.com/caddyserver/xcaddy/cmd/xcaddy@latest",
+  # Go language server (required for gopls/LSP in editors)
+  "golang.org/x/tools/gopls@latest",
+  # OCI/Docker image semantic diff
+  "github.com/reproducible-containers/diffoci/cmd/diffoci@latest",
+  # Route53 DNS management CLI
+  "github.com/barnybug/cli53/cmd/cli53@latest",
+  # AWS configuration diagnostics
+  "github.com/elC0mpa/aws-doctor@latest",
+  # Custom Caddy server builder
+  "github.com/caddyserver/xcaddy/cmd/xcaddy@latest",
 
-    # ── stale / work-specific: review and remove if no longer needed ──
-    # "github.com/fatih/hclfmt@latest",                                            # HCL formatter (2018; superseded by terraform fmt)
-    # "github.com/cappyzawa/concourse-pipeline-jsonschema@latest",                 # Concourse CI pipeline JSON schema generator
-    # "github.com/alphagov/terraform-provider-concourse@latest",                   # Terraform provider for Concourse CI
-    # "github.com/hashicorp/terraform-provider-nomad@latest",                      # Terraform provider for Nomad (was terraform-providers/...)
-    # "github.com/pulumi/pulumi-nomad/cmd/pulumi-resource-nomad@latest",           # Pulumi Nomad resource provider
-    # "github.com/pulumi/pulumi-nomad/cmd/pulumi-tfgen-nomad@latest",              # Pulumi Nomad tfgen
-    # "github.com/adamdecaf/vault-backend-migrator@latest",                        # One-time Vault backend migration tool (2020)
-    # "github.com/pulumi/scripts/gomod-doccopy@latest",                            # Internal Pulumi doc utility (2020)
-    # tf2pulumi deprecated 2022; use 'pulumi convert --from terraform' instead
+  # ── stale / work-specific: review and remove if no longer needed ──
+  # "github.com/fatih/hclfmt@latest",                                            # HCL formatter (2018; superseded by terraform fmt)
+  # "github.com/cappyzawa/concourse-pipeline-jsonschema@latest",                 # Concourse CI pipeline JSON schema generator
+  # "github.com/alphagov/terraform-provider-concourse@latest",                   # Terraform provider for Concourse CI
+  # "github.com/hashicorp/terraform-provider-nomad@latest",                      # Terraform provider for Nomad (was terraform-providers/...)
+  # "github.com/pulumi/pulumi-nomad/cmd/pulumi-resource-nomad@latest",           # Pulumi Nomad resource provider
+  # "github.com/pulumi/pulumi-nomad/cmd/pulumi-tfgen-nomad@latest",              # Pulumi Nomad tfgen
+  # "github.com/adamdecaf/vault-backend-migrator@latest",                        # One-time Vault backend migration tool (2020)
+  # "github.com/pulumi/scripts/gomod-doccopy@latest",                            # Internal Pulumi doc utility (2020)
+  # tf2pulumi deprecated 2022; use 'pulumi convert --from terraform' instead
 ]

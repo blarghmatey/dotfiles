@@ -18,9 +18,9 @@ import json
 import subprocess
 from pathlib import Path
 
+from rich import box
 from rich.console import Console
 from rich.table import Table
-from rich import box
 
 console = Console()
 
@@ -30,7 +30,7 @@ def _load_lock(repo_root: Path) -> dict[str, dict]:
     path = repo_root / "skills-lock.json"
     if not path.exists():
         return {}
-    with open(path) as f:
+    with path.open() as f:
         data = json.load(f)
     return data.get("skills", {})
 
@@ -41,6 +41,7 @@ def _installed_skills() -> set[str]:
         ["npx", "skills", "list", "-g", "--json"],
         capture_output=True,
         text=True,
+        check=False,
     )
     try:
         return {s["name"] for s in json.loads(result.stdout)}
@@ -75,10 +76,7 @@ def install_skills(repo_root: Path, *, yes: bool = False) -> None:
 
     for source in sources:
         skill_names = [name for name, e in skills.items() if e.get("source") == source]
-        console.print(
-            f"  [cyan]{source}[/cyan] "
-            f"[dim]({len(skill_names)} skills)[/dim]"
-        )
+        console.print(f"  [cyan]{source}[/cyan] [dim]({len(skill_names)} skills)[/dim]")
         cmd = ["npx", "skills", "add", source, "--global", "--all"]
         if yes:
             cmd.append("--yes")
@@ -104,9 +102,7 @@ def diff_skills(repo_root: Path) -> None:
     extra = sorted(installed - expected)
     ok_count = len(expected) - len(missing)
 
-    table = Table(
-        box=box.SIMPLE_HEAD, show_header=True, header_style="bold", padding=(0, 1)
-    )
+    table = Table(box=box.SIMPLE_HEAD, show_header=True, header_style="bold", padding=(0, 1))
     table.add_column("Category", min_width=20)
     table.add_column("Status", min_width=14)
     table.add_column("Details")
@@ -133,7 +129,5 @@ def diff_skills(repo_root: Path) -> None:
 
     if extra:
         console.print(
-            f"[dim]{len(extra)} installed but not in lockfile: "
-            + ", ".join(extra)
-            + "[/dim]\n"
+            f"[dim]{len(extra)} installed but not in lockfile: " + ", ".join(extra) + "[/dim]\n"
         )

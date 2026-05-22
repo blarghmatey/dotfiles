@@ -1,0 +1,51 @@
+# prek — git hook manager (https://prek.j178.dev)
+# Run:  prek run --all-files   (check everything)
+#       prek install            (wire into git hooks)
+
+# ── Built-in fast hooks (Rust-native, no network or interpreter needed) ───────
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "trailing-whitespace" },
+  { id = "end-of-file-fixer" },
+  { id = "check-merge-conflict" },
+  { id = "check-toml" },
+  { id = "check-json", exclude = 'renovate\.json' },
+  { id = "check-yaml" },
+  { id = "detect-private-key" },
+]
+
+# ── Ruff — Python linting and formatting ──────────────────────────────────────
+[[repos]]
+repo = "https://github.com/astral-sh/ruff-pre-commit"
+rev = "v0.15.14"
+hooks = [
+  { id = "ruff", args = ["--fix"] },
+  { id = "ruff-format" },
+]
+
+# ── detect-secrets — broad secrets / credential scanning ─────────────────────
+[[repos]]
+repo = "https://github.com/Yelp/detect-secrets"
+rev = "v1.5.0"
+hooks = [
+  { id = "detect-secrets", args = ["--baseline", ".secrets.baseline"] },
+]
+
+# ── shellcheck — shell script linting ────────────────────────────────────────
+[[repos]]
+repo = "https://github.com/shellcheck-py/shellcheck-py"
+rev = "v0.11.0.1"
+hooks = [
+  # Restrict to *.sh/*.bash — zsh config files (home/.zshrc etc.) use
+  # zsh-specific syntax that shellcheck cannot fully analyse.
+  { id = "shellcheck", files = '\.(sh|bash)$' },
+]
+
+# ── yamllint — YAML style and validity ───────────────────────────────────────
+[[repos]]
+repo = "https://github.com/adrienverge/yamllint"
+rev = "v1.38.0"
+hooks = [
+  { id = "yamllint", args = ["-c", ".yamllint.yaml"] },
+]

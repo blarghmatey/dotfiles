@@ -6,20 +6,20 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from ._types import FileState, FileStatus
+from ._types import FileState
 from .sync import get_status, iter_tracked
 
 console = Console()
 
 _STATE_STYLE: dict[FileState, tuple[str, str]] = {
-    FileState.LINKED_OK:       ("✓ linked-ok",       "green"),
-    FileState.LINKED_WRONG:    ("⚡ linked-wrong",    "yellow"),
-    FileState.BROKEN:          ("✗ broken",           "red bold"),
-    FileState.RENDERED:        ("✓ rendered",         "blue"),
-    FileState.RENDERED_STALE:  ("⚡ rendered-stale",  "yellow"),
-    FileState.COPY_SAME:       ("~ copy-same",        "dim"),
-    FileState.COPY_DIFFERENT:  ("⚡ copy-different",  "yellow"),
-    FileState.MISSING:         ("✗ missing",          "red bold"),
+    FileState.LINKED_OK: ("✓ linked-ok", "green"),
+    FileState.LINKED_WRONG: ("⚡ linked-wrong", "yellow"),
+    FileState.BROKEN: ("✗ broken", "red bold"),
+    FileState.RENDERED: ("✓ rendered", "blue"),
+    FileState.RENDERED_STALE: ("⚡ rendered-stale", "yellow"),
+    FileState.COPY_SAME: ("~ copy-same", "dim"),
+    FileState.COPY_DIFFERENT: ("⚡ copy-different", "yellow"),
+    FileState.MISSING: ("✗ missing", "red bold"),
 }
 
 
@@ -51,7 +51,5 @@ def print_status(repo_root: Path, home: Path) -> None:
     err = counts.get(FileState.MISSING, 0) + counts.get(FileState.BROKEN, 0)
 
     console.print(
-        f"\n[green]{ok}[/green] ok  "
-        f"[yellow]{drift}[/yellow] drift  "
-        f"[red]{err}[/red] missing/broken"
+        f"\n[green]{ok}[/green] ok  [yellow]{drift}[/yellow] drift  [red]{err}[/red] missing/broken"
     )

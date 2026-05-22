@@ -569,7 +569,7 @@
                     :add-on? t))
   ;; Basedpyright LSP (primary): semantic tokens for rich highlighting
   ;; Pyrefly LSP (add-on): faster jump-to-definition
-  
+
   ;; Pyrefly LSP as add-on (faster navigation)
   (defgroup lsp-python-refly nil
     "LSP support for Python (pyrefly) - fast navigation add-on."
@@ -918,11 +918,11 @@
 
 (use-package yaml-mode
   :straight t
-  :hook ((yaml-mode . (lambda () 
+  :hook ((yaml-mode . (lambda ()
                         (setq-local electric-indent-mode nil)
                         (setq-local indent-line-function 'yaml-indent-line)))
          ;; yaml-ts-mode is a remap target; hooks do not carry over from yaml-mode.
-         (yaml-ts-mode . (lambda () 
+         (yaml-ts-mode . (lambda ()
                           (setq-local electric-indent-mode nil)
                           (setq-local indent-line-function 'yaml-indent-line)))))
 

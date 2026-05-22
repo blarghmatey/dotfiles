@@ -11,7 +11,7 @@ _MANIFEST_PATH = Path(__file__).parent.parent / "manifest.toml"
 @lru_cache(maxsize=1)
 def load() -> dict:
     """Return the parsed manifest.toml (cached for the lifetime of the deploy run)."""
-    with open(_MANIFEST_PATH, "rb") as f:
+    with _MANIFEST_PATH.open("rb") as f:
         return tomllib.load(f)
 
 
@@ -22,7 +22,5 @@ def profile(name: str) -> dict:
         return manifest["profiles"][name]
     except KeyError:
         available = list(manifest.get("profiles", {}).keys())
-        raise KeyError(
-            f"Profile {name!r} not found in manifest.toml. "
-            f"Available: {available}"
-        ) from None
+        msg = f"Profile {name!r} not found in manifest.toml. Available: {available}"
+        raise KeyError(msg) from None

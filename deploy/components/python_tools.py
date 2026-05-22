@@ -11,9 +11,8 @@ server.shell with ``uvenv uninstall``.
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import tomllib
+from pathlib import Path
 
 from pyinfra import host
 from pyinfra.api import deploy
@@ -30,7 +29,7 @@ def _lock_summary() -> str:
         shown = pkgs[:6]
         suffix = f" … +{len(pkgs) - 6} more" if len(pkgs) > 6 else ""
         return f"({len(pkgs)} tools): {', '.join(shown)}{suffix}"
-    except Exception:
+    except (OSError, tomllib.TOMLDecodeError):
         return f"from {_LOCKFILE.name}"
 
 
@@ -46,12 +45,12 @@ def install_python_tools() -> None:
     # uvenv has no pyinfra operation; server.shell is the correct fallback.
     remove_pkgs = _parse_csv(host.data.get("remove_uvenv", ""))
     for pkg in remove_pkgs:
-        server.shell(
+        server.shell(  # pyrefly: ignore [unexpected-keyword]
             name=f"Remove Python tool: {pkg}",
             commands=[f"uvenv uninstall {pkg}"],
         )
 
-    server.shell(
+    server.shell(  # pyrefly: ignore [unexpected-keyword]
         name=f"uvenv thaw {_lock_summary()}",
         commands=[f"uvenv thaw --filename {_LOCKFILE} --skip-current"],
     )

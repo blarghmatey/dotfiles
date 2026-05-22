@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 
 
-class FileState(str, Enum):
+class FileState(StrEnum):
     LINKED_OK = "linked-ok"
     LINKED_WRONG = "linked-wrong"
     BROKEN = "broken"
@@ -20,8 +20,8 @@ class FileState(str, Enum):
 class TrackedFile:
     """A file tracked in the dotfiles repo."""
 
-    src: Path          # Absolute path within repo home/
-    dst: Path          # Absolute path within ~/
+    src: Path  # Absolute path within repo home/
+    dst: Path  # Absolute path within ~/
     is_template: bool  # True when src has a .tmpl extension
     sensitive: bool = False
 

@@ -6,8 +6,8 @@ This directory contains maintenance patches for Emacs configuration that fix bug
 
 ### `python-treesit-fixes.el`
 
-**Status:** Active for Emacs 30.2  
-**Created:** 2025-05-02  
+**Status:** Active for Emacs 30.2
+**Created:** 2025-05-02
 **Purpose:** Fix tree-sitter font-lock query error for Python
 
 **Issue:**
@@ -15,7 +15,7 @@ Emacs 30.2's `python--treesit-keywords` includes multi-word operators (`"not in"
 
 This results in errors during buffer editing:
 ```
-Error during redisplay: (jit-lock-function 1) signaled 
+Error during redisplay: (jit-lock-function 1) signaled
 (treesit-query-error "Syntax error at" 358 ...)
 ```
 

@@ -62,15 +62,25 @@ def _run_pyinfra(
     """Invoke pyinfra with the full set of data keys."""
     deploy_script = repo_root / "deploy" / "deploy.py"
     cmd = [
-        *_PYINFRA, "@local", str(deploy_script),
-        "--data", f"profile={profile}",
-        "--data", f"remove_packages={','.join(remove_packages or [])}",
-        "--data", f"remove_npm={','.join(remove_npm or [])}",
-        "--data", f"remove_uvenv={','.join(remove_uvenv or [])}",
-        "--data", f"remove_cargo={','.join(remove_cargo or [])}",
-        "--data", f"remove_go={','.join(remove_go or [])}",
-        "--data", f"enable_cargo={'true' if enable_cargo else 'false'}",
-        "--data", f"enable_go={'true' if enable_go else 'false'}",
+        *_PYINFRA,
+        "@local",
+        str(deploy_script),
+        "--data",
+        f"profile={profile}",
+        "--data",
+        f"remove_packages={','.join(remove_packages or [])}",
+        "--data",
+        f"remove_npm={','.join(remove_npm or [])}",
+        "--data",
+        f"remove_uvenv={','.join(remove_uvenv or [])}",
+        "--data",
+        f"remove_cargo={','.join(remove_cargo or [])}",
+        "--data",
+        f"remove_go={','.join(remove_go or [])}",
+        "--data",
+        f"enable_cargo={'true' if enable_cargo else 'false'}",
+        "--data",
+        f"enable_go={'true' if enable_go else 'false'}",
         "-y",
     ]
     if verbose:
@@ -82,7 +92,7 @@ def install_packages(repo_root: Path, profile: str, *, verbose: bool = False) ->
     """Run pyinfra deploy: remove stale packages then install manifest packages."""
     _sudo_authenticate()
 
-    with open(repo_root / "manifest.toml", "rb") as f:
+    with (repo_root / "manifest.toml").open("rb") as f:
         manifest = tomllib.load(f)
     profile_data = manifest.get("profiles", {}).get(profile, {})
     pkg_data = profile_data.get("packages", {})
@@ -112,11 +122,10 @@ def install_packages(repo_root: Path, profile: str, *, verbose: bool = False) ->
             if stale_npm:
                 remove_npm = _confirm_removals("npm global", stale_npm)
 
-    console.print(
-        f"\n[bold]Running pyinfra deploy[/bold]  profile=[cyan]{profile}[/cyan]"
-    )
+    console.print(f"\n[bold]Running pyinfra deploy[/bold]  profile=[cyan]{profile}[/cyan]")
     _run_pyinfra(
-        repo_root, profile,
+        repo_root,
+        profile,
         verbose=verbose,
         remove_packages=remove_pkgs,
         remove_npm=remove_npm,
@@ -133,7 +142,7 @@ def install_packages(repo_root: Path, profile: str, *, verbose: bool = False) ->
 def install_python(repo_root: Path) -> None:
     """Remove stale Python tools then thaw uvenv.lock."""
     lockfile = repo_root / "uvenv.lock"
-    with open(lockfile, "rb") as f:
+    with lockfile.open("rb") as f:
         lock = tomllib.load(f)
     current_tools: list[str] = sorted(lock.get("packages", {}).keys())
 
@@ -148,7 +157,7 @@ def install_python(repo_root: Path) -> None:
             remove_uvenv = _confirm_removals("uvenv", stale)
 
     profile = prev.profile or "arch-wsl2"
-    console.print(f"[bold]Installing Python tools[/bold] via pyinfra + uvenv thaw")
+    console.print("[bold]Installing Python tools[/bold] via pyinfra + uvenv thaw")
     _run_pyinfra(repo_root, profile, remove_uvenv=remove_uvenv)
 
     new_state = pkg_state.load()
@@ -158,13 +167,10 @@ def install_python(repo_root: Path) -> None:
 
 def install_node(repo_root: Path, profile: str) -> None:
     """Remove stale npm globals then install manifest npm globals via pyinfra."""
-    with open(repo_root / "manifest.toml", "rb") as f:
+    with (repo_root / "manifest.toml").open("rb") as f:
         manifest = tomllib.load(f)
     current_npm: list[str] = (
-        manifest.get("profiles", {})
-        .get(profile, {})
-        .get("node", {})
-        .get("global", [])
+        manifest.get("profiles", {}).get(profile, {}).get("node", {}).get("global", [])
     )
 
     if not current_npm:
@@ -193,7 +199,7 @@ def install_node(repo_root: Path, profile: str) -> None:
 
 def install_cargo(repo_root: Path) -> None:
     """Remove stale Cargo tools then install manifest cargo tools."""
-    with open(repo_root / "manifest.toml", "rb") as f:
+    with (repo_root / "manifest.toml").open("rb") as f:
         manifest = tomllib.load(f)
     current_tools: list[str] = manifest.get("cargo", {}).get("tools", [])
 
@@ -210,7 +216,8 @@ def install_cargo(repo_root: Path) -> None:
     profile = prev.profile or "arch-wsl2"
     console.print("[bold]Installing Cargo tools[/bold]")
     _run_pyinfra(
-        repo_root, profile,
+        repo_root,
+        profile,
         remove_cargo=remove_cargo,
         enable_cargo=True,
     )
@@ -222,7 +229,7 @@ def install_cargo(repo_root: Path) -> None:
 
 def install_go(repo_root: Path) -> None:
     """Remove stale Go tools then install manifest go tools."""
-    with open(repo_root / "manifest.toml", "rb") as f:
+    with (repo_root / "manifest.toml").open("rb") as f:
         manifest = tomllib.load(f)
     current_specs: list[str] = manifest.get("go", {}).get("tools", [])
 
@@ -234,16 +241,15 @@ def install_go(repo_root: Path) -> None:
         installed = _go_installed(list(candidates))
         stale = sorted(candidates & installed)
         if stale:
-            remove_go = _confirm_removals(
-                "go", [_go_binary_name(s) for s in stale]
-            )
+            remove_go = _confirm_removals("go", [_go_binary_name(s) for s in stale])
             # Pass the full specs (not binary names) to pyinfra for removal
             remove_go = stale if remove_go else []
 
     profile = prev.profile or "arch-wsl2"
     console.print("[bold]Installing Go tools[/bold]")
     _run_pyinfra(
-        repo_root, profile,
+        repo_root,
+        profile,
         remove_go=remove_go,
         enable_go=True,
     )
@@ -253,7 +259,7 @@ def install_go(repo_root: Path) -> None:
     pkg_state.save(new_state, new_state.profile or profile)
 
 
-def upgrade_all(profile: str) -> None:
+def upgrade_all(_profile: str) -> None:
     """Upgrade system packages, Python tools, npm globals, cargo/go tools, and pi."""
     console.print("[bold]Upgrading system packages[/bold]  (yay -Syu)")
     subprocess.run(["yay", "-Syu", "--noconfirm"], check=True)
@@ -271,5 +277,5 @@ def upgrade_all(profile: str) -> None:
     console.print("[dim]Run 'dots install go' to re-install all go tools at @latest[/dim]")
 
     from .pi import upgrade_pi
-    upgrade_pi()
 
+    upgrade_pi()

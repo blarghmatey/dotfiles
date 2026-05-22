@@ -64,7 +64,7 @@ def _read_packages(repo_root: Path) -> list[str]:
             path = live
         else:
             return []
-    with open(path) as fh:
+    with path.open() as fh:
         return json.load(fh).get("packages", [])
 
 
@@ -81,13 +81,12 @@ def _pkg_name(spec: str) -> str:
     if name.startswith("@"):
         # Scoped package: @scope/name[@version]
         slash = name.index("/")
-        rest = name[slash + 1:]
+        rest = name[slash + 1 :]
         if "@" in rest:
             rest = rest[: rest.index("@")]
         name = name[: slash + 1] + rest
-    else:
-        if "@" in name:
-            name = name[: name.index("@")]
+    elif "@" in name:
+        name = name[: name.index("@")]
     return name
 
 
@@ -97,6 +96,7 @@ def _pi_cli_installed() -> bool:
         ["npm", "list", "-g", "--depth=0", "--json"],
         capture_output=True,
         text=True,
+        check=False,
     )
     try:
         data = json.loads(result.stdout)
@@ -146,8 +146,7 @@ def install_pi(repo_root: Path) -> None:
         return
 
     console.print(
-        f"\n[bold]Installing pi extensions[/bold]"
-        f"  [dim]({len(packages)} packages)[/dim]\n"
+        f"\n[bold]Installing pi extensions[/bold]  [dim]({len(packages)} packages)[/dim]\n"
     )
 
     installed_count = 0
@@ -165,8 +164,10 @@ def install_pi(repo_root: Path) -> None:
 
 
 def diff_pi(repo_root: Path) -> None:
-    """Print a diff table comparing settings.json packages vs what is installed,
-    and flagging any tracked config files that are out of sync with the live copies."""
+    """Print a diff table comparing settings.json packages vs what is installed.
+
+    Also flags any tracked config files that are out of sync with the live copies.
+    """
     packages = _read_packages(repo_root)
 
     console.print("\n[bold]Pi extensions diff[/bold]\n")
@@ -227,11 +228,20 @@ def diff_pi(repo_root: Path) -> None:
             live_missing = not (_PI_AGENT / rel).exists()
             repo_missing = not _agent_path(repo_root, rel).exists()
             if live_missing and repo_missing:
-                status, detail = "[dim]—[/dim]", "[dim]not present in either location[/dim]"
+                status, detail = (
+                    "[dim]—[/dim]",
+                    "[dim]not present in either location[/dim]",
+                )
             elif live_missing:
-                status, detail = "[yellow]?[/yellow]", "[yellow]live copy missing — run dots sync[/yellow]"
+                status, detail = (
+                    "[yellow]?[/yellow]",
+                    "[yellow]live copy missing — run dots sync[/yellow]",
+                )
             else:
-                status, detail = "[yellow]?[/yellow]", "[yellow]not yet tracked in dotfiles[/yellow]"
+                status, detail = (
+                    "[yellow]?[/yellow]",
+                    "[yellow]not yet tracked in dotfiles[/yellow]",
+                )
         elif in_sync:
             status, detail = "[green]✓[/green]", "[dim]in sync[/dim]"
         else:

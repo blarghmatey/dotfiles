@@ -23,7 +23,8 @@ def _resolve_pass(secret: str) -> str:
 def _resolve_env(var: str) -> str:
     value = os.environ.get(var.strip())
     if value is None:
-        raise KeyError(f"Environment variable not set: {var!r}")
+        msg = f"Environment variable not set: {var!r}"
+        raise KeyError(msg)
     return value
 
 
@@ -37,8 +38,7 @@ def render(content: str) -> str:
         return _resolve_env(m.group(1))
 
     content = _PASS_RE.sub(replace_pass, content)
-    content = _ENV_RE.sub(replace_env, content)
-    return content
+    return _ENV_RE.sub(replace_env, content)
 
 
 def render_file(src: Path, dst: Path, *, dry_run: bool = False) -> None:

@@ -35,12 +35,12 @@ def _go_bin_dir() -> str:
     Prefers $GOBIN, then first entry of $GOPATH/bin, then ~/go/bin.
     """
     gobin = subprocess.run(
-        ["go", "env", "GOBIN"], capture_output=True, text=True
+        ["go", "env", "GOBIN"], capture_output=True, text=True, check=False
     ).stdout.strip()
     if gobin:
         return gobin
     gopath = subprocess.run(
-        ["go", "env", "GOPATH"], capture_output=True, text=True
+        ["go", "env", "GOPATH"], capture_output=True, text=True, check=False
     ).stdout.strip()
     if gopath:
         return str(Path(gopath.split(":")[0]) / "bin")
@@ -56,7 +56,7 @@ def _binary_name(spec: str) -> str:
         github.com/barnybug/cli53/cmd/cli53@latest -> cli53
         github.com/foo/bar/v2@latest            -> bar  (strips /vN suffix)
     """
-    path = spec.split("@")[0]
+    path = spec.split("@", maxsplit=1)[0]
     parts = path.rstrip("/").split("/")
     last = parts[-1]
     # Strip Go major version suffix (e.g., /v2, /v3)
@@ -83,13 +83,13 @@ def install_go_tools() -> None:
         go_bin = _go_bin_dir()
         for spec in remove_specs:
             binary = _binary_name(spec)
-            server.shell(
+            server.shell(  # pyrefly: ignore [unexpected-keyword]
                 name=f"Remove go binary: {binary}",
                 commands=[f"rm -f {go_bin}/{binary}"],
             )
 
     for spec in specs:
-        server.shell(
+        server.shell(  # pyrefly: ignore [unexpected-keyword]
             name=f"go install {spec}",
             commands=[f"go install {spec}"],
         )

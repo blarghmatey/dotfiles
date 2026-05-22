@@ -12,7 +12,7 @@ console = Console()
 
 
 def _load_manifest(repo_root: Path) -> dict:
-    with open(repo_root / "manifest.toml", "rb") as f:
+    with (repo_root / "manifest.toml").open("rb") as f:
         return tomllib.load(f)
 
 
@@ -26,10 +26,7 @@ def iter_tracked(repo_root: Path, home: Path) -> list[TrackedFile]:
     sensitive_set: set[str] = set(sync_cfg.get("sensitive", []))
 
     # Build template map: repo-relative source path -> home-relative target path
-    template_map: dict[str, str] = {
-        t["source"]: t["target"]
-        for t in sync_cfg.get("templates", [])
-    }
+    template_map: dict[str, str] = {t["source"]: t["target"] for t in sync_cfg.get("templates", [])}
 
     files: list[TrackedFile] = []
     for src in sorted(home_src.rglob("*")):
@@ -50,12 +47,14 @@ def iter_tracked(repo_root: Path, home: Path) -> list[TrackedFile]:
             dst = home / rel
 
         dst_rel = str(dst.relative_to(home))
-        files.append(TrackedFile(
-            src=src,
-            dst=dst,
-            is_template=is_template,
-            sensitive=rel_str in sensitive_set or dst_rel in sensitive_set,
-        ))
+        files.append(
+            TrackedFile(
+                src=src,
+                dst=dst,
+                is_template=is_template,
+                sensitive=rel_str in sensitive_set or dst_rel in sensitive_set,
+            )
+        )
 
     return files
 
@@ -149,7 +148,9 @@ def _do_link(
     if (dst.exists() or dst.is_symlink()) and not safe_to_replace:
         if not force:
             reason = (
-                "local edits" if current_state == FileState.COPY_DIFFERENT else "wrong symlink target"
+                "local edits"
+                if current_state == FileState.COPY_DIFFERENT
+                else "wrong symlink target"
             )
             console.print(
                 f"  [yellow]skip[/yellow]       {f.rel}"
@@ -180,10 +181,7 @@ def _print_summary(results: list[FileStatus], *, dry_run: bool) -> None:
     for r in results:
         counts[r.state] = counts.get(r.state, 0) + 1
 
-    skipped = sum(
-        counts.get(s, 0)
-        for s in (FileState.COPY_DIFFERENT, FileState.LINKED_WRONG)
-    )
+    skipped = sum(counts.get(s, 0) for s in (FileState.COPY_DIFFERENT, FileState.LINKED_WRONG))
     prefix = "[dim]Dry run —[/dim] " if dry_run else ""
     console.print(
         f"\n{prefix}"

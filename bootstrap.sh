@@ -50,7 +50,8 @@ fi
 if ! command -v uvenv &>/dev/null; then
     step "Installing uvenv"
     uv tool install uvenv
-    export PATH="$(uv tool dir)/bin:$PATH"
+    _uvenv_bin="$(uv tool dir)/bin"
+    export PATH="$_uvenv_bin:$PATH"
 else
     info "uvenv already installed — skipping"
 fi

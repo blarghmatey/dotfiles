@@ -20,7 +20,7 @@ console = Console()
 
 
 def _pacman_installed() -> set[str]:
-    result = subprocess.run(["pacman", "-Q"], capture_output=True, text=True)
+    result = subprocess.run(["pacman", "-Q"], capture_output=True, text=True, check=False)
     return {line.split()[0] for line in result.stdout.splitlines() if line.strip()}
 
 
@@ -29,6 +29,7 @@ def _npm_global_installed() -> set[str]:
         ["npm", "list", "-g", "--depth=0", "--json"],
         capture_output=True,
         text=True,
+        check=False,
     )
     try:
         data = json.loads(result.stdout)
@@ -38,7 +39,7 @@ def _npm_global_installed() -> set[str]:
 
 
 def _uvenv_installed() -> set[str]:
-    result = subprocess.run(["uvenv", "list"], capture_output=True, text=True)
+    result = subprocess.run(["uvenv", "list"], capture_output=True, text=True, check=False)
     tools: set[str] = set()
     for line in result.stdout.splitlines():
         stripped = line.strip()
@@ -50,7 +51,7 @@ def _uvenv_installed() -> set[str]:
 def _cargo_installed() -> set[str]:
     """Return the set of crate names installed via cargo."""
     result = subprocess.run(
-        ["cargo", "install", "--list"], capture_output=True, text=True
+        ["cargo", "install", "--list"], capture_output=True, text=True, check=False
     )
     crates: set[str] = set()
     for line in result.stdout.splitlines():
@@ -63,12 +64,12 @@ def _cargo_installed() -> set[str]:
 def _go_bin_dir() -> Path:
     """Return the directory where 'go install' places binaries."""
     gobin = subprocess.run(
-        ["go", "env", "GOBIN"], capture_output=True, text=True
+        ["go", "env", "GOBIN"], capture_output=True, text=True, check=False
     ).stdout.strip()
     if gobin:
         return Path(gobin)
     gopath = subprocess.run(
-        ["go", "env", "GOPATH"], capture_output=True, text=True
+        ["go", "env", "GOPATH"], capture_output=True, text=True, check=False
     ).stdout.strip()
     if gopath:
         return Path(gopath.split(":")[0]) / "bin"
@@ -77,7 +78,7 @@ def _go_bin_dir() -> Path:
 
 def _go_binary_name(spec: str) -> str:
     """Extract installed binary name from a go install spec."""
-    path = spec.split("@")[0].rstrip("/")
+    path = spec.split("@", maxsplit=1)[0].rstrip("/")
     parts = path.split("/")
     last = parts[-1]
     # Strip Go major version suffix (e.g., /v2, /v3)
@@ -140,9 +141,9 @@ def _add_row(
 
 def print_diff(repo_root: Path, profile: str) -> None:
     """Query each package manager and display what's missing or pending removal."""
-    with open(repo_root / "manifest.toml", "rb") as f:
+    with (repo_root / "manifest.toml").open("rb") as f:
         manifest = tomllib.load(f)
-    with open(repo_root / "uvenv.lock", "rb") as f:
+    with (repo_root / "uvenv.lock").open("rb") as f:
         lock = tomllib.load(f)
 
     profile_data = manifest.get("profiles", {}).get(profile, {})
@@ -182,15 +183,9 @@ def print_diff(repo_root: Path, profile: str) -> None:
             pending_pacman = [p for p in pending_sys if p in set(prev.pacman)]
             pending_aur = [p for p in pending_sys if p in set(prev.aur)]
 
-            pending_npm = sorted(
-                (set(prev.npm_global) - set(npm_expected)) & npm_inst
-            )
-            pending_uvenv = sorted(
-                (set(prev.uvenv_tools) - set(python_expected)) & uvenv_inst
-            )
-            pending_cargo = sorted(
-                (set(prev.cargo_tools) - set(cargo_expected)) & cargo_inst
-            )
+            pending_npm = sorted((set(prev.npm_global) - set(npm_expected)) & npm_inst)
+            pending_uvenv = sorted((set(prev.uvenv_tools) - set(python_expected)) & uvenv_inst)
+            pending_cargo = sorted((set(prev.cargo_tools) - set(cargo_expected)) & cargo_inst)
             # go: compare specs; treat installed as present if binary exists
             stale_go_specs = set(prev.go_tools) - set(go_expected)
             pending_go = sorted(stale_go_specs & _go_installed(list(stale_go_specs)))
@@ -204,19 +199,54 @@ def print_diff(repo_root: Path, profile: str) -> None:
     table.add_column("Status", min_width=16)
     table.add_column("Details")
 
-    _add_row(table, "pacman", pacman_expected, pacman_inst,
-             pending_pacman or None, name_label=f"pacman ({len(pacman_expected)})")
-    _add_row(table, "AUR", aur_expected, pacman_inst,
-             pending_aur or None, name_label=f"AUR ({len(aur_expected)})")
-    _add_row(table, "npm global", npm_expected, npm_inst,
-             pending_npm or None, name_label=f"npm global ({len(npm_expected)})")
-    _add_row(table, "python tools", python_expected, uvenv_inst,
-             pending_uvenv or None, name_label=f"python tools ({len(python_expected)})")
-    _add_row(table, "cargo tools", cargo_expected, cargo_inst,
-             pending_cargo or None, name_label=f"cargo tools ({len(cargo_expected)})")
-    _add_row(table, "go tools", go_expected_binaries, go_inst_binaries,
-             [_go_binary_name(s) for s in pending_go] or None,
-             name_label=f"go tools ({len(go_expected)})")
+    _add_row(
+        table,
+        "pacman",
+        pacman_expected,
+        pacman_inst,
+        pending_pacman or None,
+        name_label=f"pacman ({len(pacman_expected)})",
+    )
+    _add_row(
+        table,
+        "AUR",
+        aur_expected,
+        pacman_inst,
+        pending_aur or None,
+        name_label=f"AUR ({len(aur_expected)})",
+    )
+    _add_row(
+        table,
+        "npm global",
+        npm_expected,
+        npm_inst,
+        pending_npm or None,
+        name_label=f"npm global ({len(npm_expected)})",
+    )
+    _add_row(
+        table,
+        "python tools",
+        python_expected,
+        uvenv_inst,
+        pending_uvenv or None,
+        name_label=f"python tools ({len(python_expected)})",
+    )
+    _add_row(
+        table,
+        "cargo tools",
+        cargo_expected,
+        cargo_inst,
+        pending_cargo or None,
+        name_label=f"cargo tools ({len(cargo_expected)})",
+    )
+    _add_row(
+        table,
+        "go tools",
+        go_expected_binaries,
+        go_inst_binaries,
+        [_go_binary_name(s) for s in pending_go] or None,
+        name_label=f"go tools ({len(go_expected)})",
+    )
 
     console.print(table)
 

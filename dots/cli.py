@@ -33,9 +33,8 @@ def _find_repo_root() -> Path:
         if (candidate / "manifest.toml").exists():
             return candidate
         candidate = candidate.parent
-    raise RuntimeError(
-        "Cannot locate dotfiles repo root. Set the DOTS_REPO environment variable."
-    )
+    msg = "Cannot locate dotfiles repo root. Set the DOTS_REPO environment variable."
+    raise RuntimeError(msg)
 
 
 REPO_ROOT = _find_repo_root()
@@ -50,7 +49,6 @@ def sync(
     *,
     dry_run: Annotated[bool, cyclopts.Parameter(name=["--dry-run", "-n"])] = False,
     force: Annotated[bool, cyclopts.Parameter(name=["--force", "-f"])] = False,
-    profile: str = DEFAULT_PROFILE,
 ) -> None:
     """Symlink all tracked dotfiles into ~/; render templates in-place."""
     from .sync import sync_all
