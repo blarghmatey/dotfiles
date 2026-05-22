@@ -42,5 +42,9 @@ target/
 *.tfstate
 *.tfstate.backup
 
+# Pulumi
+.pulumi/
+
 # Tools
 .aider*
+.pi/
