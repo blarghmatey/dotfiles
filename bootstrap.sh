@@ -27,33 +27,33 @@ sudo pacman -S --needed --noconfirm base-devel git
 
 # ── 2. yay (AUR helper) ───────────────────────────────────────────────────────
 if ! command -v yay &>/dev/null; then
-    step "Installing yay (AUR helper)"
-    _tmpdir="$(mktemp -d)"
-    git clone --depth=1 https://aur.archlinux.org/yay.git "$_tmpdir/yay"
-    (cd "$_tmpdir/yay" && makepkg -si --noconfirm)
-    rm -rf "$_tmpdir"
+	step "Installing yay (AUR helper)"
+	_tmpdir="$(mktemp -d)"
+	git clone --depth=1 https://aur.archlinux.org/yay.git "$_tmpdir/yay"
+	(cd "$_tmpdir/yay" && makepkg -si --noconfirm)
+	rm -rf "$_tmpdir"
 else
-    info "yay already installed — skipping"
+	info "yay already installed — skipping"
 fi
 
 # ── 3. uv ─────────────────────────────────────────────────────────────────────
 if ! command -v uv &>/dev/null; then
-    step "Installing uv (Python package manager)"
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-    # Make uv available for the rest of this script
-    export PATH="$HOME/.local/bin:$PATH"
+	step "Installing uv (Python package manager)"
+	curl -LsSf https://astral.sh/uv/install.sh | sh
+	# Make uv available for the rest of this script
+	export PATH="$HOME/.local/bin:$PATH"
 else
-    info "uv already installed — skipping"
+	info "uv already installed — skipping"
 fi
 
 # ── 4. uvenv ──────────────────────────────────────────────────────────────────
 if ! command -v uvenv &>/dev/null; then
-    step "Installing uvenv"
-    uv tool install uvenv
-    _uvenv_bin="$(uv tool dir)/bin"
-    export PATH="$_uvenv_bin:$PATH"
+	step "Installing uvenv"
+	uv tool install uvenv
+	_uvenv_bin="$(uv tool dir)/bin"
+	export PATH="$_uvenv_bin:$PATH"
 else
-    info "uvenv already installed — skipping"
+	info "uvenv already installed — skipping"
 fi
 
 # ── 5. dots CLI ───────────────────────────────────────────────────────────────

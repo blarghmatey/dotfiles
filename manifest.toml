@@ -99,9 +99,8 @@ global = [
   "@google/gemini-cli",
   "@github/copilot",
   "@kilocode/cli",
-  "@sourcegraph/amp",
-  "@musistudio/claude-code-router",
-  "@earendil-works/pi-coding-agent",
+  "@earendil-works/pi-coding-agent", # pi agent
+  "altimate-code", # data engineering agent assistant - https://docs.altimate.sh/
 ]
 
 # ──────────────────────────────────────────────

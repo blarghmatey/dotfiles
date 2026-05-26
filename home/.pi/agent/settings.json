@@ -7,5 +7,7 @@
     "npm:pi-lens",
     "npm:pi-total-recall",
     "npm:@zenobius/pi-worktrees"
-  ]
+  ],
+  "hideThinkingBlock": false,
+  "defaultThinkingLevel": "medium"
 }

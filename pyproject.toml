@@ -4,12 +4,12 @@ version = "0.1.0"
 description = "Personal dotfiles management CLI"
 requires-python = ">=3.13"
 dependencies = [
-    "cyclopts>=4",
-    # Pin to git main until pyinfra 3.8 ships; 3.7 has a gevent+Python-3.13
-    # signature-mismatch bug in connectors/util.py (issue #1652 / PR #1653).
-    # Revert to "pyinfra>=3.8" once released on PyPI.
-    "pyinfra>=3.8",
-    "rich>=13",
+  "cyclopts>=4",
+  # Pin to git main until pyinfra 3.8 ships; 3.7 has a gevent+Python-3.13
+  # signature-mismatch bug in connectors/util.py (issue #1652 / PR #1653).
+  # Revert to "pyinfra>=3.8" once released on PyPI.
+  "pyinfra>=3.8",
+  "rich>=13",
 ]
 
 [project.scripts]
@@ -31,63 +31,63 @@ target-version = "py313"
 
 [tool.ruff.lint]
 select = [
-    "A",    # flake8-builtins
-    "ARG",  # flake8-unused-arguments
-    "B",    # flake8-bugbear
-    "BLE",  # flake8-blind-except
-    "C4",   # flake8-comprehensions
-    "DTZ",  # flake8-datetimez
-    "E",    # pycodestyle errors
-    "EM",   # flake8-errmsg
-    "F",    # pyflakes
-    "FBT",  # flake8-boolean-trap
-    "I",    # isort
-    "ICN",  # flake8-import-conventions
-    "ISC",  # flake8-implicit-str-concat
-    "N",    # pep8-naming
-    "PERF", # perflint
-    "PIE",  # flake8-pie
-    "PL",   # pylint
-    "PTH",  # flake8-use-pathlib
-    "RET",  # flake8-return
-    "RSE",  # flake8-raise
-    "RUF",  # ruff-specific rules
-    "S",    # flake8-bandit
-    "SIM",  # flake8-simplify
-    "T10",  # flake8-debugger
-    "TID",  # flake8-tidy-imports
-    "TRY",  # tryceratops
-    "UP",   # pyupgrade
-    "W",    # pycodestyle warnings
-    "YTT",  # flake8-2020
+  "A",    # flake8-builtins
+  "ARG",  # flake8-unused-arguments
+  "B",    # flake8-bugbear
+  "BLE",  # flake8-blind-except
+  "C4",   # flake8-comprehensions
+  "DTZ",  # flake8-datetimez
+  "E",    # pycodestyle errors
+  "EM",   # flake8-errmsg
+  "F",    # pyflakes
+  "FBT",  # flake8-boolean-trap
+  "I",    # isort
+  "ICN",  # flake8-import-conventions
+  "ISC",  # flake8-implicit-str-concat
+  "N",    # pep8-naming
+  "PERF", # perflint
+  "PIE",  # flake8-pie
+  "PL",   # pylint
+  "PTH",  # flake8-use-pathlib
+  "RET",  # flake8-return
+  "RSE",  # flake8-raise
+  "RUF",  # ruff-specific rules
+  "S",    # flake8-bandit
+  "SIM",  # flake8-simplify
+  "T10",  # flake8-debugger
+  "TID",  # flake8-tidy-imports
+  "TRY",  # tryceratops
+  "UP",   # pyupgrade
+  "W",    # pycodestyle warnings
+  "YTT",  # flake8-2020
 ]
 ignore = [
-    # Formatter compatibility
-    "E501",    # line too long — handled by ruff-format
-    "ISC001",  # implicit str-concat on one line — formatter conflict
-    # Subprocess: this tool calls trusted system CLIs by short name
-    "S603",    # subprocess — check for execution of untrusted input
-    "S607",    # starting process with partial executable path (npm, pi, git, etc.)
-    # Boolean parameters: cyclopts uses Annotated[bool] for CLI flags
-    "FBT001",  # boolean-typed positional arg in function definition
-    "FBT002",  # boolean default value in function definition
-    # Exception messages: small project, inline messages are readable
-    "TRY003",  # long exception messages outside the exception class
-    # Relative imports: standard within the dots package
-    "TID252",  # relative imports from parent packages
-    # Path used at runtime, not only in type annotations
-    "TC003",   # stdlib import in TYPE_CHECKING block
-    # Magic integer literals are clearer in context (e.g. len(parts) >= 2)
-    "PLR2004", # magic value used in comparison
-    # Rich UI strings intentionally use em-dashes (—)
-    "RUF001",  # ambiguous unicode character in string
-    # Commented-out code is intentional (stale tool notes in manifest)
-    "ERA001",  # found commented-out code
-    # Pylint complexity limits — CLI commands are naturally verbose
-    "PLR0911", # too many return statements
-    "PLR0912", # too many branches
-    "PLR0913", # too many arguments
-    "PLR0915", # too many statements
+  # Formatter compatibility
+  "E501",   # line too long — handled by ruff-format
+  "ISC001", # implicit str-concat on one line — formatter conflict
+  # Subprocess: this tool calls trusted system CLIs by short name
+  "S603", # subprocess — check for execution of untrusted input
+  "S607", # starting process with partial executable path (npm, pi, git, etc.)
+  # Boolean parameters: cyclopts uses Annotated[bool] for CLI flags
+  "FBT001", # boolean-typed positional arg in function definition
+  "FBT002", # boolean default value in function definition
+  # Exception messages: small project, inline messages are readable
+  "TRY003", # long exception messages outside the exception class
+  # Relative imports: standard within the dots package
+  "TID252", # relative imports from parent packages
+  # Path used at runtime, not only in type annotations
+  "TC003", # stdlib import in TYPE_CHECKING block
+  # Magic integer literals are clearer in context (e.g. len(parts) >= 2)
+  "PLR2004", # magic value used in comparison
+  # Rich UI strings intentionally use em-dashes (—)
+  "RUF001", # ambiguous unicode character in string
+  # Commented-out code is intentional (stale tool notes in manifest)
+  "ERA001", # found commented-out code
+  # Pylint complexity limits — CLI commands are naturally verbose
+  "PLR0911", # too many return statements
+  "PLR0912", # too many branches
+  "PLR0913", # too many arguments
+  "PLR0915", # too many statements
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -99,7 +99,4 @@ ignore = [
 known-first-party = ["dots", "deploy"]
 
 [dependency-groups]
-dev = [
-    "prek>=0.4.1",
-    "ruff>=0.15.14",
-]
+dev = ["prek>=0.4.1", "ruff>=0.15.14"]
