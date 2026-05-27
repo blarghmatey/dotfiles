@@ -3,7 +3,8 @@
   "private": true,
   "dependencies": {
     "@zenobius/pi-worktrees": "^0.5.1",
-    "pi-lens": "^3.8.45",
+    "pi-ask-user": "^0.11.1",
+    "pi-lens": "^3.8.46",
     "pi-mcp-adapter": "^2.8.0",
     "pi-total-recall": "^1.8.0"
   }

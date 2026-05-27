@@ -11,7 +11,12 @@ Additional tracked config files (all under ``home/.pi/agent/``):
     pi-worktrees.config.json — pi-worktrees extension config
     npm/package.json      — Extension package manifest with semver constraints
 
+Local extensions live under ``home/.pi/agent/extensions/`` and are auto-discovered
+by pi after ``dots sync`` symlinks them into ``~/.pi/agent/extensions/``.  No entry
+in ``settings.json`` is needed for these.
+
 ``dots install pi``  — install the pi CLI globally and any missing extensions
+``dots sync``        — symlink local extensions + config into ~/
 ``dots diff``        — includes a pi section comparing settings vs installed
 ``dots upgrade``     — includes ``pi update`` to upgrade pi + all extensions
 """
@@ -31,6 +36,7 @@ console = Console()
 _PI_CLI_PKG = "@earendil-works/pi-coding-agent"
 _PI_AGENT = Path.home() / ".pi" / "agent"
 _PI_NPM_MODULES = _PI_AGENT / "npm" / "node_modules"
+_PI_EXTENSIONS = _PI_AGENT / "extensions"
 
 # Config files tracked in the dotfiles repo (relative to home/.pi/agent/)
 _TRACKED_CONFIGS = [
@@ -108,6 +114,19 @@ def _pi_cli_installed() -> bool:
 def _extension_installed(pkg_name: str) -> bool:
     """Return True if a pi extension is present in ``~/.pi/agent/npm/node_modules/``."""
     return (_PI_NPM_MODULES / pkg_name).exists()
+
+
+def _local_extension_dirs(repo_root: Path) -> list[str]:
+    """Return names of local extension directories tracked under home/.pi/agent/extensions/."""
+    ext_src = _agent_path(repo_root, "extensions")
+    if not ext_src.exists():
+        return []
+    return sorted(p.name for p in ext_src.iterdir() if p.is_dir())
+
+
+def _local_extension_linked(name: str) -> bool:
+    """Return True if the extension directory exists under the live ~/.pi/agent/extensions/."""
+    return (_PI_EXTENSIONS / name).exists()
 
 
 def _config_in_sync(repo_root: Path, rel: str) -> bool | None:
@@ -218,6 +237,27 @@ def diff_pi(repo_root: Path) -> None:
             f"pi extensions ({len(packages)})",
             "  ".join(status_parts) or "[dim]—[/dim]",
             detail,
+        )
+
+    # Rows: local extensions (auto-discovered from ~/.pi/agent/extensions/)
+    local_exts = _local_extension_dirs(repo_root)
+    if local_exts:
+        missing_exts = [n for n in local_exts if not _local_extension_linked(n)]
+        ok_exts = len(local_exts) - len(missing_exts)
+        ext_status_parts: list[str] = []
+        if ok_exts:
+            ext_status_parts.append(f"[green]{ok_exts} ✓[/green]")
+        if missing_exts:
+            ext_status_parts.append(f"[yellow]{len(missing_exts)} ?[/yellow]")
+        ext_detail = (
+            "[yellow]not linked: " + ", ".join(missing_exts) + " — run: dots sync[/yellow]"
+            if missing_exts
+            else "[dim]symlinked[/dim]"
+        )
+        table.add_row(
+            f"local extensions ({len(local_exts)})",
+            "  ".join(ext_status_parts) or "[dim]—[/dim]",
+            ext_detail,
         )
 
     # Rows: tracked config files

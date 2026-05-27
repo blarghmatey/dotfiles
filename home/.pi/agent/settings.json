@@ -1,12 +1,13 @@
 {
-  "lastChangelogVersion": "0.75.4",
-  "defaultProvider": "github-copilot",
-  "defaultModel": "claude-sonnet-4.6",
+  "lastChangelogVersion": "0.75.5",
+  "defaultProvider": "kilo",
+  "defaultModel": "kilo-auto/free",
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-lens",
     "npm:pi-total-recall",
-    "npm:@zenobius/pi-worktrees"
+    "npm:@zenobius/pi-worktrees",
+    "npm:pi-ask-user"
   ],
   "hideThinkingBlock": false,
   "defaultThinkingLevel": "medium"

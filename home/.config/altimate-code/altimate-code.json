@@ -1,6 +1,0 @@
-{
-  "provider": {
-    "copilot": {}
-  },
-  "model": "copilot/sonnet-4.6"
-}
