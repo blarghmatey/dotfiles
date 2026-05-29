@@ -1,14 +1,15 @@
 {
-  "lastChangelogVersion": "0.75.5",
-  "defaultProvider": "kilo",
-  "defaultModel": "kilo-auto/free",
+  "lastChangelogVersion": "0.77.0",
+  "defaultProvider": "github-copilot",
+  "defaultModel": "claude-sonnet-4.6",
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-lens",
     "npm:pi-total-recall",
     "npm:@zenobius/pi-worktrees",
-    "npm:pi-ask-user"
+    "npm:pi-smart-fetch"
   ],
+  "extensions": ["extensions/virtual-cwd.ts"],
   "hideThinkingBlock": false,
   "defaultThinkingLevel": "medium"
 }
