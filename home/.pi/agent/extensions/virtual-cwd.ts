@@ -16,10 +16,10 @@
  */
 
 import { execSync } from "node:child_process";
-import { isAbsolute, resolve, basename } from "node:path";
 import { existsSync, statSync } from "node:fs";
-import { createLocalBashOperations, isToolCallEventType } from "@earendil-works/pi-coding-agent";
+import { basename, isAbsolute, resolve } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { createLocalBashOperations, isToolCallEventType } from "@earendil-works/pi-coding-agent";
 import type { AutocompleteItem } from "@earendil-works/pi-tui";
 
 function shellQuote(s: string): string {
@@ -65,10 +65,7 @@ function listWorktrees(cwd: string): Worktree[] {
 function findWorktree(name: string, cwd: string): Worktree | undefined {
   const worktrees = listWorktrees(cwd);
   return worktrees.find(
-    (wt) =>
-      basename(wt.path) === name ||
-      wt.path === name ||
-      wt.branch === name
+    (wt) => basename(wt.path) === name || wt.path === name || wt.branch === name
   );
 }
 
@@ -83,6 +80,7 @@ export default function (pi: ExtensionAPI) {
     return virtualCwd !== null && virtualCwd !== launchCwd;
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: ctx.ui type is not exported by pi
   function updateStatus(ctx: { cwd: string; hasUI: boolean; ui: any }) {
     if (!ctx.hasUI) return;
     const vCwd = getVirtualCwd(ctx.cwd);
@@ -107,7 +105,7 @@ export default function (pi: ExtensionAPI) {
       // "worktree " prefix: complete worktree names
       const worktreePrefix = "worktree ";
       if (prefix.startsWith(worktreePrefix)) {
-        const namePart = prefix.slice(worktreePrefix.length);
+        const _namePart = prefix.slice(worktreePrefix.length);
         // Use process.cwd() as the best available cwd at completion time
         const worktrees = listWorktrees(process.cwd());
         const items = worktrees.flatMap((wt) => {
@@ -170,9 +168,7 @@ export default function (pi: ExtensionAPI) {
       }
 
       // Plain path
-      const resolved = isAbsolute(target)
-        ? target
-        : resolve(currentVCwd, target);
+      const resolved = isAbsolute(target) ? target : resolve(currentVCwd, target);
 
       if (!existsSync(resolved)) {
         ctx.ui.notify(`Directory not found: ${resolved}`, "error");
@@ -226,7 +222,7 @@ export default function (pi: ExtensionAPI) {
   });
 
   // Intercept user ! commands to run in the virtual cwd
-  pi.on("user_bash", (event, ctx) => {
+  pi.on("user_bash", (_event, ctx) => {
     if (!isChanged(ctx.cwd)) return;
     const vCwd = getVirtualCwd(ctx.cwd);
     const local = createLocalBashOperations();

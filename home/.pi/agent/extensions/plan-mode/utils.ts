@@ -57,7 +57,7 @@ Note: Read-only mode is active. Do not attempt to write or edit files.
 // ---------------------------------------------------------------------------
 
 export const ARTIFACT_PROMPTS = {
-	implementationGuide: `\
+  implementationGuide: `\
 The planning phase is complete. Produce an **implementation guide** from the plan above.
 
 Format:
@@ -80,7 +80,7 @@ Ordered numbered list. Each task:
 Any ❓ items that must be resolved before or during implementation.
 `,
 
-	rfc: `\
+  rfc: `\
 The planning phase is complete. Produce an **RFC document** from the plan above.
 
 Format:
@@ -112,7 +112,7 @@ What changes downstream, what we give up, what we gain.
 Any ❓ items not yet resolved.
 `,
 
-	githubIssues: `\
+  githubIssues: `\
 The planning phase is complete. Produce **GitHub issues** from the plan above.
 
 For each deliverable (aim for 3–8 issues, right-sized for 1–3 days each):
@@ -148,7 +148,7 @@ After the issues, add a **Milestone** section suggesting how to group them.
  * otherwise null.
  */
 export function extractPlanReady(text: string): string | null {
-	if (!text.includes("PLAN READY")) return null;
-	const match = text.match(/##\s+Plan\b[\s\S]*/i);
-	return match ? match[0].replace(/PLAN READY\s*$/i, "").trim() : text;
+  if (!text.includes("PLAN READY")) return null;
+  const match = text.match(/##\s+Plan\b[\s\S]*/i);
+  return match ? match[0].replace(/PLAN READY\s*$/i, "").trim() : text;
 }
