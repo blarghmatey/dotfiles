@@ -6,6 +6,7 @@
     "pi-ask-user": "^0.11.1",
     "pi-lens": "^3.8.46",
     "pi-mcp-adapter": "^2.8.0",
+    "pi-smart-fetch": "^0.3.9",
     "pi-total-recall": "^1.8.0"
   }
 }

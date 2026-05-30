@@ -9,7 +9,9 @@
     "npm:@zenobius/pi-worktrees",
     "npm:pi-smart-fetch"
   ],
-  "extensions": ["extensions/virtual-cwd.ts"],
+  "extensions": [
+    "extensions/virtual-cwd.ts"
+  ],
   "hideThinkingBlock": false,
-  "defaultThinkingLevel": "medium"
+  "defaultThinkingLevel": "high"
 }
