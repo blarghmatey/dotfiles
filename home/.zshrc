@@ -17,13 +17,13 @@ if command -v eza &>/dev/null; then
   alias lt='eza --icons --tree --level=2'
 fi
 
-# AI CLI tools — installed globally, fallback to npx
-alias gemini='npx -y @google/gemini-cli'
-alias ghc='npx -y @github/copilot'
-alias amp='npx -y @sourcegraph/amp'
-alias kilo='npx -y @kilocode/cli'
-alias ccr='npx -y @musistudio/claude-code-router'
-alias pi='npx -y @earendil-works/pi-coding-agent'
+# AI CLI tools — installed globally, fallback to bunx
+alias gemini='bunx -y @google/gemini-cli'
+alias ghc='bunx -y @github/copilot'
+alias amp='bunx -y @sourcegraph/amp'
+alias kilo='bunx -y @kilocode/cli'
+alias ccr='bunx -y @musistudio/claude-code-router'
+alias pi='bunx -y @earendil-works/pi-coding-agent'
 
 
 function retire_concourse_worker {
@@ -129,6 +129,7 @@ export OLLAMA_NUM_THREADS=8
 export OLLAMA_API_KEY=$(pass ollama-cloud-api-key)
 
 export KILO_API_KEY=$(pass kilo-api-key)
+export NVIDIA_NIM_API_KEY=$(pass nvidia-nim-api-key)
 # Claude Code
 # Enable Bedrock integration
 # export CLAUDE_CODE_USE_BEDROCK=1

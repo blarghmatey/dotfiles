@@ -60,6 +60,7 @@ pacman = [
 
   # Languages & runtimes
   "nodejs",
+  "bun",
   "npm",
   "go",
   "rustup",
