@@ -48,3 +48,4 @@ target/
 # Tools
 .aider*
 .pi/
+.pi-lens/
