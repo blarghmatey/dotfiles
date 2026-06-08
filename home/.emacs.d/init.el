@@ -187,7 +187,7 @@
                (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.24.8"))
                ;; (julia . ("https://github.com/tree-sitter/tree-sitter-julia" "v0.25.0"))
                ;; (markdown . ("https://github.com/ikatyang/tree-sitter-markdown" "v0.7.1"))
-               ;; (ocaml . ("https://github.com/tree-sitter/tree-sitter-ocaml" "v0.24.2"))
+               ;; (ocaml . ("https://github.com/tree-sitter/tree-sitter-ocaml" "v0.25.0"))
                ;; (php . ("https://github.com/tree-sitter/tree-sitter-php" "v0.24.2"))
                (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.25.0"))
                (ruby . ("https://github.com/tree-sitter/tree-sitter-ruby" "v0.23.1"))
