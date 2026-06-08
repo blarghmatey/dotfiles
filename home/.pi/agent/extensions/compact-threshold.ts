@@ -200,7 +200,7 @@ export default function compactThresholdExtension(pi: ExtensionAPI): void {
       const threshold = resolveByKey(config.thresholds, modelId, provider);
       const windowOverride = resolveByKey(config.contextWindows, modelId, provider);
 
-      const { contextWindow, percent } = resolveContextUsage(
+      const { tokens, contextWindow, percent } = resolveContextUsage(
         config,
         modelId,
         provider,
