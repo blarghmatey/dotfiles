@@ -136,7 +136,10 @@ export default function compactThresholdExtension(pi: ExtensionAPI): void {
           ? "accent"
           : "muted";
 
-    ctx.ui.setStatus("compact-threshold", ctx.ui.theme.fg(color, label));
+    ctx.ui.setStatus(
+      "compact-threshold",
+      `${ctx.ui.theme.fg(color, label)} ${ctx.ui.theme.fg("dim", "|")}`
+    );
   }
 
   pi.on("session_start", async (_event, ctx) => {
@@ -146,7 +149,10 @@ export default function compactThresholdExtension(pi: ExtensionAPI): void {
     lastKnownPercent = null;
     lastKnownThreshold = null;
     if (ctx.hasUI && showStatus) {
-      ctx.ui.setStatus("compact-threshold", ctx.ui.theme.fg("muted", "ctx --"));
+      ctx.ui.setStatus(
+        "compact-threshold",
+        `${ctx.ui.theme.fg("muted", "ctx --")} ${ctx.ui.theme.fg("dim", "|")}`
+      );
     }
   });
 
