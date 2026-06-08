@@ -1,17 +1,18 @@
 {
-  "lastChangelogVersion": "0.78.0",
-  "defaultProvider": "github-copilot",
-  "defaultModel": "claude-sonnet-4.6",
+  "lastChangelogVersion": "0.78.1",
+  "defaultProvider": "claude-bridge",
+  "defaultModel": "claude-sonnet-4-6",
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-lens",
     "npm:pi-total-recall",
     "npm:@zenobius/pi-worktrees",
-    "npm:pi-smart-fetch"
+    "npm:pi-smart-fetch",
+    "npm:pi-claude-bridge"
   ],
   "extensions": [
     "extensions/virtual-cwd.ts"
   ],
   "hideThinkingBlock": false,
-  "defaultThinkingLevel": "high"
+  "defaultThinkingLevel": "medium"
 }

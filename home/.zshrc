@@ -130,6 +130,7 @@ export OLLAMA_API_KEY=$(pass ollama-cloud-api-key)
 
 export KILO_API_KEY=$(pass kilo-api-key)
 export NVIDIA_NIM_API_KEY=$(pass nvidia-nim-api-key)
+export MIT_PARLEY_API_KEY=$(pass mit-parley-api-key)
 # Claude Code
 # Enable Bedrock integration
 # export CLAUDE_CODE_USE_BEDROCK=1

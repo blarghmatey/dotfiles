@@ -49,3 +49,5 @@ target/
 .aider*
 .pi/
 .pi-lens/
+
+**/.claude/settings.local.json
