@@ -127,7 +127,7 @@ export default function compactThresholdExtension(pi: ExtensionAPI): void {
         ? "warning"
         : percent >= 50
           ? "accent"
-          : "fg";
+          : "muted";
 
     ctx.ui.setStatus("compact-threshold", ctx.ui.theme.fg(color, label));
   }
