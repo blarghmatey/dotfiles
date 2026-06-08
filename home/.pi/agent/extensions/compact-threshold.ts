@@ -103,6 +103,8 @@ function formatPercent(percent: number | null): string {
 export default function compactThresholdExtension(pi: ExtensionAPI): void {
   let showStatus = true;
   let lastCompactPercent: number | null = null;
+  let lastKnownPercent: number | null = null;
+  let lastKnownThreshold: number | null = null;
 
   function updateFooter(
     // biome-ignore lint/suspicious/noExplicitAny: ctx.ui type not exported by pi
@@ -112,20 +114,25 @@ export default function compactThresholdExtension(pi: ExtensionAPI): void {
   ): void {
     if (!ctx.hasUI || !showStatus) return;
 
-    if (percent === null) {
-      ctx.ui.setStatus("compact-threshold", undefined);
-      return;
-    }
+    // Persist last known values so the indicator stays visible when tokens are
+    // temporarily unavailable (e.g. right after compaction).
+    if (percent !== null) lastKnownPercent = percent;
+    if (threshold !== null) lastKnownThreshold = threshold;
+
+    const displayPercent = lastKnownPercent;
+    const displayThreshold = lastKnownThreshold;
 
     const label =
-      threshold !== null
-        ? `ctx ${formatPercent(percent)}/${threshold}%`
-        : `ctx ${formatPercent(percent)}`;
+      displayThreshold !== null
+        ? `ctx ${formatPercent(displayPercent)}/${displayThreshold}%`
+        : `ctx ${formatPercent(displayPercent)}`;
 
     const color =
-      threshold !== null && percent >= threshold * 0.9
+      displayPercent !== null &&
+      displayThreshold !== null &&
+      displayPercent >= displayThreshold * 0.9
         ? "warning"
-        : percent >= 50
+        : displayPercent !== null && displayPercent >= 50
           ? "accent"
           : "muted";
 
@@ -136,7 +143,11 @@ export default function compactThresholdExtension(pi: ExtensionAPI): void {
     const config = loadConfig(ctx.cwd);
     showStatus = config.showStatus ?? true;
     lastCompactPercent = null;
-    updateFooter(ctx, null, null);
+    lastKnownPercent = null;
+    lastKnownThreshold = null;
+    if (ctx.hasUI && showStatus) {
+      ctx.ui.setStatus("compact-threshold", ctx.ui.theme.fg("muted", "ctx --"));
+    }
   });
 
   pi.on("turn_end", async (_event, ctx) => {
