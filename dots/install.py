@@ -275,7 +275,3 @@ def upgrade_all(_profile: str) -> None:
 
     console.print("[bold]Upgrading Go tools[/bold]  (go install @latest)")
     console.print("[dim]Run 'dots install go' to re-install all go tools at @latest[/dim]")
-
-    from .pi import upgrade_pi
-
-    upgrade_pi()

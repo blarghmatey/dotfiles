@@ -75,10 +75,14 @@ def freeze() -> None:
 
 @app.command
 def upgrade(*, profile: str = DEFAULT_PROFILE) -> None:
-    """Upgrade all managed tools: pacman, uvenv, npm globals."""
+    """Upgrade all managed tools: pacman, uvenv, npm globals, Claude Code, pi."""
+    from .claude import upgrade_claude
     from .install import upgrade_all
+    from .pi import upgrade_pi
 
     upgrade_all(profile)
+    upgrade_claude()
+    upgrade_pi()
 
 
 @app.command
@@ -88,13 +92,23 @@ def diff(*, profile: str = DEFAULT_PROFILE) -> None:
     Compares the manifest and uvenv.lock against actually installed packages and
     prints a per-category table of what is present vs missing.
     """
+    from .claude import diff_claude
     from .diff import print_diff
     from .pi import diff_pi
     from .skills import diff_skills
 
     print_diff(REPO_ROOT, profile)
     diff_pi(REPO_ROOT)
+    diff_claude(REPO_ROOT)
     diff_skills(REPO_ROOT)
+
+
+@install.command(name="claude")
+def claude_code() -> None:
+    """Install the Claude Code CLI globally via npm."""
+    from .claude import install_claude
+
+    install_claude(REPO_ROOT)
 
 
 @install.command(name="pi")
@@ -167,12 +181,13 @@ def install_all(
     verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = False,
     yes: Annotated[bool, cyclopts.Parameter(name=["--yes", "-y"])] = False,
 ) -> None:
-    """Run all install subcommands in order: packages → python → node → cargo → go → pi → skills."""
+    """Run all install subcommands in order: packages → python → node → cargo → go → claude → pi → skills."""
     packages(profile=profile, verbose=verbose)
     python_tools()
     node(profile=profile)
     cargo_tools()
     go_tools()
+    claude_code()
     pi_extensions()
     skills(yes=yes)
 

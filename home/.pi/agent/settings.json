@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.78.1",
+  "lastChangelogVersion": "0.79.1",
   "defaultProvider": "claude-bridge",
-  "defaultModel": "claude-sonnet-4-6",
+  "defaultModel": "claude-opus-4-8",
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-lens",
@@ -14,5 +14,5 @@
     "extensions/virtual-cwd.ts"
   ],
   "hideThinkingBlock": false,
-  "defaultThinkingLevel": "medium"
+  "defaultThinkingLevel": "high"
 }

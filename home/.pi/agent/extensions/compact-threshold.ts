@@ -36,9 +36,21 @@
  *   /threshold status   Toggle footer status indicator on/off
  */
 
-import { existsSync, readFileSync } from "node:fs";
+import { appendFileSync, existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
+
+const LOG_FILE = join(homedir(), ".pi", "logs", "compact-threshold.log");
+
+function log(msg: string): void {
+  const ts = new Date().toISOString();
+  try {
+    appendFileSync(LOG_FILE, `${ts}  ${msg}\n`);
+  } catch {
+    // if the logs dir doesn't exist yet, fail silently
+  }
+}
+
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 interface ThresholdConfig {
@@ -54,7 +66,9 @@ function loadConfig(cwd: string): ThresholdConfig {
     try {
       return JSON.parse(readFileSync(path, "utf-8"));
     } catch (e) {
-      console.error(`compact-threshold: failed to parse ${path}: ${e}`);
+      const msg = `compact-threshold: failed to parse ${path}: ${e}`;
+      console.error(msg);
+      log(msg);
       return {};
     }
   }
@@ -142,59 +156,77 @@ export default function compactThresholdExtension(pi: ExtensionAPI): void {
     );
   }
 
+  process.on("uncaughtException", (err) => {
+    log(`uncaughtException: ${err.stack ?? err.message}`);
+  });
+  process.on("unhandledRejection", (reason) => {
+    log(
+      `unhandledRejection: ${reason instanceof Error ? (reason.stack ?? reason.message) : String(reason)}`
+    );
+  });
+
   pi.on("session_start", async (_event, ctx) => {
-    const config = loadConfig(ctx.cwd);
-    showStatus = config.showStatus ?? true;
-    lastCompactPercent = null;
-    lastKnownPercent = null;
-    lastKnownThreshold = null;
-    if (ctx.hasUI && showStatus) {
-      ctx.ui.setStatus(
-        "compact-threshold",
-        `${ctx.ui.theme.fg("muted", "ctx --")} ${ctx.ui.theme.fg("dim", "|")}`
+    try {
+      const config = loadConfig(ctx.cwd);
+      showStatus = config.showStatus ?? true;
+      lastCompactPercent = null;
+      lastKnownPercent = null;
+      lastKnownThreshold = null;
+      if (ctx.hasUI && showStatus) {
+        ctx.ui.setStatus(
+          "compact-threshold",
+          `${ctx.ui.theme.fg("muted", "ctx --")} ${ctx.ui.theme.fg("dim", "|")}`
+        );
+      }
+    } catch (err) {
+      log(
+        `session_start error: ${err instanceof Error ? (err.stack ?? err.message) : String(err)}`
       );
     }
   });
 
   pi.on("turn_end", async (_event, ctx) => {
-    const config = loadConfig(ctx.cwd);
-    if (!config.enabled) return;
+    try {
+      const config = loadConfig(ctx.cwd);
+      if (!config.enabled) return;
 
-    const raw = ctx.getContextUsage();
-    const modelId = ctx.model?.id;
-    const provider = (ctx.model as { provider?: string } | undefined)?.provider;
+      const raw = ctx.getContextUsage();
+      const modelId = ctx.model?.id;
+      const provider = (ctx.model as { provider?: string } | undefined)?.provider;
 
-    const { contextWindow, percent } = resolveContextUsage(
-      config,
-      modelId,
-      provider,
-      raw?.tokens ?? null,
-      raw?.contextWindow ?? 0
-    );
+      const { contextWindow, percent } = resolveContextUsage(
+        config,
+        modelId,
+        provider,
+        raw?.tokens ?? null,
+        raw?.contextWindow ?? 0
+      );
 
-    const threshold = resolveByKey(config.thresholds, modelId, provider);
+      const threshold = resolveByKey(config.thresholds, modelId, provider);
 
-    updateFooter(ctx, percent, threshold);
+      updateFooter(ctx, percent, threshold);
 
-    if (threshold === null || percent === null) return;
+      if (threshold === null || percent === null) return;
 
-    if (percent >= threshold) {
-      const prevPercent = lastCompactPercent;
-      // Guard against compact loops: don't trigger again if we just compacted
-      // and usage is still high (model was already minimal, nothing to compact)
-      if (prevPercent !== null && prevPercent >= threshold) return;
+      if (percent >= threshold) {
+        const prevPercent = lastCompactPercent;
+        // Guard against compact loops: don't trigger again if we just compacted
+        // and usage is still high (model was already minimal, nothing to compact)
+        if (prevPercent !== null && prevPercent >= threshold) return;
 
-      lastCompactPercent = percent;
-      ctx.compact();
+        lastCompactPercent = percent;
+        ctx.compact();
 
-      if (ctx.hasUI) {
-        ctx.ui.notify(
-          `Auto-compact triggered: context at ${formatPercent(percent)} of ${contextWindow.toLocaleString()} tokens (threshold ${threshold}%)`,
-          "info"
-        );
+        if (ctx.hasUI) {
+          const autoCompactMsg = `Auto-compact triggered: context at ${formatPercent(percent)} of ${contextWindow.toLocaleString()} tokens (threshold ${threshold}%)`;
+          log(autoCompactMsg);
+          ctx.ui.notify(autoCompactMsg, "info");
+        }
+      } else {
+        lastCompactPercent = null;
       }
-    } else {
-      lastCompactPercent = null;
+    } catch (err) {
+      log(`turn_end error: ${err instanceof Error ? (err.stack ?? err.message) : String(err)}`);
     }
   });
 

@@ -242,6 +242,16 @@
   rex = remote rm
   rem = remote rename
 
+  # Worktree operations
+  wt    = "!f() { git worktree "$@"; }; f"  # Generic passthrough: git wt list, git wt add <path> <branch>, etc.
+  wtls  = worktree list
+  wta   = worktree add
+  wtr   = worktree remove
+  wtm   = worktree move
+  wtp   = worktree prune
+  wtlo  = worktree lock
+  wtulo = worktree unlock
+
   # Miscellaneous
   w = whatchanged
   search = "!f() { query=\"$1\"; shift; git log -S\"$query\" \"$@\"; }; f \"$@\""

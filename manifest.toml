@@ -12,6 +12,8 @@ exclude = ["**/.DS_Store", "**/.gitkeep"]
 sensitive = [
   ".npmrc",
   ".claude/settings.json",
+  ".claude/CLAUDE.md",
+  ".claude/keybindings.json",
   ".copilot/mcp-config.json",
   ".pi/agent/settings.json",
   ".pi/agent/mcp.json",
@@ -97,6 +99,10 @@ aur = [
 
 [profiles.arch-wsl2.node]
 global = [
+  "@anthropic-ai/claude-code", # Claude Code CLI
+  # LSP servers for Claude Code integration (Python LSPs installed via uvenv)
+  "typescript-language-server", # TypeScript/JavaScript language server
+  "typescript",                # peer dep for typescript-language-server
   "@google/gemini-cli",
   "@github/copilot",
   "@kilocode/cli",
@@ -126,15 +132,9 @@ tools = [
   "github.com/elC0mpa/aws-doctor@latest",
   # Custom Caddy server builder
   "github.com/caddyserver/xcaddy/cmd/xcaddy@latest",
-
+  # Git worktree simplification
+  "github.com/k1LoW/git-wt@latest",
   # ── stale / work-specific: review and remove if no longer needed ──
   # "github.com/fatih/hclfmt@latest",                                            # HCL formatter (2018; superseded by terraform fmt)
   # "github.com/cappyzawa/concourse-pipeline-jsonschema@latest",                 # Concourse CI pipeline JSON schema generator
-  # "github.com/alphagov/terraform-provider-concourse@latest",                   # Terraform provider for Concourse CI
-  # "github.com/hashicorp/terraform-provider-nomad@latest",                      # Terraform provider for Nomad (was terraform-providers/...)
-  # "github.com/pulumi/pulumi-nomad/cmd/pulumi-resource-nomad@latest",           # Pulumi Nomad resource provider
-  # "github.com/pulumi/pulumi-nomad/cmd/pulumi-tfgen-nomad@latest",              # Pulumi Nomad tfgen
-  # "github.com/adamdecaf/vault-backend-migrator@latest",                        # One-time Vault backend migration tool (2020)
-  # "github.com/pulumi/scripts/gomod-doccopy@latest",                            # Internal Pulumi doc utility (2020)
-  # tf2pulumi deprecated 2022; use 'pulumi convert --from terraform' instead
 ]
