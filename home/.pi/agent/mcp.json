@@ -1,5 +1,19 @@
 {
   "mcpServers": {
+    "witan": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/mitodl/agent-kit#subdirectory=mcp/servers/witan",
+        "--with",
+        "git+https://github.com/mitodl/agent-kit#subdirectory=mcp/servers/witan-code",
+        "witan",
+        "serve"
+      ],
+      "env": {
+        "WITAN_AUTHOR": "<your-name>"
+      }
+    },
     "semble": {
       "command": "uvx",
       "args": [
@@ -40,13 +54,6 @@
         "X-Grafana-URL": "https://mitolqa.grafana.net"
       }
     },
-    "memory": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ]
-    },
     "sequential-thinking": {
       "command": "npx",
       "args": [
@@ -65,6 +72,18 @@
     "sentry": {
       "type": "http",
       "url": "https://mcp.sentry.dev/mcp"
+    },
+    "witan-code": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/mitodl/agent-kit#subdirectory=mcp/servers/witan-code",
+        "witan-code",
+        "serve"
+      ],
+      "env": {
+        "WITAN_AUTHOR": "<your-name>"
+      }
     }
   }
 }

@@ -4,7 +4,7 @@
  * Collaborative planning mode: structured Explore → Frame → Diverge → Converge → Artifact
  * workflow. When active, the LLM is instructed to iterate on a plan with the user before
  * implementing anything. On convergence the user is prompted to export as an implementation
- * guide, RFC, or set of GitHub issues.
+ * guide, RFC, set of GitHub issues, or a tracked project + tasks in the omnigraph MCP.
  *
  * Features:
  * - /plan command and Ctrl+Alt+P to toggle
@@ -110,6 +110,7 @@ export default function planModeExtension(pi: ExtensionAPI): void {
       "Implementation guide — ordered tasks for a coding session",
       "RFC — problem / options considered / decision / consequences",
       "GitHub issues — one issue per deliverable with acceptance criteria",
+      "Omnigraph — register as a tracked project + tasks (omnigraph MCP)",
       "Keep planning",
     ]);
 
@@ -119,7 +120,9 @@ export default function planModeExtension(pi: ExtensionAPI): void {
       ? ARTIFACT_PROMPTS.implementationGuide
       : choice.startsWith("RFC")
         ? ARTIFACT_PROMPTS.rfc
-        : ARTIFACT_PROMPTS.githubIssues;
+        : choice.startsWith("GitHub")
+          ? ARTIFACT_PROMPTS.githubIssues
+          : ARTIFACT_PROMPTS.omnigraphProject;
 
     // Exit plan mode first so the LLM generates freely
     disable(ctx);

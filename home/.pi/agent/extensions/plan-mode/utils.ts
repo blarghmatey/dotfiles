@@ -136,6 +136,35 @@ What this issue deliberately does NOT cover.
 
 After the issues, add a **Milestone** section suggesting how to group them.
 `,
+
+  omnigraphProject: `\
+The planning phase is complete. Register this plan in the omnigraph
+work-coordination graph using the **omnigraph-memory MCP tools**, so it can be
+tracked and picked up across sessions and agents. Do NOT implement anything —
+only create the project and tasks.
+
+1. Create one project for the overall plan and note its returned \`wp-\` slug:
+   \`workflow_project_create(title="<concise plan title>",
+   description="<1–2 sentence goal>", phase="implementation")\`
+
+2. Create one task per actionable step in the \`## Plan\`, each linked to the
+   project via \`project_slug="<wp- slug>"\`:
+   \`task_create(title="<step>", description="<what to do + done condition>",
+   project_slug="<wp- slug>", priority="<p0|p1|p2|p3>")\`
+   - **Ordering → dependencies:** if a step must follow earlier ones, pass
+     \`blocked_by=["<tk- slug of the prerequisite>", ...]\`.
+   - **Grouping → hierarchy:** for a step that decomposes into sub-steps, create
+     it as \`type="epic"\` and create the sub-steps with \`parent="<epic tk- slug>"\`.
+   - Pass \`external_uri\` when a step references a GitHub issue/PR.
+   - Turn each open question (❓) into a task whose title starts with
+     "[open question]" so it stays visible.
+
+3. Finish with a short summary: the project slug and the created task slugs/titles,
+   and note the user can triage with the \`/task\` skill or
+   \`omnigraph-explore tasks --ready\`.
+
+If the omnigraph-memory tools are not available, say so instead of guessing.
+`,
 } as const;
 
 // ---------------------------------------------------------------------------

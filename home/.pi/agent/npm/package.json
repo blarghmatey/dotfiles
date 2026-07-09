@@ -4,10 +4,10 @@
   "dependencies": {
     "@zenobius/pi-worktrees": "^0.5.1",
     "pi-ask-user": "^0.11.1",
-    "pi-claude-bridge": "^0.6.0",
-    "pi-lens": "^3.8.50",
-    "pi-mcp-adapter": "^2.9.0",
-    "pi-smart-fetch": "^0.3.11",
-    "pi-total-recall": "^1.8.0"
+    "pi-claude-bridge": "^0.6.2",
+    "pi-lens": "^3.8.66",
+    "pi-mcp-adapter": "^2.11.0",
+    "pi-smart-fetch": "^0.3.12",
+    "pi-total-recall": "^1.8.1"
   }
 }
