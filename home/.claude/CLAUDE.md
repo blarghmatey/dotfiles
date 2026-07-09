@@ -33,6 +33,7 @@
 - Prefer creating new commits over amending published ones
 - GPG signing is enabled; never skip hooks with `--no-verify`
 - Worktree workflow supported (`git wt`, `pi-worktrees`)
+- Before making code changes in any git repo, call `EnterWorktree` first so concurrent work doesn't stomp on the same files. Skip only when the user explicitly says to edit in place.
 
 ## Project Conventions
 - dotfiles repo: `~/code/personal/dotfiles`, managed via `dots` CLI
