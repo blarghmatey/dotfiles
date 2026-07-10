@@ -84,6 +84,15 @@
       "env": {
         "WITAN_AUTHOR": "<your-name>"
       }
+    },
+    "toolhive-swe-ci": {
+      "url": "https://toolhive-swe.ci.ol.mit.edu/mcp"
+    },
+    "toolhive-swe-qa": {
+      "url": "https://toolhive-swe.qa.ol.mit.edu/mcp"
+    },
+    "toolhive-swe-prod": {
+      "url": "https://toolhive-swe.ol.mit.edu/mcp"
     }
   }
 }
