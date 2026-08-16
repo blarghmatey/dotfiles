@@ -192,7 +192,7 @@
                (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.25.0"))
                (ruby . ("https://github.com/tree-sitter/tree-sitter-ruby" "v0.23.1"))
                (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.24.2"))
-               ;; (scala . ("https://github.com/tree-sitter/tree-sitter-scala" "v0.26.0"))
+               ;; (scala . ("https://github.com/tree-sitter/tree-sitter-scala" "v0.26.2"))
                ;; (swift . ("https://github.com/tree-sitter/swift-tree-sitter" "0.25.0"))
                (toml . ("https://github.com/tree-sitter/tree-sitter-toml" "v0.5.1"))
                (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.2" "tsx/src"))
