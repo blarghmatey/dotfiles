@@ -5,7 +5,7 @@
     "@zenobius/pi-worktrees": "^0.5.1",
     "pi-ask-user": "^0.14.0",
     "pi-claude-bridge": "^0.7.0",
-    "pi-lens": "^3.8.66",
+    "pi-lens": "^4.0.0",
     "pi-mcp-adapter": "^2.11.0",
     "pi-smart-fetch": "^0.3.12",
     "pi-total-recall": "^1.8.1"
