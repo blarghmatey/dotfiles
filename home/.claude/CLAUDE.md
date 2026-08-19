@@ -43,3 +43,22 @@
 - Before making code changes in any git repo, call `EnterWorktree` first so concurrent
   work doesn't stomp on the same files. Skip only when the user explicitly says to edit
   in place. Prefer basing the worktree off of the latest commit of the default branch.
+- If `EnterWorktree` isn't available, check manually before the first edit: compare
+  `git rev-parse --show-toplevel` to `git rev-parse --git-common-dir` (stripped of
+  `/.git`) — if they match, you're in the shared checkout, not a worktree. Other
+  concurrent sessions can switch branches or commit there while you're mid-task, so
+  create one (`git worktree add ../wt-<slug> -b <branch>`) before touching files.
+
+## Claims Must Be Evidence-Backed
+- Before stating a factual claim in a PR body, code comment, commit message, or
+  review reply — "prod never showed this", "the library defaults to X", "this
+  fixed the leak" — verify it against the live source: a Prometheus/Grafana query
+  over at least a 7-day window, the actual library source, or the running
+  infra definition (Pulumi/Terraform/K8s manifest as deployed, not as written).
+  Don't assert framework or library default behavior from memory.
+- A config/manifest change is not verified by merging. Confirm the rollout
+  actually happened — pods restarted, the new value is live in the running
+  process — before claiming the change took effect, and confirm it's scoped to
+  the intended environment only.
+- If a claim can't be verified before shipping, flag it as unverified or drop
+  it rather than stating it with unwarranted confidence.
