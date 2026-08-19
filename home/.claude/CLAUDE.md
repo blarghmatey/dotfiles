@@ -13,6 +13,30 @@
 - Reference code as `file_path:line_number` format
 - One-sentence updates while working; brief is good, silent is not
 
+## Writing Style (all written artifacts)
+Applies everywhere text gets written, not just chat replies: code comments,
+commit messages, PR/issue bodies, RFCs, review replies, docs.
+- Say the thing directly. No throat-clearing openers ("I'll go ahead and...",
+  "Let's dive into...", "Great question!", "Sure, here's...").
+- Cut hedge padding: "it's worth noting that", "in order to", "essentially",
+  "basically", "simply", "just". Delete it or say the thing plainly instead.
+- No inflated adjectives: robust, seamless, powerful, comprehensive, elegant,
+  cutting-edge, significant. Use a concrete description or drop the word.
+- No corporate transitions ("Furthermore", "Moreover", "Additionally"). Start
+  the next sentence directly.
+- Don't restate the request or narrate what you're about to do before doing
+  it ("Now let's...", "Next, I will..."). Just do it.
+- Don't explain what code obviously does. Same rule as inline comments,
+  applied to PR/commit prose: state the non-obvious why, skip the what.
+- Short declarative sentences over hedged, qualifier-stacked ones.
+- Don't inflate importance ("this is a critical fix", "this dramatically
+  improves..."). See Claims Must Be Evidence-Backed below; an unverified
+  claim of impact is still unverified.
+- No em dashes. Use a period, comma, or parentheses instead.
+- Don't overuse "load-bearing." It's a specific, useful metaphor (a piece
+  nothing else can safely be removed out from under). Reach for it only
+  when that's actually the claim, not as generic emphasis.
+
 ## Code Preferences
 - Python: use `uv` for environments, `cyclopts` for CLIs, `ruff` for linting
 - Avoid premature abstractions — solve exactly what's needed, no more
