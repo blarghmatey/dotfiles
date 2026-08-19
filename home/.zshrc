@@ -2,6 +2,9 @@ setopt COMPLETE_ALIASES
 autoload -U select-word-style
 select-word-style bash
 
+# Handle xdg-open on WSL2
+export BROWSER="cmd.exe /c start"
+
 # Aliases
 alias ls='/bin/ls --indicator-style=slash --color=auto'
 alias et='emacsclient -nw -t'
@@ -156,13 +159,3 @@ export JAVA_HOME
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-# Added by dbt installer
-export PATH="$PATH:/home/tmacey/.local/bin"
-
-# dbt aliases
-alias dbtf=/home/tmacey/.local/bin/dbt
-
-
-# Added by Antigravity CLI installer
-export PATH="/home/tmacey/.local/bin:$PATH"
