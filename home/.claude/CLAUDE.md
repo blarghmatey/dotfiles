@@ -52,10 +52,17 @@
 ## Claims Must Be Evidence-Backed
 - Before stating a factual claim in a PR body, code comment, commit message, or
   review reply — "prod never showed this", "the library defaults to X", "this
-  fixed the leak" — verify it against the live source: a Prometheus/Grafana query
-  over at least a 7-day window, the actual library source, or the running
-  infra definition (Pulumi/Terraform/K8s manifest as deployed, not as written).
+  fixed the leak" — verify it against the live source: a Prometheus/Grafana query,
+  the actual library source, or the running infra definition
+  (Pulumi/Terraform/K8s manifest as deployed, not as written).
   Don't assert framework or library default behavior from memory.
+- Size the query window to the claim. A claim about a period ("prod never
+  showed this", "broken since the July deploy") is only supported by a window
+  covering that whole period; if retention won't reach back that far, narrow
+  the claim to what was actually queried ("no occurrences in the last 30
+  days") instead of asserting it whole. At least 7 days is the floor for
+  *trend* claims, so a short blip doesn't read as a trend — a minimum, never
+  sufficient on its own for an absence claim.
 - A config/manifest change is not verified by merging. Confirm the rollout
   actually happened — pods restarted, the new value is live in the running
   process — before claiming the change took effect, and confirm it's scoped to
