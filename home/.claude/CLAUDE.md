@@ -35,6 +35,23 @@
   `home/.claude/CLAUDE.md` in the dotfiles repo) stays `CLAUDE.md` — Claude Code
   loads that specific name for global config, so it isn't a per-repo context file.
 
+## Exploring Unfamiliar Repos
+- Check first whether the repo is already checked out locally (e.g. under
+  `~/code/`) — a local checkout beats both cloning and fetching.
+- Otherwise, for read-only exploration of a repo's file contents (not
+  GitHub/GitLab-side state like PRs, reviews, checks, or issues — use the API
+  for those), clone it rather than fetching files one at a time via `gh api`,
+  raw.githubusercontent.com, WebFetch, or MCP file-getters. A sequence of
+  per-file fetches is slow, burns rate limit, and can't grep across the tree.
+- Shallow-clone into `/tmp` or the session scratchpad, never into a code
+  directory where it would look like a real checkout: `git clone --depth 1`,
+  adding `--filter=blob:none` for a large repo.
+- A depth-1 clone only has the default branch. If the question is about a
+  PR's contents, fetch that ref explicitly, e.g.
+  `git fetch origin pull/<n>/head:<local-branch>` (or the branch name) after
+  the initial clone.
+- Delete the clone when done exploring; don't leave it behind in /tmp.
+
 ## Git
 - Commits focus on "why" not "what"
 - Prefer creating new commits over amending published ones
