@@ -26,7 +26,14 @@
 - `eza` instead of `ls`, `fd` instead of `find` where appropriate
 - `delta` for git diffs
 - `just` for project task runners (prefer over Makefile)
-- `dots` CLI manages this dotfiles repo — see `dots --help`
+
+## Repo Context Files
+- Always check the repo root for an `AGENTS.md` before relying on these global
+  defaults — it takes precedence for anything it covers.
+- When a repo has no context file yet and one is needed, create `AGENTS.md`, not
+  `CLAUDE.md`. Exception: this file itself (`~/.claude/CLAUDE.md`, synced from
+  `home/.claude/CLAUDE.md` in the dotfiles repo) stays `CLAUDE.md` — Claude Code
+  loads that specific name for global config, so it isn't a per-repo context file.
 
 ## Git
 - Commits focus on "why" not "what"
@@ -36,9 +43,3 @@
 - Before making code changes in any git repo, call `EnterWorktree` first so concurrent
   work doesn't stomp on the same files. Skip only when the user explicitly says to edit
   in place. Prefer basing the worktree off of the latest commit of the default branch.
-
-## Project Conventions
-- dotfiles repo: `~/code/personal/dotfiles`, managed via `dots` CLI
-- `manifest.toml` is the source of truth for packages/profiles
-- `home/` mirrors `~/` — files are symlinked by `dots sync`
-- Sensitive configs (API keys, tokens) use `{{ pass:name }}` templates
