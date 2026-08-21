@@ -76,6 +76,17 @@
           }
         ]
       }
+    ],
+    "WorktreeCreate": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/wt-create-hook.sh",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   },
   "worktree": {

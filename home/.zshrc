@@ -152,6 +152,11 @@ if command -v uv &>/dev/null; then
   eval "$(uvx --generate-shell-completion zsh)"
 fi
 
+# git-wt — `git wt <branch>` worktree switch/create, with cd + completion
+if command -v git-wt &>/dev/null; then
+  eval "$(git-wt --init zsh)"
+fi
+
 # Java Setup
 JAVA_HOME=/usr/lib/jvm/default
 export JAVA_HOME

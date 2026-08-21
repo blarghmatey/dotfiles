@@ -243,7 +243,9 @@
   rem = remote rename
 
   # Worktree operations
-  wt    = "!f() { git worktree "$@"; }; f"  # Generic passthrough: git wt list, git wt add <path> <branch>, etc.
+  # `wt` intentionally NOT aliased here: aliases take priority over PATH, and
+  # would shadow the git-wt binary (github.com/k1LoW/git-wt) that provides the
+  # real `git wt <branch>` switch/create/cd/delete/rename workflow.
   wtls  = worktree list
   wta   = worktree add
   wtr   = worktree remove
@@ -276,6 +278,12 @@
 [credential]
   # Use gh CLI for GitHub authentication
   helper = !/usr/bin/gh auth git-credential
+
+[wt]
+  # Matches the pi agent's worktree convention (~/.pi/agent/pi-worktrees.config.json,
+  # worktreeRoot: "{{mainWorktree}}.worktrees") so git-wt and pi land worktrees in the
+  # same place: a sibling <repo>.worktrees/ directory, not nested inside the repo.
+  basedir = ../{gitroot}.worktrees
 
 [lfs]
 	concurrenttransfers = 3
