@@ -20,6 +20,9 @@ app = cyclopts.App(
 install = cyclopts.App(name="install", help="Install packages and tools.")
 app.command(install, name="install")
 
+repos = cyclopts.App(name="repos", help="Index a directory tree of git checkouts.")
+app.command(repos, name="repos")
+
 console = Console()
 DEFAULT_PROFILE = "arch-wsl2"
 
@@ -172,6 +175,25 @@ def go_tools() -> None:
     from .install import install_go
 
     install_go(REPO_ROOT)
+
+
+@repos.command
+def manifest(
+    *,
+    root: Annotated[Path | None, cyclopts.Parameter(name=["--root", "-r"])] = None,
+) -> None:
+    """Regenerate MANIFEST.yaml for ROOT: org/url/description/topics/worktrees per repo.
+
+    Scans ROOT for git checkouts, pulls description and topics from GitHub
+    (batched, github.com only), and writes ROOT/MANIFEST.yaml. Any `note` you've
+    hand-written for a repo is preserved across regenerations.
+    """
+    from .repos import build_manifest, print_summary
+
+    root = (root or Path.cwd()).expanduser().resolve()
+    manifest_path = root / "MANIFEST.yaml"
+    found = build_manifest(root, manifest_path)
+    print_summary(found, manifest_path)
 
 
 @install.command(name="all")

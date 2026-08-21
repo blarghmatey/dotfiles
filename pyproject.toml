@@ -9,6 +9,7 @@ dependencies = [
   # signature-mismatch bug in connectors/util.py (issue #1652 / PR #1653).
   # Revert to "pyinfra>=3.8" once released on PyPI.
   "pyinfra>=3.8",
+  "pyyaml>=6",
   "rich>=13",
 ]
 
