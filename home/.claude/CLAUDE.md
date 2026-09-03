@@ -45,7 +45,6 @@ commit messages, PR/issue bodies, RFCs, review replies, docs.
 - No backwards-compatibility shims when you can just change the code
 
 ## Shell & Tools
-- Prefer `rg` (ripgrep) over `grep` for code search
 - `bat` for viewing files when suggesting terminal commands
 - `eza` instead of `ls`, `fd` instead of `find` where appropriate
 - `delta` for git diffs
