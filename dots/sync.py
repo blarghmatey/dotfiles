@@ -107,6 +107,7 @@ def sync_all(
     """
     tracked_files = iter_tracked(repo_root, home)
     results: list[FileStatus] = []
+    failures: list[str] = []
 
     for f in tracked_files:
         current = get_status(f)
@@ -116,20 +117,32 @@ def sync_all(
             continue
 
         if f.is_template:
-            _do_render(f, dry_run=dry_run)
-            results.append(FileStatus(f, FileState.RENDERED))
+            try:
+                _do_render(f, dry_run=dry_run)
+            except (RuntimeError, OSError) as exc:
+                console.print(f"  [red]failed[/red]     {f.rel}  [dim]({exc})[/dim]")
+                failures.append(f.rel)
+                results.append(FileStatus(f, current.state, str(exc)))
+            else:
+                results.append(FileStatus(f, FileState.RENDERED))
         else:
             linked = _do_link(f, current_state=current.state, force=force, dry_run=dry_run)
             results.append(FileStatus(f, FileState.LINKED_OK if linked else current.state))
 
     _print_summary(results, dry_run=dry_run)
+    if failures:
+        console.print(f"[red]{len(failures)} file(s) failed to render:[/red] {', '.join(failures)}")
+        raise SystemExit(1)
 
 
 def _do_render(f: TrackedFile, *, dry_run: bool) -> None:
-    verb = "[dim]would render[/dim]" if dry_run else "[blue]rendered  [/blue]"
-    console.print(f"  {verb}  {f.rel}")
-    if not dry_run:
-        render_file(f.src, f.dst)
+    if dry_run:
+        console.print(f"  [dim]would render[/dim]  {f.rel}")
+        return
+    # Print after the write, not before: rendering resolves secrets and can
+    # fail, and announcing it first reports a success that did not happen.
+    render_file(f.src, f.dst)
+    console.print(f"  [blue]rendered  [/blue]  {f.rel}")
 
 
 def _do_link(

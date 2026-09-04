@@ -17,12 +17,20 @@ def _resolve_pass(secret: str) -> str:
             " is not on PATH. It has no Windows build; render templates from WSL2."
         )
         raise RuntimeError(msg)
+    name = secret.strip()
     result = subprocess.run(
-        ["pass", "show", secret.strip()],
+        ["pass", "show", name],
         capture_output=True,
         text=True,
-        check=True,
+        check=False,
     )
+    if result.returncode != 0:
+        msg = (
+            f"pass has no entry {name!r} (exit {result.returncode})."
+            f" Add it with `pass insert {name}`, or drop the"
+            f" {{{{ pass:{name} }}}} marker from the template."
+        )
+        raise RuntimeError(msg)
     # `pass show` prints the secret on the first line
     return result.stdout.split("\n")[0].strip()
 
