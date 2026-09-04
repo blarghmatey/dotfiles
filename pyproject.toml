@@ -5,9 +5,6 @@ description = "Personal dotfiles management CLI"
 requires-python = ">=3.13"
 dependencies = [
   "cyclopts>=4",
-  # Pin to git main until pyinfra 3.8 ships; 3.7 has a gevent+Python-3.13
-  # signature-mismatch bug in connectors/util.py (issue #1652 / PR #1653).
-  # Revert to "pyinfra>=3.8" once released on PyPI.
   "pyinfra>=3.8",
   "pyyaml>=6",
   "rich>=13",
@@ -100,4 +97,8 @@ ignore = [
 known-first-party = ["dots", "deploy"]
 
 [dependency-groups]
-dev = ["prek>=0.4.1", "ruff>=0.15.14"]
+dev = [
+    "prek>=0.4.1",
+    "ruff>=0.15.14",
+    "ty>=0.0.78",
+]

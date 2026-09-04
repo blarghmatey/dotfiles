@@ -1,28 +1,49 @@
 # dotfiles
 
-Personal dotfiles for Arch Linux / WSL2, managed by the `dots` CLI.
+Personal dotfiles managed by the `dots` CLI, across two independent
+machine contexts: Arch Linux on WSL2 (`arch-wsl2` profile) and the Windows
+host itself (`windows` profile). `dots` runs natively in each — the
+`windows` profile is never reached through WSL interop.
 
 ## Quick start (fresh machine)
+
+Arch/WSL2 side:
 
 ```bash
 git clone https://github.com/blarghmatey/dotfiles ~/.dotfiles
 cd ~/.dotfiles
 ./bootstrap.sh          # installs yay, uv, uvenv, and the dots CLI
+dots bootstrap          # prerequisite tooling dots install assumes exists (yay, rustup toolchain)
 dots sync               # symlink dotfiles into ~/
 dots install all        # install system packages, Python tools, and npm globals
 ```
 
 `bootstrap.sh` has no third-party dependencies — it only needs `bash`, `git`, and internet access.
 
+Windows side (run in PowerShell, not WSL):
+
+```powershell
+git clone https://github.com/blarghmatey/dotfiles $HOME\.dotfiles
+cd $HOME\.dotfiles
+.\bootstrap.ps1                             # installs Scoop, uv, and the dots CLI
+dots bootstrap --profile windows            # WSL2 feature/kernel, Scoop sanity check
+dots install packages --profile windows     # installs manifest.toml's [profiles.windows.packages] scoop list
+```
+
+`bootstrap.ps1` has no third-party dependencies either. It's independent of
+`bootstrap.sh` — running it doesn't touch or require WSL.
+
 ## Repository layout
 
 ```
-bootstrap.sh          # one-shot setup for a fresh machine
+bootstrap.sh          # one-shot setup for a fresh Arch/WSL2 machine
+bootstrap.ps1          # one-shot setup for a fresh Windows machine
 manifest.toml         # source of truth: profiles, packages, sync config
 uvenv.lock            # locked Python CLI tools (managed by `dots freeze`)
 home/                 # dotfiles — synced to ~/ by `dots sync`
 dots/                 # the dots CLI source (Python, cyclopts)
-deploy/               # pyinfra deploy used by `dots install`
+  bootstrap.py         # yay/rustup toolchain (arch-wsl2), WSL2/Scoop (windows)
+deploy/               # pyinfra deploy used by `dots install packages` (arch-wsl2 only)
   components/
     packages.py       # pacman + AUR via pyinfra
     node_tools.py     # npm globals via pyinfra
@@ -32,29 +53,38 @@ deploy/               # pyinfra deploy used by `dots install`
 ## The `dots` CLI
 
 ```
+dots bootstrap          Install prerequisite tooling (yay/rustup toolchain, or WSL2/Scoop)
 dots sync               Symlink home/* into ~/; render .tmpl files in-place
 dots status             Audit tracked dotfiles — show link/drift/template state
 dots diff               Show what install would change (read-only)
-dots install all        Install everything: packages → python tools → npm globals → skills
-dots install packages   System packages only (pacman + AUR via pyinfra)
+dots install all        Install everything (windows skips the pyinfra-backed python/node/cargo/go steps)
+dots install packages   System packages (pacman+AUR via pyinfra, or Scoop natively on windows)
 dots install python     Python CLI tools only (uvenv thaw)
 dots install node       npm global packages only
 dots install skills     Agent skills only (npx skills add … --global)
-dots upgrade            Upgrade all managed tools (pacman -Syu, uvenv, npm)
+dots upgrade            Upgrade all managed tools for --profile
 dots freeze             Regenerate uvenv.lock from currently installed tools
 ```
 
-All install and remove operations use pyinfra (pacman, npm) or uvenv for
-idempotent, distribution-aware execution.
+`arch-wsl2` installs go through pyinfra (pacman, npm) or uvenv for
+idempotent, distribution-aware execution. `windows` bypasses pyinfra
+entirely — its Windows support is experimental — and calls Scoop directly.
 
 ## Profiles
 
-Packages are grouped into profiles defined in `manifest.toml`. The default
-profile is `arch-wsl2`. Pass `--profile <name>` to any command to override.
+Packages are grouped into profiles defined in `manifest.toml`: `arch-wsl2`
+(the default) and `windows`. Pass `--profile <name>` to any command to
+override — but run the command from the matching OS context, since each
+profile's tooling only exists there.
 
 ```bash
 dots install all --profile arch-wsl2
 dots diff --profile arch-wsl2
+```
+
+```powershell
+dots install packages --profile windows
+dots diff --profile windows
 ```
 
 ## Package management

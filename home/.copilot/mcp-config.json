@@ -10,8 +10,7 @@
         "semble[mcp]",
         "semble"
       ],
-      "source": "user",
-      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+      "source": "user"
     },
     "Mantic": {
       "tools": [
@@ -24,8 +23,7 @@
         "mantic.sh@latest",
         "server"
       ],
-      "source": "user",
-      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+      "source": "user"
     },
     "filesystem": {
       "tools": [
@@ -40,8 +38,7 @@
         "/home/tmacey/.config",
         "/tmp"
       ],
-      "source": "user",
-      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+      "source": "user"
     },
     "grafana-production": {
       "tools": [
@@ -52,8 +49,7 @@
       "headers": {
         "X-Grafana-URL": "https://mitolproduction.grafana.net"
       },
-      "source": "user",
-      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+      "source": "user"
     },
     "grafana-qa": {
       "tools": [
@@ -64,8 +60,7 @@
       "headers": {
         "X-Grafana-URL": "https://mitolqa.grafana.net"
       },
-      "source": "user",
-      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+      "source": "user"
     },
     "memory": {
       "tools": [
@@ -77,8 +72,7 @@
         "-y",
         "@modelcontextprotocol/server-memory"
       ],
-      "source": "user",
-      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+      "source": "user"
     },
     "sequential-thinking": {
       "tools": [
@@ -90,8 +84,7 @@
         "-y",
         "@modelcontextprotocol/server-sequential-thinking"
       ],
-      "source": "user",
-      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+      "source": "user"
     },
     "vantage": {
       "tools": [
@@ -99,8 +92,7 @@
       ],
       "type": "http",
       "url": "https://mcp.vantage.sh/mcp",
-      "source": "user",
-      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+      "source": "user"
     },
     "OpenMetadata": {
       "tools": [
@@ -108,8 +100,7 @@
       ],
       "type": "http",
       "url": "https://data.ol.mit.edu/mcp",
-      "source": "user",
-      "sourcePath": "/home/tmacey/.copilot/mcp-config.json"
+      "source": "user"
     },
     "sentry": {
       "type": "http",

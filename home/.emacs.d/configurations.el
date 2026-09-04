@@ -9,8 +9,10 @@
 ;; (setq mac-option-modifier nil)
 ;; (setq debug-on-error t)
 
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin:/home/tmacey/.local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin" "/usr/local/sbin" "/home/tmacey/.local/bin")))
+(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin:/usr/local/sbin:"
+                       (expand-file-name "~/.local/bin")))
+(setq exec-path (append exec-path (list "/usr/local/bin" "/usr/local/sbin"
+                                        (expand-file-name "~/.local/bin"))))
 
 (setq auth-sources '("~/.authinfo.gpg" "~/.authinfo"  "~/.netrc"))
 

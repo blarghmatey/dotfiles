@@ -11,12 +11,12 @@
           {
             "type": "command",
             "command": "witan inject-context",
-            "timeout": 15
+            "timeout": 15.0
           },
           {
             "type": "command",
             "command": "witan code inject-context",
-            "timeout": 15
+            "timeout": 15.0
           }
         ]
       }
@@ -28,12 +28,12 @@
           {
             "type": "command",
             "command": "witan session-checkpoint",
-            "timeout": 15
+            "timeout": 15.0
           },
           {
             "type": "command",
             "command": "witan code checkpoint",
-            "timeout": 15
+            "timeout": 15.0
           }
         ]
       }
@@ -99,7 +99,7 @@
   },
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
     "gopls-lsp@claude-plugins-official": true
   },
   "skipWorkflowUsageWarning": true,

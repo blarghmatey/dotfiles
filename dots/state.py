@@ -41,6 +41,7 @@ class DotsState:
     applied_at: str = ""
     pacman: list[str] = field(default_factory=list)
     aur: list[str] = field(default_factory=list)
+    scoop: list[str] = field(default_factory=list)
     npm_global: list[str] = field(default_factory=list)
     uvenv_tools: list[str] = field(default_factory=list)
     cargo_tools: list[str] = field(default_factory=list)
@@ -59,6 +60,7 @@ def load() -> DotsState:
         applied_at=data.get("meta", {}).get("applied_at", ""),
         pacman=data.get("packages", {}).get("pacman", []),
         aur=data.get("packages", {}).get("aur", []),
+        scoop=data.get("packages", {}).get("scoop", []),
         npm_global=data.get("node", {}).get("global", []),
         uvenv_tools=data.get("uvenv", {}).get("tools", []),
         cargo_tools=data.get("cargo", {}).get("tools", []),
@@ -81,6 +83,7 @@ def save(state: DotsState, profile: str) -> None:
         "[packages]\n"
         f"pacman = {_fmt_list(state.pacman)}\n"
         f"aur = {_fmt_list(state.aur)}\n"
+        f"scoop = {_fmt_list(state.scoop)}\n"
         "\n"
         "[node]\n"
         f"global = {_fmt_list(state.npm_global)}\n"

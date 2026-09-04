@@ -10,7 +10,7 @@ hooks = [
   { id = "end-of-file-fixer" },
   { id = "check-merge-conflict" },
   { id = "check-toml" },
-  { id = "check-json", exclude = 'renovate\.json' },
+  { id = "check-json" },
   { id = "check-yaml" },
   { id = "detect-private-key" },
 ]

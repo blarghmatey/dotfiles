@@ -3,6 +3,11 @@
 Imports and calls each scoped component module in order. Components are
 responsible for their own idempotency via pyinfra operations.
 
+Linux/WSL-only: pyinfra's Windows support is experimental, so the ``windows``
+profile never invokes this — its installs (Scoop) run natively via plain
+subprocess calls from dots/install.py instead. See dots/bootstrap.py and
+bootstrap.ps1 for how the windows profile bootstraps itself.
+
 Cargo and Go components are disabled by default; pass ``enable_cargo=true``
 or ``enable_go=true`` via ``--data`` to activate them.
 

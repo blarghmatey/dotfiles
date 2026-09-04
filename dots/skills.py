@@ -62,21 +62,43 @@ def _unique_sources(skills: dict[str, dict]) -> list[str]:
 
 
 def install_skills(repo_root: Path, *, yes: bool = False) -> None:
-    """Install all global agent skills declared in skills-lock.json."""
+    """Install the global agent skills from skills-lock.json that aren't present yet.
+
+    Only sources with at least one missing skill are re-added, mirroring how
+    ``install_pi`` checks per-package state first. ``_installed_skills`` returns
+    an empty set when the query fails, which degrades to adding everything.
+    """
     skills = _load_lock(repo_root)
     if not skills:
         console.print("[yellow]skills-lock.json not found or empty.[/yellow]")
         return
 
-    sources = _unique_sources(skills)
+    installed = _installed_skills()
+    by_source = {
+        source: [name for name, e in skills.items() if e.get("source") == source]
+        for source in _unique_sources(skills)
+    }
+    pending = {
+        source: names
+        for source, names in by_source.items()
+        if any(name not in installed for name in names)
+    }
+
+    if not pending:
+        console.print(
+            f"[dim]All {len(skills)} skills from {len(by_source)} packages already installed[/dim]"
+        )
+        return
+
+    missing_count = sum(1 for name in skills if name not in installed)
     console.print(
         f"\n[bold]Installing agent skills[/bold]  "
-        f"[dim]({len(skills)} skills from {len(sources)} packages)[/dim]\n"
+        f"[dim]({missing_count} missing from {len(pending)} packages)[/dim]\n"
     )
 
-    for source in sources:
-        skill_names = [name for name, e in skills.items() if e.get("source") == source]
-        console.print(f"  [cyan]{source}[/cyan] [dim]({len(skill_names)} skills)[/dim]")
+    for source, names in pending.items():
+        absent = [name for name in names if name not in installed]
+        console.print(f"  [cyan]{source}[/cyan] [dim]({len(absent)} missing)[/dim]")
         cmd = ["npx", "skills", "add", source, "--global", "--all"]
         if yes:
             cmd.append("--yes")

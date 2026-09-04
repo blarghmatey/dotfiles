@@ -11,7 +11,7 @@
         "serve"
       ],
       "env": {
-        "WITAN_AUTHOR": "<your-name>"
+        "WITAN_AUTHOR": "Tobias Macey"
       }
     },
     "semble": {
@@ -82,17 +82,32 @@
         "serve"
       ],
       "env": {
-        "WITAN_AUTHOR": "<your-name>"
+        "WITAN_AUTHOR": "Tobias Macey"
       }
     },
     "toolhive-swe-ci": {
-      "url": "https://toolhive-swe.ci.ol.mit.edu/mcp"
+      "url": "https://toolhive-swe.ci.ol.mit.edu/mcp",
+      "auth": "oauth",
+      "oauth": {
+        "clientId": "toolhive-swe-cli",
+        "redirectUri": "http://localhost:8080/callback"
+      }
     },
     "toolhive-swe-qa": {
-      "url": "https://toolhive-swe.qa.ol.mit.edu/mcp"
+      "url": "https://toolhive-swe.qa.ol.mit.edu/mcp",
+      "auth": "oauth",
+      "oauth": {
+        "clientId": "toolhive-swe-cli",
+        "redirectUri": "http://localhost:8080/callback"
+      }
     },
     "toolhive-swe-prod": {
-      "url": "https://toolhive-swe.ol.mit.edu/mcp"
+      "url": "https://toolhive-swe.ol.mit.edu/mcp",
+      "auth": "oauth",
+      "oauth": {
+        "clientId": "toolhive-swe-cli",
+        "redirectUri": "http://localhost:8080/callback"
+      }
     }
   }
 }

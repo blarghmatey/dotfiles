@@ -130,13 +130,16 @@
   insteadof = github:
 
 [credential "https://github.com"]
-  helper = !/usr/bin/gh auth git-credential
+	helper =
+	helper = !gh auth git-credential
 
 [credential "https://gist.github.com"]
-  helper = !/usr/bin/gh auth git-credential
+	helper =
+	helper = !gh auth git-credential
 
 [credential "https://github.mit.edu"]
-  helper = !/usr/bin/gh auth git-credential
+	helper =
+	helper = !gh auth git-credential
 
 # User and Platform Settings
 [user]
@@ -256,12 +259,14 @@
 
   # Miscellaneous
   w = whatchanged
-  search = "!f() { query=\"$1\"; shift; git log -S\"$query\" \"$@\"; }; f \"$@\""
+  # No trailing `f "$@"`: git already appends the alias args to the command
+  # string (prepare_shell_cmd), so passing "$@" too passes every arg twice.
+  search = "!f() { query=\"$1\"; shift; git log -S\"$query\" \"$@\"; }; f"
   rdiff = diff --summary head
   stat = diff --summary head
   mt = mergetool
   pr = pull-request
-  smc = log --author=\"Tobias Macey\" --grep=\"$1\"
+  smc = "!f() { query=\"$1\"; shift; git log --author=\"Tobias Macey\" --grep=\"$query\" \"$@\"; }; f"
 
 # Delta Integration
 [interactive]
@@ -275,9 +280,10 @@
   syntax-theme = Dracula
   hyperlinks = true
 
-[credential]
-  # Use gh CLI for GitHub authentication
-  helper = !/usr/bin/gh auth git-credential
+[credential "https://github.com"]
+  # Fallback for witan-code, which clones with a PAT rather than a gh login.
+  # Host-scoped on purpose: unscoped, this hands the token to every https remote.
+  helper = "!f() { echo username=x-access-token; echo \"password=${WITAN_CODE_GH_TOKEN}\"; }; f"
 
 [wt]
   # Matches the pi agent's worktree convention (~/.pi/agent/pi-worktrees.config.json,

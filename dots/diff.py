@@ -24,6 +24,37 @@ def _pacman_installed() -> set[str]:
     return {line.split()[0] for line in result.stdout.splitlines() if line.strip()}
 
 
+def _scoop_installed() -> set[str]:
+    """Return the set of app names installed via Scoop.
+
+    Runs natively on Windows. ``scoop list`` prints a formatted table, so
+    PowerShell's object pipeline (``Select-Object -ExpandProperty Name``) is
+    used to get plain names instead of parsing that table's columns.
+    ``6>$null`` discards its "Installed apps:" banner — that's a Write-Host
+    call, which still lands on stdout under non-interactive redirection and
+    would otherwise show up as a bogus installed-app name (confirmed against
+    a real Scoop install: without it, the banner text leaks into this set).
+    Returns an empty set (rather than raising) if ``powershell.exe`` isn't on
+    PATH — e.g. this got invoked from the wrong (non-Windows) context.
+    """
+    try:
+        result = subprocess.run(
+            [
+                "powershell.exe",
+                "-NoProfile",
+                "-NonInteractive",
+                "-Command",
+                "scoop list 6>$null | Select-Object -ExpandProperty Name",
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError:
+        return set()
+    return {line.strip() for line in result.stdout.splitlines() if line.strip()}
+
+
 def _npm_global_installed() -> set[str]:
     result = subprocess.run(
         ["npm", "list", "-g", "--depth=0", "--json"],
@@ -136,18 +167,64 @@ def _add_row(
     table.add_row(label, status, notes_str)
 
 
+def _stale_note(prev_profile: str, profile: str) -> None:
+    console.print(
+        f"[dim]Note: state was recorded for profile [bold]{prev_profile}[/bold];"
+        f" pending removals not shown for profile [bold]{profile}[/bold].[/dim]\n"
+    )
+
+
 # ── public entry point ────────────────────────────────────────────────────────
+
+
+def _print_diff_windows(pkg_data: dict, prev: pkg_state.DotsState, profile: str) -> None:
+    """windows profile: Scoop only — pacman/npm/uvenv/cargo/go don't exist here."""
+    scoop_expected: list[str] = pkg_data.get("scoop", [])
+    state_matches_profile = prev.profile == profile
+
+    with console.status("[dim]Querying installed packages…[/dim]"):
+        scoop_inst = _scoop_installed()
+
+    pending_scoop: list[str] = []
+    if state_matches_profile:
+        pending_scoop = sorted((set(prev.scoop) - set(scoop_expected)) & scoop_inst)
+
+    table = Table(box=box.SIMPLE_HEAD, show_header=True, header_style="bold", padding=(0, 1))
+    table.add_column("Category", min_width=22)
+    table.add_column("Status", min_width=16)
+    table.add_column("Details")
+    _add_row(
+        table,
+        "scoop",
+        scoop_expected,
+        scoop_inst,
+        pending_scoop or None,
+        name_label=f"scoop ({len(scoop_expected)})",
+    )
+    console.print(table)
+
+    if not state_matches_profile and prev.profile:
+        _stale_note(prev.profile, profile)
 
 
 def print_diff(repo_root: Path, profile: str) -> None:
     """Query each package manager and display what's missing or pending removal."""
     with (repo_root / "manifest.toml").open("rb") as f:
         manifest = tomllib.load(f)
-    with (repo_root / "uvenv.lock").open("rb") as f:
-        lock = tomllib.load(f)
 
     profile_data = manifest.get("profiles", {}).get(profile, {})
     pkg_data = profile_data.get("packages", {})
+
+    prev = pkg_state.load()
+
+    console.print(f"\n[bold]Dotfiles diff[/bold]  profile=[cyan]{profile}[/cyan]\n")
+
+    if profile == "windows":
+        _print_diff_windows(pkg_data, prev, profile)
+        return
+
+    with (repo_root / "uvenv.lock").open("rb") as f:
+        lock = tomllib.load(f)
 
     pacman_expected: list[str] = pkg_data.get("pacman", [])
     aur_expected: list[str] = pkg_data.get("aur", [])
@@ -156,8 +233,6 @@ def print_diff(repo_root: Path, profile: str) -> None:
     cargo_expected: list[str] = manifest.get("cargo", {}).get("tools", [])
     go_expected: list[str] = manifest.get("go", {}).get("tools", [])
 
-    # Load saved state to compute pending removals.
-    prev = pkg_state.load()
     state_matches_profile = prev.profile == profile
 
     pending_pacman: list[str] = []
@@ -166,8 +241,6 @@ def print_diff(repo_root: Path, profile: str) -> None:
     pending_uvenv: list[str] = []
     pending_cargo: list[str] = []
     pending_go: list[str] = []
-
-    console.print(f"\n[bold]Dotfiles diff[/bold]  profile=[cyan]{profile}[/cyan]\n")
 
     with console.status("[dim]Querying installed packages…[/dim]"):
         pacman_inst = _pacman_installed()
@@ -251,7 +324,4 @@ def print_diff(repo_root: Path, profile: str) -> None:
     console.print(table)
 
     if not state_matches_profile and prev.profile:
-        console.print(
-            f"[dim]Note: state was recorded for profile [bold]{prev.profile}[/bold];"
-            f" pending removals not shown for profile [bold]{profile}[/bold].[/dim]\n"
-        )
+        _stale_note(prev.profile, profile)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 import tomllib
@@ -15,6 +16,7 @@ from .diff import (
     _go_installed,
     _npm_global_installed,
     _pacman_installed,
+    _scoop_installed,
     _uvenv_installed,
 )
 
@@ -46,6 +48,40 @@ def _confirm_removals(category: str, pkgs: list[str]) -> list[str]:
     return []
 
 
+def _scoop_bin() -> str:
+    """Resolve the Scoop shim's full path.
+
+    Scoop's own command is a ``.cmd`` shim; ``subprocess`` with
+    ``shell=False`` won't resolve a bare "scoop" without the extension on
+    Windows, so ``shutil.which`` (which does the PATHEXT lookup) is required.
+    """
+    scoop = shutil.which("scoop")
+    if not scoop:
+        msg = "scoop not found on PATH — run 'dots bootstrap --profile windows' first"
+        raise RuntimeError(msg)
+    return scoop
+
+
+def _install_scoop_packages(packages: list[str]) -> None:
+    """Install *packages* via Scoop, natively on Windows. No-op if empty."""
+    if not packages:
+        return
+    console.print(
+        f"[bold]Installing Scoop packages[/bold] ({len(packages)}): {', '.join(packages)}"
+    )
+    subprocess.run([_scoop_bin(), "install", *packages], check=True)
+
+
+def _remove_scoop_packages(packages: list[str]) -> None:
+    """Uninstall *packages* via Scoop, natively on Windows. No-op if empty."""
+    if not packages:
+        return
+    console.print(
+        f"[yellow]Removing Scoop packages[/yellow] ({len(packages)}): {', '.join(packages)}"
+    )
+    subprocess.run([_scoop_bin(), "uninstall", *packages], check=True)
+
+
 def _run_pyinfra(
     repo_root: Path,
     profile: str,
@@ -59,7 +95,20 @@ def _run_pyinfra(
     enable_cargo: bool = False,
     enable_go: bool = False,
 ) -> None:
-    """Invoke pyinfra with the full set of data keys."""
+    """Invoke pyinfra with the full set of data keys.
+
+    Linux/WSL-only: pyinfra's Windows local connector is experimental, so the
+    ``windows`` profile must never reach this. Guarded here rather than only at
+    the callers because ``install_python``/``install_cargo``/``install_go`` take
+    the profile from saved state, not from ``--profile``.
+    """
+    if profile == "windows":
+        msg = (
+            "This step runs through pyinfra, which the windows profile does not use."
+            " Run it from WSL2 with --profile arch-wsl2."
+        )
+        raise RuntimeError(msg)
+
     deploy_script = repo_root / "deploy" / "deploy.py"
     cmd = [
         *_PYINFRA,
@@ -88,14 +137,47 @@ def _run_pyinfra(
     subprocess.run(cmd, check=True, cwd=str(repo_root))
 
 
-def install_packages(repo_root: Path, profile: str, *, verbose: bool = False) -> None:
-    """Run pyinfra deploy: remove stale packages then install manifest packages."""
-    _sudo_authenticate()
+def _install_packages_windows(profile: str, pkg_data: dict) -> None:
+    """Install/remove Scoop packages natively — no pyinfra, no WSL involved."""
+    current_scoop: list[str] = pkg_data.get("scoop", [])
+    prev = pkg_state.load()
 
+    remove_scoop: list[str] = []
+    if prev.profile == profile:
+        candidates_scoop = set(prev.scoop) - set(current_scoop)
+        if candidates_scoop:
+            installed_scoop = _scoop_installed()
+            stale_scoop = sorted(candidates_scoop & installed_scoop)
+            if stale_scoop:
+                remove_scoop = _confirm_removals("scoop", stale_scoop)
+
+    _remove_scoop_packages(remove_scoop)
+    _install_scoop_packages(current_scoop)
+
+    new_state = pkg_state.load()
+    new_state.profile = profile
+    new_state.scoop = current_scoop
+    pkg_state.save(new_state, profile)
+
+
+def install_packages(repo_root: Path, profile: str, *, verbose: bool = False) -> None:
+    """Install packages for *profile*.
+
+    ``windows`` runs natively (Scoop, no pyinfra); every other profile runs
+    through the pyinfra deploy (pacman/AUR + npm), which assumes it's
+    executing on the Linux/WSL side.
+    """
     with (repo_root / "manifest.toml").open("rb") as f:
         manifest = tomllib.load(f)
     profile_data = manifest.get("profiles", {}).get(profile, {})
     pkg_data = profile_data.get("packages", {})
+
+    if profile == "windows":
+        _install_packages_windows(profile, pkg_data)
+        return
+
+    _sudo_authenticate()
+
     current_pacman: list[str] = pkg_data.get("pacman", [])
     current_aur: list[str] = pkg_data.get("aur", [])
     current_npm: list[str] = profile_data.get("node", {}).get("global", [])
@@ -259,8 +341,15 @@ def install_go(repo_root: Path) -> None:
     pkg_state.save(new_state, new_state.profile or profile)
 
 
-def upgrade_all(_profile: str) -> None:
+def upgrade_all(profile: str) -> None:
     """Upgrade system packages, Python tools, npm globals, cargo/go tools, and pi."""
+    if profile == "windows":
+        console.print("[bold]Upgrading Scoop[/bold]  (scoop update; scoop update --all)")
+        scoop = _scoop_bin()
+        subprocess.run([scoop, "update"], check=True)
+        subprocess.run([scoop, "update", "--all"], check=True)
+        return
+
     console.print("[bold]Upgrading system packages[/bold]  (yay -Syu)")
     subprocess.run(["yay", "-Syu", "--noconfirm"], check=True)
 

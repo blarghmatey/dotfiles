@@ -14,7 +14,13 @@ dir=$(dirname "$file")
 root=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null) || exit 0
 [ -f "$root/prek.toml" ] || [ -f "$root/.pre-commit-config.yaml" ] || exit 0
 
-out=$(cd "$root" && prek run --files "$file" --color=never 2>&1)
-code=$?
-printf '%s\n' "$out" | tail -n 40
-exit "$code"
+if out=$(cd "$root" && prek run --files "$file" --color=never 2>&1); then
+  exit 0
+fi
+
+# Report on stderr, exit 2. For PostToolUse that is the only combination the
+# agent ever sees: stdout goes to the debug log, and any other non-zero exit
+# renders a "hook error" notice built from stderr -- empty if we wrote stdout.
+# Exit 2 cannot block here (the edit already happened); it just surfaces.
+printf '%s\n' "$out" | tail -n 40 >&2
+exit 2

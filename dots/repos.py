@@ -12,6 +12,7 @@ context beyond what GitHub knows).
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -47,13 +48,16 @@ def _run(*args: str, cwd: Path | None = None) -> str:
 
 def find_repos(root: Path) -> list[Path]:
     """All git repo roots under `root`, up to MAX_DEPTH."""
-    out = subprocess.run(
-        ["find", str(root), "-maxdepth", str(MAX_DEPTH), "-type", "d", "-name", ".git"],
-        capture_output=True,
-        text=True,
-        check=False,
-    ).stdout
-    return sorted(Path(line).parent for line in out.splitlines())
+    found: list[Path] = []
+    root_depth = len(root.parts)
+    for dirpath, dirnames, _ in os.walk(root):
+        current = Path(dirpath)
+        if len(current.parts) - root_depth >= MAX_DEPTH:
+            dirnames.clear()
+            continue
+        if ".git" in dirnames:
+            found.append(current)
+    return sorted(found)
 
 
 def _parse_remote(url: str) -> tuple[str, str, str]:
@@ -135,10 +139,18 @@ def _fetch_github_metadata(repos: list[RepoInfo]) -> int:
 
 
 def _load_existing_notes(manifest_path: Path) -> dict[str, str | None]:
+    """Map root-relative repo path -> sticky note from an existing manifest.
+
+    Keyed on the entry's path rather than its basename: two checkouts sharing a
+    folder name (personal/foo and work/foo) would otherwise share one note, and
+    whichever sorted last would silently take the other's.
+    """
     if not manifest_path.exists():
         return {}
     data = yaml.safe_load(manifest_path.read_text()) or {}
-    return {name: entry.get("note") for name, entry in data.get("repos", {}).items()}
+    return {
+        entry.get("path", key): entry.get("note") for key, entry in data.get("repos", {}).items()
+    }
 
 
 def build_manifest(root: Path, manifest_path: Path) -> list[RepoInfo]:
@@ -148,19 +160,20 @@ def build_manifest(root: Path, manifest_path: Path) -> list[RepoInfo]:
 
     notes = _load_existing_notes(manifest_path)
     for r in repos:
-        r.note = notes.get(r.name)
+        r.note = notes.get(r.path)
 
+    # Keyed by root-relative path, which is unique; a bare repo name is not.
     out = {
-        r.name: {
+        r.path: {
+            "name": r.name,
             "org": r.org,
             "url": r.url,
             "description": r.description,
             "topics": r.topics,
             "worktrees": r.worktrees,
-            "path": r.path,
             "note": r.note,
         }
-        for r in sorted(repos, key=lambda r: r.name)
+        for r in sorted(repos, key=lambda r: r.path)
     }
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     with manifest_path.open("w") as f:

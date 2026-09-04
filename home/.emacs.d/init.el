@@ -884,7 +884,8 @@
                 undo-tree-enable-undo-in-region t
                 undo-tree-visualizer-diff t
                 undo-tree-visualizer-timestamps t
-                undo-tree-history-directory-alist '(("." . "/home/tmacey/.emacs.d/undo-tree/"))))
+                undo-tree-history-directory-alist
+                `(("." . ,(expand-file-name "undo-tree/" user-emacs-directory)))))
 
 (use-package unicode-fonts
   :straight t

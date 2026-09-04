@@ -107,7 +107,36 @@ global = [
   "@github/copilot",
   "@kilocode/cli",
   "@earendil-works/pi-coding-agent", # pi agent
+  # Installed and aliased in .zshrc but previously undeclared here, so a
+  # rebuild silently dropped them.
+  "@sourcegraph/amp",                 # Sourcegraph Amp (README lists it as an npm install)
+  "@musistudio/claude-code-router",   # `ccr` alias
   "altimate-code", # data engineering agent assistant - https://docs.altimate.sh/
+]
+
+[profiles.windows]
+description = "Windows host packages via Scoop, installed natively (not through WSL2 interop)"
+
+# All names below are verified present in Scoop's default `main` bucket, which
+# is the only one `dots bootstrap --profile windows` sets up. Anything from
+# `extras` (lazygit, vscode, terminals) needs `scoop bucket add extras` first.
+[profiles.windows.packages]
+scoop = [
+  # Windows-host essentials
+  "git",
+  "gh",
+  "7zip",
+
+  # Parity with the arch-wsl2 CLI tools, for PowerShell sessions
+  "ripgrep",
+  "fd",
+  "bat",
+  "fzf",
+  "jq",
+  "delta",
+  "zoxide",
+  "starship",
+  "neovim",
 ]
 
 # ──────────────────────────────────────────────

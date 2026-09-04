@@ -66,6 +66,12 @@ def get_status(tracked: TrackedFile) -> FileStatus:
     if tracked.is_template:
         if not dst.exists():
             return FileStatus(tracked, FileState.MISSING, "template not rendered")
+        # mtime, not content: the rendered output legitimately differs from the
+        # source (pass/env markers are substituted), and the secrets behind those
+        # markers rotate independently, so a content compare can't decide this.
+        # The rendered file's own mtime is the last-render marker.
+        if tracked.src.stat().st_mtime > dst.stat().st_mtime:
+            return FileStatus(tracked, FileState.RENDERED_STALE, "source changed since render")
         return FileStatus(tracked, FileState.RENDERED)
 
     if not dst.exists() and not dst.is_symlink():
@@ -172,7 +178,15 @@ def _do_link(
     console.print(f"  {verb}  {f.rel}")
     if not dry_run:
         dst.parent.mkdir(parents=True, exist_ok=True)
-        dst.symlink_to(f.src)
+        try:
+            dst.symlink_to(f.src)
+        except OSError as exc:
+            msg = (
+                f"Could not symlink {f.rel}: {exc}. On Windows, creating symlinks"
+                " needs Developer Mode or an elevated shell — dots sync is meant to"
+                " run from WSL2."
+            )
+            raise RuntimeError(msg) from exc
     return True
 
 

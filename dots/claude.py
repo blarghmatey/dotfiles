@@ -19,6 +19,7 @@ Add a new file there to register a new /command in Claude Code.
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -48,7 +49,7 @@ _TRACKED_DIRS = [
 
 def _claude_installed() -> bool:
     """Return True if the claude CLI is on PATH."""
-    return subprocess.run(["which", "claude"], capture_output=True, check=False).returncode == 0
+    return shutil.which("claude") is not None
 
 
 def _claude_version() -> str:
@@ -132,7 +133,7 @@ def _lsp_servers(repo_root: Path) -> dict[str, dict]:
 
 def _binary_on_path(command: str) -> bool:
     """Return True if *command* resolves on PATH."""
-    return subprocess.run(["which", command], capture_output=True, check=False).returncode == 0
+    return shutil.which(command) is not None
 
 
 # ── public API ────────────────────────────────────────────────────────────────

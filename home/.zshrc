@@ -8,8 +8,8 @@ export BROWSER="cmd.exe /c start"
 # Aliases
 alias ls='/bin/ls --indicator-style=slash --color=auto'
 alias et='emacsclient -nw -t'
-alias cat='/usr/sbin/bat'
-alias vim='/usr/sbin/nvim'
+alias cat='bat'
+alias vim='nvim'
 alias prune_pods='kubectl delete pods --field-selector=status.phase!=Running --all-namespaces'
 
 # eza — modern ls (install: cargo install eza)
@@ -20,13 +20,24 @@ if command -v eza &>/dev/null; then
   alias lt='eza --icons --tree --level=2'
 fi
 
-# AI CLI tools — installed globally, fallback to bunx
-alias gemini='bunx -y @google/gemini-cli'
-alias ghc='bunx -y @github/copilot'
-alias amp='bunx -y @sourcegraph/amp'
-alias kilo='bunx -y @kilocode/cli'
-alias ccr='bunx -y @musistudio/claude-code-router'
-alias pi='bunx -y @earendil-works/pi-coding-agent'
+# AI CLI tools — use the global npm install when present, bunx otherwise.
+# These previously aliased straight to bunx, which shadowed the installed
+# binary and paid a package-resolution round-trip on every invocation.
+# $1 alias name, $2 binary the package installs, $3 npm package.
+_ai_cli() {
+  if command -v "$2" &>/dev/null; then
+    [[ "$1" == "$2" ]] || alias "$1"="$2"
+  else
+    alias "$1"="bunx -y $3"
+  fi
+}
+_ai_cli gemini gemini  @google/gemini-cli
+_ai_cli ghc    copilot @github/copilot
+_ai_cli amp    amp     @sourcegraph/amp
+_ai_cli kilo   kilo    @kilocode/cli
+_ai_cli ccr    ccr     @musistudio/claude-code-router
+_ai_cli pi     pi      @earendil-works/pi-coding-agent
+unset -f _ai_cli
 
 
 function retire_concourse_worker {
@@ -47,10 +58,10 @@ if [[ -n "$GITHUB_COPILOT_CLI" ]]; then
     export SAVEHIST=500000
 fi
 
-path+=('/home/tmacey/.local/bin')
-path+=('/home/tmacey/.cargo/bin')
-path+=('/home/tmacey/.npm_packages/bin')
-path+=('/home/tmacey/go/bin')
+path+=("$HOME/.local/bin")
+path+=("$HOME/.cargo/bin")
+path+=("$HOME/.npm_packages/bin")
+path+=("$HOME/go/bin")
 export PATH
 
 ### Added by Zinit's installer
@@ -158,7 +169,7 @@ if command -v git-wt &>/dev/null; then
 fi
 
 # Java Setup
-JAVA_HOME=/usr/lib/jvm/default
+JAVA_HOME=/usr/lib/jvm/default-runtime
 export JAVA_HOME
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!

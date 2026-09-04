@@ -1,0 +1,43 @@
+---
+name: CI
+
+"on":
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Sync environment
+        run: uv sync
+
+      # prek fetches each remote hook repo on first run; cache them so
+      # Renovate's dependency PRs don't re-clone the whole suite every time.
+      - name: Cache prek hook environments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/prek
+          key: prek-${{ runner.os }}-${{ hashFiles('prek.toml') }}
+          restore-keys: prek-${{ runner.os }}-
+
+      - name: Run hooks
+        run: uv run prek run --all-files --show-diff-on-failure
+
+      - name: Type check
+        run: uv run ty check dots deploy

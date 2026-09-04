@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -10,6 +11,12 @@ _ENV_RE = re.compile(r"\{\{\s*env:([^\}]+?)\s*\}\}")
 
 
 def _resolve_pass(secret: str) -> str:
+    if not shutil.which("pass"):
+        msg = (
+            f"Template needs {{{{ pass:{secret.strip()} }}}} but the `pass` password manager"
+            " is not on PATH. It has no Windows build; render templates from WSL2."
+        )
+        raise RuntimeError(msg)
     result = subprocess.run(
         ["pass", "show", secret.strip()],
         capture_output=True,

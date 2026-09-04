@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import tomllib
 from pathlib import Path
 from typing import Annotated
 
@@ -44,7 +45,36 @@ REPO_ROOT = _find_repo_root()
 HOME = Path.home()
 
 
+def _validate_profile(profile: str) -> None:
+    """Reject a profile the manifest doesn't define.
+
+    Without this an unknown profile resolves to an empty dict at every lookup,
+    so the command reports "nothing to do" and exits 0 rather than erroring.
+    """
+    with (REPO_ROOT / "manifest.toml").open("rb") as f:
+        known = sorted(tomllib.load(f).get("profiles", {}))
+    if profile not in known:
+        console.print(
+            f"[red]Unknown profile[/red] {profile!r} — manifest.toml defines: {', '.join(known)}"
+        )
+        raise SystemExit(2)
+
+
 # ── top-level commands ────────────────────────────────────────────────────────
+
+
+@app.command
+def bootstrap(*, profile: str = DEFAULT_PROFILE) -> None:
+    """Install prerequisite tooling for *profile* that `dots install` assumes exists.
+
+    arch-wsl2: yay (AUR helper), a default rustup toolchain.
+    windows: the WSL2 feature/kernel, and Scoop. Run natively on Windows —
+    see bootstrap.ps1 to get `dots` installed there in the first place.
+    """
+    from .bootstrap import bootstrap as run_bootstrap
+
+    _validate_profile(profile)
+    run_bootstrap(profile)
 
 
 @app.command
@@ -78,11 +108,12 @@ def freeze() -> None:
 
 @app.command
 def upgrade(*, profile: str = DEFAULT_PROFILE) -> None:
-    """Upgrade all managed tools: pacman, uvenv, npm globals, Claude Code, pi."""
+    """Upgrade all managed tools for *profile*: pacman or scoop, uvenv, npm globals, Claude Code, pi."""
     from .claude import upgrade_claude
     from .install import upgrade_all
     from .pi import upgrade_pi
 
+    _validate_profile(profile)
     upgrade_all(profile)
     upgrade_claude()
     upgrade_pi()
@@ -100,6 +131,7 @@ def diff(*, profile: str = DEFAULT_PROFILE) -> None:
     from .pi import diff_pi
     from .skills import diff_skills
 
+    _validate_profile(profile)
     print_diff(REPO_ROOT, profile)
     diff_pi(REPO_ROOT)
     diff_claude(REPO_ROOT)
@@ -139,9 +171,13 @@ def packages(
     profile: str = DEFAULT_PROFILE,
     verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = False,
 ) -> None:
-    """Install system packages via pyinfra (pacman + AUR)."""
+    """Install system packages for *profile*.
+
+    arch-wsl2: pacman + AUR via pyinfra. windows: Scoop, natively, no pyinfra.
+    """
     from .install import install_packages
 
+    _validate_profile(profile)
     install_packages(REPO_ROOT, profile, verbose=verbose)
 
 
@@ -158,6 +194,7 @@ def node(*, profile: str = DEFAULT_PROFILE) -> None:
     """Install global npm packages."""
     from .install import install_node
 
+    _validate_profile(profile)
     install_node(REPO_ROOT, profile)
 
 
@@ -203,12 +240,20 @@ def install_all(
     verbose: Annotated[bool, cyclopts.Parameter(name=["--verbose", "-v"])] = False,
     yes: Annotated[bool, cyclopts.Parameter(name=["--yes", "-y"])] = False,
 ) -> None:
-    """Run all install subcommands in order: packages → python → node → cargo → go → claude → pi → skills."""
+    """Run all install subcommands in order.
+
+    arch-wsl2: packages → python → node → cargo → go → claude → pi → skills.
+    windows: packages → claude → pi → skills. The python/node/cargo/go steps all
+    go through pyinfra, whose Windows local connector is experimental, and uvenv/
+    cargo/go aren't part of the native-Windows install to begin with.
+    """
+    _validate_profile(profile)
     packages(profile=profile, verbose=verbose)
-    python_tools()
-    node(profile=profile)
-    cargo_tools()
-    go_tools()
+    if profile != "windows":
+        python_tools()
+        node(profile=profile)
+        cargo_tools()
+        go_tools()
     claude_code()
     pi_extensions()
     skills(yes=yes)
