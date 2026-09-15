@@ -30,7 +30,7 @@ jobs:
       # prek fetches each remote hook repo on first run; cache them so
       # Renovate's dependency PRs don't re-clone the whole suite every time.
       - name: Cache prek hook environments
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/prek
           key: prek-${{ runner.os }}-${{ hashFiles('prek.toml') }}
