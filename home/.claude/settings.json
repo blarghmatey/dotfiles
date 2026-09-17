@@ -85,6 +85,16 @@
             "command": "witan code session-init"
           }
         ]
+      },
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/shared-checkout-warning.sh",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "WorktreeCreate": [
