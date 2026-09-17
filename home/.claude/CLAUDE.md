@@ -156,10 +156,12 @@ house style wins.
 - Delete the clone when done exploring; don't leave it behind in /tmp.
 
 ## Git
-- Match the repo's commit convention. Where history uses typed commits:
+- Match the commit convention in the repo's recent `git log` (scopes, casing,
+  type names). Repo conventions change, so check rather than assume. Where
+  there's no settled convention (new or personal repos), default to
   `type: Capitalized imperative subject`, no scope, no trailing period, about
-  50 chars (max 72). Types: `fix`, `config`, `version`, `feat`, `refactor`,
-  `chore`, `defaults`, `hack`, `style`, `doc`. Combine with a comma, config
+  50 chars (max 72), with types `fix`, `config`, `version`, `feat`, `refactor`,
+  `chore`, `defaults`, `hack`, `style`, `doc`, combined with a comma, config
   first: `config,fix:`.
 - The subject says what changed; the body says why. Skip the body for trivial
   changes. Otherwise write short prose, problem first, links as full URLs.

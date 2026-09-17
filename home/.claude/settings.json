@@ -48,6 +48,16 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "matcher": "Bash|mcp__github__create_pull_request|mcp__github__create_issue|mcp__github__add_issue_comment|mcp__github__create_pull_request_review|mcp__github__update_issue",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/ai-drift-gate.py",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PostToolUse": [
