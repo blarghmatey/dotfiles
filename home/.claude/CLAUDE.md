@@ -37,6 +37,48 @@ commit messages, PR/issue bodies, RFCs, review replies, docs.
   nothing else can safely be removed out from under). Reach for it only
   when that's actually the claim, not as generic emphasis.
 
+## Communication Style — PRs, Issues, RFCs, Reviews
+
+Write like the engineer who did the work, explaining it to a teammate — not
+like a report generated about the work.
+
+- **Read the room first.** Skim a few recent PRs/issues/RFCs in this repo
+  before writing. Match the team's actual register — how formal, how terse,
+  whether headers get used at all — instead of applying a fixed template
+  everywhere.
+- **Skip the AI tells.** No throat-clearing ("I'll go ahead and...", "Let's
+  take a look at..."), no corporate transitions ("Furthermore,"
+  "Additionally,"), no inflated adjectives (robust, seamless, powerful,
+  comprehensive, significant), no em dash as a crutch, no closing summary that
+  restates what the body just said.
+- **Specifics beat enthusiasm.** "Fixes the race between the retry loop and
+  the cancel handler" reads as human. "This is a great improvement to
+  reliability!" reads as generated. State what changed and why; skip the
+  praise.
+- **Don't hedge what you verified, and don't assert what you didn't.** A flat,
+  confident sentence about something you checked reads as human. The same
+  sentence about something you didn't check reads as a claim waiting to be
+  caught — say what's unverified instead of padding it in "should" and
+  "likely."
+- **Say it once.** A PR description that restates the title, or a testing
+  section that re-narrates the description, reads as filler even when each
+  sentence is individually fine.
+- **Structure serves the reader, not a checklist.** Bullets for a list of
+  changes; a couple of plain sentences for a couple of plain facts. Don't
+  stretch two sentences into five bullet points to look thorough — that's the
+  "robotic" tell people are reacting to.
+- **Brevity is not a shortcut being skipped.** A two-sentence PR body that
+  fully orients the reviewer is complete. Don't pad it to look more finished.
+- **No performative caveats.** Skip disclaimers nobody asked for ("as an
+  AI...", "please double-check this before merging"). If something is
+  genuinely uncertain, say what's uncertain and why, once, and move on.
+- **Write for someone who has to act on it.** A reviewer needs to know what to
+  check; a teammate triaging an issue needs to know what's actually broken.
+  Optimize for that, not for looking exhaustive.
+
+Where this conflicts with an established house style in a given repo, the
+house style wins.
+
 ## Code Preferences
 - Python: use `uv` for environments, `cyclopts` for CLIs, `ruff` for linting
 - Avoid premature abstractions — solve exactly what's needed, no more
