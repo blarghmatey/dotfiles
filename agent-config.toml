@@ -1,0 +1,60 @@
+# Personal agent-config-kit manifest — MCP servers I use across every
+# coding-agent platform, regardless of which repo I'm in.
+#
+# Scope, deliberately: general-purpose personal tools only. Everything
+# mitodl/work-specific (toolhive-swe-*, the grafana-production/grafana-qa
+# instances, vantage, OpenMetadata, sentry) stays out of here — those belong
+# to the mitodl org's own manifest
+# (https://github.com/mitodl/agent-kit/blob/main/agent-config.toml), not a
+# personal one, and they're already hand-duplicated in
+# home/.pi/agent/mcp.json / home/.copilot/mcp-config.json today. Fold them
+# into the mitodl manifest separately rather than here.
+#
+# witan / witan-code are excluded too: `witan setup` owns their MCP
+# registration and skill installation lifecycle (see agent-kit's own
+# agent-config.toml header) — registering them here would just duplicate
+# that, same reasoning that keeps them out of the mitodl manifest.
+#
+# Personal skills authored in this repo (skills/<name>/SKILL.md) are managed
+# here and installed with `agent-kit apply`. Third-party skill packages still
+# come from skills-lock.json via `dots install skills`; don't list the same
+# skill in both places.
+#
+# This is the seed of a consolidation: today filesystem/sequential-thinking/
+# semble/Mantic are hand-copied into home/.pi/agent/mcp.json AND
+# home/.copilot/mcp-config.json separately (and drifted — copilot's file
+# also has a `memory` server this one and pi's don't). Once this manifest is
+# wired up (see `default_manifest` in
+# ~/.config/agent-config-kit/config.toml), those hand-maintained files
+# become generated output instead of two independently-edited sources.
+#
+# Usage:
+#   agent-kit validate ~/code/personal/dotfiles/agent-config.toml
+#   agent-kit apply ~/code/personal/dotfiles/agent-config.toml --dry-run --diff
+#   agent-kit apply ~/code/personal/dotfiles/agent-config.toml   # writes for real
+
+[options]
+scope = "global"   # these are always-available tools, not per-project
+
+[mcp_servers.filesystem]
+kind = "stdio"
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-filesystem", "/home/tmacey/code", "/home/tmacey/.config", "/tmp"]
+
+[mcp_servers.sequential-thinking]
+kind = "stdio"
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+
+[mcp_servers.semble]
+kind = "stdio"
+command = "uvx"
+args = ["--from", "semble[mcp]", "semble"]
+
+[mcp_servers.Mantic]
+kind = "stdio"
+command = "npx"
+args = ["-y", "mantic.sh@latest", "server"]
+
+[skills]
+writing-voice = "skills/writing-voice/SKILL.md"   # resolved relative to this file
