@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "min_changes": 1,
+  "template": "~/.claude/session-summary-template.md"
+}

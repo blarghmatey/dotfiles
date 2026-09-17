@@ -34,6 +34,11 @@
             "type": "command",
             "command": "witan code checkpoint",
             "timeout": 15.0
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/session-summary-gate.sh",
+            "timeout": 10
           }
         ]
       }
