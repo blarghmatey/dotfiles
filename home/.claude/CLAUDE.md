@@ -174,10 +174,15 @@ house style wins.
   work doesn't stomp on the same files. Skip only when the user explicitly says to edit
   in place. Prefer basing the worktree off of the latest commit of the default branch.
 - If `EnterWorktree` isn't available, check manually before the first edit: compare
-  `git rev-parse --show-toplevel` to `git rev-parse --git-common-dir` (stripped of
-  `/.git`). If they match, you're in the shared checkout, not a worktree. Other
-  concurrent sessions can switch branches or commit there while you're mid-task, so
-  create one (`git worktree add ../wt-<slug> -b <branch>`) before touching files.
+  `git rev-parse --git-dir` to `git rev-parse --git-common-dir`. If they match, you're
+  in the shared checkout, not a worktree (in a worktree the git dir is
+  `<common>/worktrees/<name>`). Don't compare the repo root against the common dir
+  stripped of `/.git`: that reads a submodule, a `--separate-git-dir` checkout, or a
+  symlinked `.git` as a worktree. Other concurrent sessions can switch branches or
+  commit there while you're mid-task, so create one
+  (`git worktree add ../wt-<slug> -b <branch>`) before touching files. The
+  `shared-checkout-warning.sh` SessionStart hook flags this automatically when a
+  session starts in a shared checkout.
 
 ## Claims Must Be Evidence-Backed
 - Before stating a factual claim in a PR body, code comment, commit message, or
