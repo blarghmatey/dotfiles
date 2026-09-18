@@ -14,3 +14,5 @@ pyinfra-debug.log
 # Emacs Custom — machine-specific; may contain API keys written by packages
 home/.emacs.d/custom.el
 .pi-lens/
+# Local, per-machine toggle for the end-of-session summary hook
+home/.claude/session-summary.json
