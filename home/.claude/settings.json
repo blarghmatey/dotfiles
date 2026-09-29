@@ -1,8 +1,15 @@
 {
+  "env": {
+    "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
+  },
   "permissions": {
     "defaultMode": "auto"
   },
   "model": "sonnet",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -11,7 +18,7 @@
           {
             "type": "command",
             "command": "witan inject-context",
-            "timeout": 15.0
+            "timeout": 45.0
           },
           {
             "type": "command",
@@ -28,7 +35,7 @@
           {
             "type": "command",
             "command": "witan session-checkpoint",
-            "timeout": 15.0
+            "timeout": 60.0
           },
           {
             "type": "command",
@@ -125,7 +132,8 @@
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": false,
-    "gopls-lsp@claude-plugins-official": true
+    "gopls-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
   },
   "skipWorkflowUsageWarning": true,
   "remoteControlAtStartup": true,
