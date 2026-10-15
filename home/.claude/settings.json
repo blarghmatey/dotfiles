@@ -105,6 +105,11 @@
             "type": "command",
             "command": "~/.claude/scripts/shared-checkout-warning.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/session-preflight.py",
+            "timeout": 20
           }
         ]
       }
