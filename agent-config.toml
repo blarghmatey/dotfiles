@@ -7,7 +7,7 @@
 # to the mitodl org's own manifest
 # (https://github.com/mitodl/agent-kit/blob/main/agent-config.toml), not a
 # personal one, and they're already hand-duplicated in
-# home/.pi/agent/mcp.json / home/.copilot/mcp-config.json today. Fold them
+# home/.pi/agent/mcp-adapter.json / home/.copilot/mcp-config.json today. Fold them
 # into the mitodl manifest separately rather than here.
 #
 # witan / witan-code are excluded too: `witan setup` owns their MCP
@@ -21,7 +21,7 @@
 # skill in both places.
 #
 # This is the seed of a consolidation: today filesystem/sequential-thinking/
-# semble/Mantic are hand-copied into home/.pi/agent/mcp.json AND
+# semble/Mantic are hand-copied into home/.pi/agent/mcp-adapter.json AND
 # home/.copilot/mcp-config.json separately (and drifted — copilot's file
 # also has a `memory` server this one and pi's don't). Once this manifest is
 # wired up (see `default_manifest` in

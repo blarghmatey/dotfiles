@@ -2,12 +2,12 @@
   "name": "pi-extensions",
   "private": true,
   "dependencies": {
+    "@juicesharp/rpiv-ask-user-question": "^2.15.0",
     "@zenobius/pi-worktrees": "^0.5.1",
-    "pi-ask-user": "^0.16.0",
-    "pi-claude-bridge": "^0.9.0",
-    "pi-lens": "^4.0.1",
-    "pi-mcp-adapter": "^5.0.0",
-    "pi-smart-fetch": "^0.3.17",
-    "pi-total-recall": "^1.8.1"
+    "pi-claude-bridge": "^0.9.3",
+    "pi-lens": "^4.4.7",
+    "pi-mcp-adapter": "^7.0.0",
+    "pi-smart-fetch": "^0.3.23",
+    "pi-subagents": "^0.84.0"
   }
 }

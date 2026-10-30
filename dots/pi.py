@@ -6,7 +6,7 @@ that file IS the live settings file, so ``pi install`` writes back into the
 repo automatically — no separate lock file is needed.
 
 Additional tracked config files (all under ``home/.pi/agent/``):
-    mcp.json              — MCP server connections (sensitive: contains org URLs)
+    mcp-adapter.json      — MCP server connections (sensitive: contains org URLs)
     models.json           — Custom model provider definitions
     pi-worktrees.config.json — pi-worktrees extension config
     npm/package.json      — Extension package manifest with semver constraints
@@ -40,7 +40,7 @@ _PI_EXTENSIONS = _PI_AGENT / "extensions"
 
 # Config files tracked in the dotfiles repo (relative to home/.pi/agent/)
 _TRACKED_CONFIGS = [
-    "mcp.json",
+    "mcp-adapter.json",
     "models.json",
     "pi-worktrees.config.json",
     "npm/package.json",

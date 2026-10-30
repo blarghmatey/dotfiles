@@ -2,14 +2,20 @@
   "env": {
     "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
   },
-  "permissions": {
-    "defaultMode": "auto"
-  },
-  "model": "sonnet",
   "attribution": {
     "commit": "",
     "pr": ""
   },
+  "permissions": {
+    "allow": [
+      "EnterWorktree",
+      "ExitWorktree",
+      "Read(~/code/**/*.worktrees/**)",
+      "Edit(~/code/**/*.worktrees/**)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "opus",
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -140,7 +146,13 @@
     "gopls-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true
   },
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  },
   "skipWorkflowUsageWarning": true,
+  "switchModelsOnFlag": false,
   "remoteControlAtStartup": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,

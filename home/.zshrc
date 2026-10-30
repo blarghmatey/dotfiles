@@ -11,6 +11,7 @@ alias et='emacsclient -nw -t'
 alias cat='bat'
 alias vim='nvim'
 alias prune_pods='kubectl delete pods --field-selector=status.phase!=Running --all-namespaces'
+alias gt='bunx @withgraphite/graphite-cli@stable'
 
 # eza — modern ls (install: cargo install eza)
 if command -v eza &>/dev/null; then
@@ -33,9 +34,7 @@ _ai_cli() {
 }
 _ai_cli gemini gemini  @google/gemini-cli
 _ai_cli ghc    copilot @github/copilot
-_ai_cli amp    amp     @sourcegraph/amp
 _ai_cli kilo   kilo    @kilocode/cli
-_ai_cli ccr    ccr     @musistudio/claude-code-router
 _ai_cli pi     pi      @earendil-works/pi-coding-agent
 unset -f _ai_cli
 
