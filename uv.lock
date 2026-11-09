@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.13"
 
 [[package]]
@@ -157,15 +157,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/6d/cd/a361394c94b2129d604bb846f624a8e88255a3ee33129c434a00d715e64f/cffi-2.1.1-cp315-cp315t-win32.whl", hash = "sha256:06c72bb76605a4b0cd0aad6930b69d4baf7dd5d806cfc409b824191099700e66", size = 182707, upload-time = "2026-08-03T21:21:11.226Z" },
     { url = "https://files.pythonhosted.org/packages/9b/b5/ba2b299993c26577d529b6ae29841f9e15b9fcf004d65f423f4fcf94ade9/cffi-2.1.1-cp315-cp315t-win_amd64.whl", hash = "sha256:d9c275eaacd24aa73f94ffd6de08fc3f932424d8b6c376f4bed7cde376fe7bc3", size = 193772, upload-time = "2026-08-03T21:21:12.39Z" },
     { url = "https://files.pythonhosted.org/packages/aa/29/35e016098c814cd93de9cd320c66b5bfba14dc6ecedd3cb518fa7c408c69/cffi-2.1.1-cp315-cp315t-win_arm64.whl", hash = "sha256:d18e5ac0f2f03f4f518d3e23db0f0cad7faa1da8620e9c09461d443bbf6e6692", size = 186360, upload-time = "2026-08-03T21:21:13.636Z" },
-]
-
-[[package]]
-name = "click"
-version = "8.5.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c7/0e/7fa0ef50764b67090eca4114772a2abf8b6148198475e54c660b97caeee6/click-8.5.0.tar.gz", hash = "sha256:ba0d2089de75ea0310e2dde03160e6ca10009947fb95a182f9b54021bb272e34", size = 382235, upload-time = "2026-08-26T13:33:14.56Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/58/50/6c0d534c5f134586a8e1ba4e330569e32f057e33372ae556463212fb4cd3/click-8.5.0-py3-none-any.whl", hash = "sha256:255bc9599cf7748b4b1a446ccc735421bd08a2ae529a8b88597d3de5664ee360", size = 125251, upload-time = "2026-08-26T13:33:12.928Z" },
 ]
 
 [[package]]
@@ -487,7 +478,7 @@ wheels = [
 
 [[package]]
 name = "paramiko"
-version = "4.0.0"
+version = "5.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bcrypt" },
@@ -495,9 +486,9 @@ dependencies = [
     { name = "invoke" },
     { name = "pynacl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1f/e7/81fdcbc7f190cdb058cffc9431587eb289833bdd633e2002455ca9bb13d4/paramiko-4.0.0.tar.gz", hash = "sha256:6a25f07b380cc9c9a88d2b920ad37167ac4667f8d9886ccebd8f90f654b5d69f", size = 1630743, upload-time = "2025-08-04T01:02:03.711Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/62/93/dcc25d52f49022ae6175d15e6bd751f1acc99b98bc61fc55e5155a7be2e7/paramiko-5.0.0.tar.gz", hash = "sha256:36763b5b95c2a0dcfdf1abc48e48156ee425b21efe2f0e787c2dd5a95c0e5e79", size = 1548586, upload-time = "2026-05-09T18:28:52.256Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a9/90/a744336f5af32c433bd09af7854599682a383b37cfd78f7de263de6ad6cb/paramiko-4.0.0-py3-none-any.whl", hash = "sha256:0e20e00ac666503bf0b4eda3b6d833465a2b7aff2e2b3d79a8bba5ef144ee3b9", size = 223932, upload-time = "2025-08-04T01:02:02.029Z" },
+    { url = "https://files.pythonhosted.org/packages/82/5b/eadf6d45de38d30ab603f49393b6cd2cbe7e233af8cf90197e32782b68a9/paramiko-5.0.0-py3-none-any.whl", hash = "sha256:b7044611c30140d9a75261653210e2002977b71a0497ff3ba0d98d7edbf62f7c", size = 208919, upload-time = "2026-05-09T18:28:50.295Z" },
 ]
 
 [[package]]
@@ -607,10 +598,10 @@ wheels = [
 
 [[package]]
 name = "pyinfra"
-version = "3.10.0"
+version = "3.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "click" },
+    { name = "cyclopts" },
     { name = "distro" },
     { name = "gevent" },
     { name = "jinja2" },
@@ -618,12 +609,13 @@ dependencies = [
     { name = "paramiko" },
     { name = "pydantic" },
     { name = "python-dateutil" },
+    { name = "rich" },
     { name = "typeguard" },
     { name = "types-paramiko" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c5/af/fc92d96ebfe7f5235977ada99fd5a294e666d771993f2be4ec5eae884920/pyinfra-3.10.0.tar.gz", hash = "sha256:802d22046eb84937ffd2aadb7dd192a3cc2b830b026f9878617349614076810f", size = 650567, upload-time = "2026-07-27T19:50:55.076Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ab/66/3eb91b5872b443d22181a75a61b32b4d3955f11cb19916f62bb4cb0c7138/pyinfra-3.11.0.tar.gz", hash = "sha256:291b9734aec8137d177ff97881ee825de72c9fad235293abf61ae7eeb2a199f8", size = 710850, upload-time = "2026-11-09T11:02:00.615Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/17/e3/c2a679d1a951ca4fbd0d3812acaeec17795303c24154a8133e3456c88cda/pyinfra-3.10.0-py3-none-any.whl", hash = "sha256:668268db8df54c23a1e684d260121a6e23330c942f60048138597303227e48fb", size = 325488, upload-time = "2026-07-27T19:50:53.625Z" },
+    { url = "https://files.pythonhosted.org/packages/2b/85/dfd611f04f0ff10983dde0959a24484036dbf26bfdb23e2983037dd84687/pyinfra-3.11.0-py3-none-any.whl", hash = "sha256:ed386a6ff0c9b2045b5fa6c1f9b8b2240a5ed7d6d993af1c13ce3b237700c20a", size = 354706, upload-time = "2026-11-09T11:01:58.38Z" },
 ]
 
 [[package]]
