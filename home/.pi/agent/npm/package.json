@@ -8,6 +8,6 @@
     "pi-lens": "^4.4.7",
     "pi-mcp-adapter": "^7.0.0",
     "pi-smart-fetch": "^0.3.23",
-    "pi-subagents": "^0.84.0"
+    "pi-subagents": "^0.88.0"
   }
 }
