@@ -4,7 +4,7 @@
   "dependencies": {
     "@juicesharp/rpiv-ask-user-question": "^2.15.0",
     "@zenobius/pi-worktrees": "^0.5.1",
-    "pi-claude-bridge": "^0.9.3",
+    "pi-claude-bridge": "^0.12.0",
     "pi-lens": "^4.4.7",
     "pi-mcp-adapter": "^7.0.0",
     "pi-smart-fetch": "^0.3.23",
