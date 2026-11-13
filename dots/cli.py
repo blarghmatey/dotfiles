@@ -253,7 +253,8 @@ def worktrees(
     Fetches each repo, looks up each branch's PR on GitHub, and sorts worktrees
     into: prunable, merged (in the base branch, or PR merged with nothing local
     beyond it), closed, stale (no PR, idle STALE_DAYS), and keep categories
-    (dirty, merged+local, open, in-use, locked, active).
+    (dirty, unanchored, merged+local, open, unknown, in-use, locked, active).
+    Ignored files other than build and cache output count as dirty.
 
     --remove takes categories from prunable/merged/closed/stale, e.g.
     `--remove merged prunable`. Branches of merged and closed worktrees are
