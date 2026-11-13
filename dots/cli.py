@@ -6,7 +6,7 @@ import os
 import subprocess
 import tomllib
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 import cyclopts
 from rich.console import Console
@@ -26,6 +26,8 @@ app.command(repos, name="repos")
 
 console = Console()
 DEFAULT_PROFILE = "arch-wsl2"
+# Mirrors worktrees.REMOVABLE; kept here so cyclopts can validate and list choices.
+RemovableCategory = Literal["prunable", "merged", "closed", "stale"]
 
 
 def _find_repo_root() -> Path:
@@ -231,6 +233,55 @@ def manifest(
     manifest_path = root / "MANIFEST.yaml"
     found = build_manifest(root, manifest_path)
     print_summary(found, manifest_path)
+
+
+@repos.command
+def worktrees(
+    *,
+    root: Annotated[Path | None, cyclopts.Parameter(name=["--root", "-r"])] = None,
+    fetch: bool = True,
+    stale_days: int = 30,
+    as_json: Annotated[bool, cyclopts.Parameter(name="--json")] = False,
+    remove: Annotated[
+        list[RemovableCategory] | None,
+        cyclopts.Parameter(name="--remove", consume_multiple=True, negative=()),
+    ] = None,
+    yes: Annotated[bool, cyclopts.Parameter(name=["--yes", "-y"])] = False,
+) -> None:
+    """Classify every git worktree under ROOT and optionally remove the dead ones.
+
+    Fetches each repo, looks up each branch's PR on GitHub, and sorts worktrees
+    into: prunable, merged (in the base branch, or PR merged with nothing local
+    beyond it), closed, stale (no PR, idle STALE_DAYS), and keep categories
+    (dirty, merged+local, open, in-use, locked, active).
+
+    --remove takes categories from prunable/merged/closed/stale, e.g.
+    `--remove merged prunable`. Branches of merged and closed worktrees are
+    deleted too; stale branches are kept since their commits may exist nowhere else.
+    """
+    from .worktrees import Category, print_report, scan, to_json
+    from .worktrees import remove as remove_worktrees
+
+    root = (root or Path.cwd()).expanduser().resolve()
+    targets = {Category(c) for c in remove or []}
+    with console.status("Scanning worktrees..."):
+        wts = scan(root, fetch=fetch, stale_days=stale_days)
+    if as_json:
+        print(to_json(wts))
+    else:
+        print_report(wts, root)
+    if not targets:
+        return
+
+    n = sum(1 for w in wts if w.category in targets)
+    if not n:
+        return
+    if (
+        not yes
+        and input(f"Remove {n} worktree(s) in {', '.join(sorted(targets))}? [y/N] ").lower() != "y"
+    ):
+        return
+    remove_worktrees(wts, targets)
 
 
 @install.command(name="all")
