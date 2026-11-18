@@ -71,6 +71,8 @@ def _parse_remote(url: str) -> tuple[str, str, str]:
         host, _, path = u[len("git@") :].partition(":")
     else:
         host, _, path = u.split("://", 1)[-1].partition("/")
+        # ssh://git@github.com/... and https://token@github.com/... carry userinfo.
+        host = host.rpartition("@")[2]
     parts = path.rsplit("/", 1)
     if len(parts) != 2:
         return host, "", ""
