@@ -22,6 +22,31 @@ auto_sync = true
 ## Filter secrets from history (AWS keys, GitHub PATs, Slack tokens, etc.)
 secrets_filter = true
 
+## Never record a command that carries a literal secret. Rust regex, unanchored, so
+## each matches anywhere in the command. A value starting with $ or a backtick is a
+## reference (TOKEN="$(vault read ...)"), not a secret, and is still recorded.
+## `atuin history prune` deletes existing entries these match.
+history_filter = [
+  # NAME=value (or a "Name: value" header) where NAME ends in a password, secret,
+  # token, or key word plus at most an environment-style suffix. A value starting
+  # with / ~ . or = is a path or version, not a secret.
+  '(?i)\b[a-z0-9_-]*(password|passwd|secret|token|api[_-]?key|access[_-]key|private[_-]key|credentials?)s?([_-](qa|ci|rc|prod|production|staging|key|id|value|[0-9]+))*(\s*=\s*|:\s+)("[^"$`/~.=][^"$`]{5,}"|\x27[^\x27/~.=][^\x27]{5,}\x27|[^\s"\x27$`;|&<>()=/~.][^\s"\x27$`;|&<>()]{5,})',
+  # --password value, --token=value, ...
+  '(?i)--(password|passwd|secret|token|api-key|client-secret|access-token)(=|\s+)["\x27]?[^\s"\x27$`]{6,}',
+  '(?i)authorization:\s*(bearer|basic|token)\s+[a-z0-9._~+/=-]{8,}',
+  '\b(mysql|mariadb|mysqldump)\b.*\s-p[^\s$`"\x27]{4,}',
+  # user:password@ in a URL
+  '\b[a-z][a-z0-9+.-]*://[^/\s:@]+:[^@\s/$`]{4,}@',
+  # Token formats secrets_filter may not cover
+  '\bgh[opusr]_[A-Za-z0-9]{36}',
+  'github_pat_[A-Za-z0-9_]{22,}',
+  'glpat-[A-Za-z0-9_-]{20,}',
+  '\bsk-(ant-|proj-)?[A-Za-z0-9_-]{20,}',
+  '\bhv[sb]\.[A-Za-z0-9_-]{20,}',
+  'eyJ[A-Za-z0-9_-]{8,}\.eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}',
+  '-----BEGIN [A-Z ]*PRIVATE KEY-----',
+]
+
 ## Workspaces: filter history to git repo tree
 workspaces = true
 

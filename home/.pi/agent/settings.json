@@ -9,7 +9,8 @@
     "npm:pi-smart-fetch",
     "npm:pi-claude-bridge",
     "npm:pi-subagents",
-    "npm:@juicesharp/rpiv-ask-user-question"
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-lean-ctx"
   ],
   "extensions": [
     "extensions/virtual-cwd.ts",

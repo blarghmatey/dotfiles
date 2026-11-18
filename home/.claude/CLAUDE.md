@@ -214,3 +214,45 @@ house style wins.
   the intended environment only.
 - If a claim can't be verified before shipping, flag it as unverified or drop
   it rather than stating it with unwarranted confidence.
+
+<!-- lean-ctx -->
+<!-- lean-ctx-claude-v11 -->
+## LeanCTX (lean-ctx) — Context Gateway for AI Systems (Replace mode)
+
+Native Grep/Glob are denied by policy. Prefer `ctx_*` MCP tools for project work:
+- `ctx_read` for task-relevant exploration (cached structural views)
+- `ctx_shell` for shell commands (command-specific output shaping)
+- `ctx_search` instead of Grep/rg (compact results)
+- `ctx_tree` instead of ls/find (compact directory maps)
+- `ctx_glob` instead of Glob (file pattern matching)
+- Project edits: `ctx_read(mode="anchored")` → `ctx_patch` (line+hash anchors; `op=create` for new files).
+
+Native `Read` is reserved for the edit gate (read-before-write) only.
+For exploration, orientation, and code understanding: ALWAYS use `ctx_read`.
+Claude auto memory (`~/.claude/projects/<slug>/memory/` — MEMORY.md and topic
+files) uses native Read/Edit internally; do NOT call MCP `resources/read` with
+file:// URIs (lean-ctx resources are `lean-ctx://context/*` only). Native Delete is fine.
+
+Read modes: anchored (edit), full (verbatim), map (overview), signatures (API), diff (post-edit), lines:N-M (range), auto.
+Details live in the `lean-ctx` skill (loads on demand — keep this file lean).
+<!-- /lean-ctx -->
+
+<!-- lean-ctx-solution -->
+SOLUTION EFFICIENCY: stop at first level that applies:
+skip (YAGNI) → reuse codebase → stdlib → native platform → installed dep → one-line → minimum code.
+Never skip: validation, security, error handling.
+<!-- /lean-ctx-solution -->
+
+## ctx_* vs code_* (lean-ctx and witan-code)
+Both route caller and impact questions to themselves. This is the split, and it
+overrides lean-ctx's server instructions for the cross-repo cases below.
+- `ctx_*` for anything inside the current checkout: reading, searching, and
+  callers or impact within this repo (`ctx_callgraph`).
+- `code_*` for what one checkout can't answer: which repos provide or consume
+  an env var, endpoint, package or service (`code_interface_*`,
+  `code_cross_repo_impact`), another branch's or a teammate's indexed view
+  (`branch=`), and the symbols a witan memory or task points at. The tools are
+  deferred, so load them with ToolSearch (`+code_ find_definition callers
+  impact`) before the first call.
+- When a change crosses a repo boundary, check `code_*` even if `ctx_*` already
+  answered for this repo.

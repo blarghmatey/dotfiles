@@ -118,6 +118,15 @@
             "timeout": 20
           }
         ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"/home/tmacey/.claude/skills/verify-before-claiming/SKILL.md\""
+          }
+        ]
       }
     ],
     "WorktreeCreate": [
