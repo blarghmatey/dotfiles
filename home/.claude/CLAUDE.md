@@ -37,6 +37,16 @@ commit messages, PR/issue bodies, RFCs, review replies, docs.
 - Don't overuse "load-bearing." It's a specific, useful metaphor (a piece
   nothing else can safely be removed out from under). Reach for it only
   when that's actually the claim, not as generic emphasis.
+- Name what you point at. A label a document gives its own parts (§4, D3,
+  A5, Phase 0, Cohort 4, open question 2, Option B) means nothing outside
+  it. When citing one anywhere else, say what it is and link the heading:
+  "the row-count guard in the scoped-pull contract", not "the §4 guard".
+  Keep using the name after the first mention. Titles (PRs, issues, witan
+  tasks) get no spec-label prefixes like `A3:`. When writing a spec or ADR,
+  give each section and decision a heading that says what it decides, so
+  there is a name to cite. This holds in chat too: put a decision to me as
+  the choice itself with a recommendation, not "decide D3", and name a task
+  by its title and PR, not its slug or hex suffix ("blocked on b5c4a8").
 
 ## Voice
 Derived from my 2016-2024 GitHub history (pre-AI baseline). Full evidence:
