@@ -62,8 +62,11 @@ established house style or template, the house style wins.
 - Emphasis with `_underscores_`, rarely. No bold for emphasis, no caps.
 - Emoji: none, apart from an occasional `:+1:` or `:)`.
 - Tradeoffs in prose ("X vs. Y", with the cost of each), not tables.
-- Link to the exact file and line range, PR, or doc instead of paraphrasing it.
-  Link text can be "here".
+- Link to the exact file and line range, PR, or doc instead of re-explaining
+  it, with a clause saying what's there. Link text can be "here".
+- Name what you point at. A spec's own labels (§4, D3, A5, Phase 0, Cohort 4,
+  open question 2) mean nothing outside the spec: "the row-count guard in the
+  scoped-pull contract", not "the §4 guard". No such labels as title prefixes.
 - Sentence-case imperative titles for issues, PRs, and docs, not Title Case.
 
 ## Never (AI-era markers)
@@ -132,13 +135,20 @@ State the position, the concrete reason, and the alternative. No apology.
 
 ### RFC / design proposal
 
-1. The problem or goal in one to three sentences, no preamble.
-2. Current state, stated candidly, including what works badly today.
-3. Problem areas as headers.
-4. Alternatives as "X vs. Y" with tradeoffs in prose.
-5. A first-person proposal ("I propose that we...").
+An RFC raises awareness of what we intend to do and asks the team about what's
+still open. For mitodl/hq, the `create-ol-rfc-discussion` template's headers
+are the structure.
+
+1. A short summary up front: what I propose, why now, who it's for. A reader
+   who stops there knows what's coming and that I want their opinion.
+2. The open questions, each one a real question with my leaning ("I lean
+   toward X because Y, but Z would change that") and who should weigh in.
+3. Current state, stated candidly, including what works badly today.
+4. A first-person proposal ("I propose that we..."), saying which parts are
+   settled.
+5. Alternatives as "X vs. Y" in prose, only where a reader would ask.
 6. Phasing, and what isn't needed yet ("We do _not_ need: ... (yet)").
-7. References. No executive summary, no recap.
+7. References. No recap.
 
 ### Issue
 
